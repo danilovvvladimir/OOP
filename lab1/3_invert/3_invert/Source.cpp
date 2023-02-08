@@ -178,15 +178,15 @@ std::string transformDoubleToString(double num)
 	return result;
 }
 
-void printFinalMatrix(double ** matrix)
+void printMatrix(std::ostream &output, double ** matrix)
 {
 	for (int i = 0; i < 3; i++)
 	{
 		for (int j = 0; j < 3; j++)
 		{
-			std::cout << transformDoubleToString(matrix[i][j]) << "\t\t";
+			output << transformDoubleToString(matrix[i][j]) << "\t\t";
 		}
-		std::cout << std::endl;
+		output << std::endl;
 	}
 }
 
@@ -261,7 +261,7 @@ int main(int argc, char* argv[])
 		}
 		invertedMatrix = invertMatrix(transposedMatrix, determinant);
 
-		printFinalMatrix(invertedMatrix);
+		printMatrix(std::cout, invertedMatrix);
 
 		cleanMatrix(startMatrix);
 		cleanMatrix(adjMatrix);
