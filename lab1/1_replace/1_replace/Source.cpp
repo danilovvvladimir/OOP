@@ -2,124 +2,118 @@
 #include <string>
 #include <fstream>
 
-
-
-//==2==Чтение текста из IN файла построчно. (открыты как IN, так и OUT файлы).
-//==1== Замена подстроки в строке
-//	- Нахождение количества вхождений в строку подстроки.
-//	- Циклом с количеством итераций, найденных выше:
-//		- Ищем эту подстроку(первый индекс) (find - даёт индекс);
-//		- До этого индекса строку засовываю в stringFirstHalf, после этого индекса+длины подстроки начальной до конца в stringSecondHalf;
-//		- Склеиваю stringFirstHalf + новая подстрока + stringSecondHalf;
-//		//и так в цикле, пока не будут изменены все вхождения !!!!!!!!!!!!!!подумать про многократное вхождение строки (контрится указанием индекса с которого будет идти цикл)
-//==3==Вывод этой строки в OUT файл.
-//
-// Разбиение на функции.
-// Обработка ошибок.
-//
-//
-// .find(substring, INDEXofstart)!!!!!!!!!!!!!!!!!!!!!
-
-int count_of_substrings(std::string src, std::string sub) {
+int countSubstrings(std::string src, std::string sub) {
 	int start = 0;
-	int count = 0;
+	int counter = 0;
 	int pos = 0;
-	for (;;) {
+
+	while (true)
+	{
 		pos = src.find(sub.c_str(), start);
 		if (pos != -1) {
 			start = pos + sub.size();
-			count++;
+			counter++;
 		}
 		else {
 			break;
 		}
 	}
-	return count;
+	return counter;
 }
 
-std::string replaceSubstring(std::string mainStr, std::string substrFirst, std::string substrSecond)
+std::string replaceSubstring(std::string mainStr, const std::string& searchString, const std::string& replacementString)
 {
 	std::string strResult = mainStr;
-	int lengthSubstringNormal = substrFirst.size();
-	int lengthSubstringNeeded = substrSecond.size();
-	int indexOfStart = 0;
-	int countSubstring = count_of_substrings(strResult, substrFirst);
+	int searchStringLength = searchString.size();
+	int replacementStringLength = replacementString.size();
+	int startIndex = 0;
+	int substrCounter = countSubstrings(strResult, searchString);
 
-	if (countSubstring > 0)
+	if (substrCounter > 0)
 	{
-		for (int k = 0; k < countSubstring; k++)
+		for (int k = 0; k < substrCounter; k++)
 		{
-			int lengthStrIN = strResult.size();
-			std::string stringFirstHalf = "";
-			std::string stringSecondHalf = "";
-			int temp = strResult.find(substrFirst, indexOfStart);
-			//std::cout << "indexOfStart: " << indexOfStart << std::endl;
-			//std::cout << "indexOfSubstringStart: " << temp << std::endl;
-			indexOfStart = temp + lengthSubstringNeeded;
+
+			std::string strFirstHalf = "";
+			std::string strSecondHalf = "";
+			int strResultLength = strResult.size();
 
 
-			for (int i = 0; i < lengthStrIN; i++)
+			int pos = strResult.find(searchString, startIndex);
+			startIndex = pos + replacementStringLength;
+
+
+			for (int i = 0; i < strResultLength; i++)
 			{
-
-				if (i < temp)
+				if (i < pos)
 				{
-					stringFirstHalf += strResult[i];
+					strFirstHalf += strResult[i];
 				}
 				else
 				{
-					if (i >= temp + lengthSubstringNormal)
+					if (i >= pos + searchStringLength)
 					{
-						stringSecondHalf += strResult[i];
+						strSecondHalf += strResult[i];
 					}
 				}
 			}
-			strResult = stringFirstHalf + substrSecond + stringSecondHalf;
+			strResult = strFirstHalf + replacementString + strSecondHalf;
 		}
 	}
 	return strResult;
 }
 
-int main()
+void copyStreamWithReplacement(std::istream& input, std::ostream& output, const std::string& searchString, const std::string& replacementString)
 {
-	std::string substringNormal = "1231234";
-	std::string substringNeeded = "NOT NEEDLE";
-
-
-	std::ifstream fIN;
-	std::ofstream fOUT;
-
-	std::string fINpath = "in.txt";
-	std::string fOUTpath = "out.txt";
-
-	fIN.open(fINpath);
-	if (fIN.is_open())
+	while (!input.eof())
 	{
-		fOUT.open(fOUTpath);
-		if (fOUT.is_open())
+		std::string line = "";
+		std::getline(input, line);
+		if (searchString.size() != 0)
 		{
-			while (!fIN.eof())
-			{
-				std::string line = "";
-				std::getline(fIN, line);
-				line = replaceSubstring(line, substringNormal, substringNeeded);
-				fOUT << line << std::endl;
+			line = replaceSubstring(line, searchString, replacementString);
+		}
+		output << line << std::endl;
+	}
+}
 
-			}
-			fOUT.close();
-			fIN.close();
+int main(int argc, char* argv[])
+{
+	if (argc != 5)
+	{
+		std::cout << "Invalid argument count\n"
+			<< "Usage: replace.exe <inputFile> <outputFile> <searchString> <replacementString>\n";
+		return 1;
+	}
+
+	std::string searchedSubstring = argv[3];
+	std::string replacedSubstring = argv[4];
+
+	std::ifstream inputFile;
+	inputFile.open(argv[1]);
+
+	
+	if (inputFile.is_open())
+	{
+		std::ofstream outputFile;
+		outputFile.open(argv[2]);
+		if (outputFile.is_open())
+		{
+			copyStreamWithReplacement(inputFile, outputFile, searchedSubstring, replacedSubstring);
+			outputFile.flush();
+			outputFile.close();
+			inputFile.close();
 		}
 		else
 		{
-			std::cout << "OUT File couldn't been opened" << std::endl;
+			std::cout << "OUTPUT File couldn't been opened" << std::endl;
 			return 1;
 		}
 	}
 	else
 	{
-		std::cout << "IN File couldn't been opened" << std::endl;
+		std::cout << "INPUT File couldn't been opened" << std::endl;
 		return 1;
 	}
-
-
 	return 0;
 }
