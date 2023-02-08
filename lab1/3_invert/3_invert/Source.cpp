@@ -1,37 +1,27 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <iomanip> 
 
-
-// Функция нахождения определителя в 3*3 матрице
-// Функция нахождения определителя в 2*2 матрице
-// Функция нахождения союзной матрицы
-// Функция нахождения транпонированной матрицы
-// Главная функция нахождения обратной матрицы (союзная-транспонированная * 1/определитель 3*3)
-// 
-//
-//
-//
-
-double findTripleMatrixDeterminant(double matrix[][3])
+double findTripleMatrixDeterminant(double ** matrix)
 {
-	double determinant = ((matrix[0][0] * matrix[1][1] * matrix[2][2]) + (matrix[0][2] * matrix[1][0] * matrix[2][1]) + (matrix[0][1] * matrix[1][2] * matrix[2][0]) -
-		(matrix[0][2] * matrix[1][1] * matrix[2][0]) + (matrix[0][1] * matrix[1][0] * matrix[2][2]) + (matrix[0][0] * matrix[1][2] * matrix[2][1]));
+	double determinant = (((matrix[0][0] * matrix[1][1] * matrix[2][2]) + (matrix[0][2] * matrix[1][0] * matrix[2][1]) + (matrix[0][1] * matrix[1][2] * matrix[2][0])) -
+		((matrix[0][2] * matrix[1][1] * matrix[2][0]) + (matrix[0][1] * matrix[1][0] * matrix[2][2]) + (matrix[0][0] * matrix[1][2] * matrix[2][1])));
 	return determinant;
 }
-
 
 double findDoubleMatrixDeterminant(double matrix[][2])
 {
-	double determinant = ((matrix[0][0] * matrix[1][1]) - (matrix[0][1] * matrix[1][0] ));
+	double determinant = ((matrix[0][0] * matrix[1][1]) - (matrix[0][1] * matrix[1][0]));
 	return determinant;
 }
 
-void findAdjugateMatrix(double matrix[][3])
+double ** findTripleAdjugateMatrix(double ** matrix)
 {
-	//double ** AdjugateMatrix = new double* [3];
-	double AdjugateMatrix[3][3];
+	double ** adjugateMatrix = new double*[3];
+	for (int i = 0; i < 3; i++)
+	{
+		adjugateMatrix[i] = new double[3];
+	}
 	double minorAdjugateMatrix[2][2];
 
 	bool isMinus = false;
@@ -114,29 +104,63 @@ void findAdjugateMatrix(double matrix[][3])
 
 			}
 
-			AdjugateMatrix[i][j] = findDoubleMatrixDeterminant(minorAdjugateMatrix);
-			if (isMinus)
+			adjugateMatrix[i][j] = findDoubleMatrixDeterminant(minorAdjugateMatrix);
+			if (isMinus && (adjugateMatrix[i][j] != 0))
 			{
-				AdjugateMatrix[i][j] = -1 * AdjugateMatrix[i][j];
+				adjugateMatrix[i][j] = -1 * adjugateMatrix[i][j];
 			}
 			isMinus = !isMinus;
 		}
 	}
-	for (int i = 0; i < 3; i++)
-	{
-		for (int k = 0; k < 3; k++)
-		{
-			std::cout << AdjugateMatrix[i][k] << "\t";
-		}
-		std::cout << std::endl;
-	}
-	//return AdjugateMatrix;
+	return adjugateMatrix;
 }
 
-std::string transformDoubleToStringAndRound(double num)
+double ** transposeMatrix(double **  matrix)
 {
+	double ** transposedMatrix = new double*[3];
+	for (int i = 0; i < 3; i++)
+	{
+		transposedMatrix[i] = new double[3];
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			transposedMatrix[i][j] = matrix[j][i];
+		}
+	}
+
+	return transposedMatrix;
+}
+
+double ** invertMatrix(double ** transposedAdjMatrix, double determinant)
+{
+	double ** invertedMatrix = new double *[3];
+
+	for (int i = 0; i < 3; i++)
+	{
+		invertedMatrix[i] = new double[3];
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			invertedMatrix[i][j] = transposedAdjMatrix[i][j] / determinant;
+		}
+	}
+
+	return invertedMatrix;
+}
+
+
+
+std::string transformDoubleToString(double num)
+{
+	double number = round(1000 * num) / 1000.0;
 	std::string result;
-	std::string numStr = std::to_string(num);
+	std::string numStr = std::to_string(number);
 	int length = numStr.size();
 	int counter = 0;
 	for (int i = 0; i < length; i++)
@@ -154,15 +178,46 @@ std::string transformDoubleToStringAndRound(double num)
 	return result;
 }
 
-int main()
+void printFinalMatrix(double ** matrix)
+{
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			std::cout << transformDoubleToString(matrix[i][j]) << "\t\t";
+		}
+		std::cout << std::endl;
+	}
+}
+
+void cleanMatrix(double ** matrix)
+{
+	for (int i = 0; i < 3; i++)
+	{
+		delete[] matrix[i];
+	}
+	delete[] matrix;
+}
+
+int main(int argc, char* argv[])
 {
 	system("chcp 1251> nul");
-	std::string fInPath = "in.txt";
-	std::ifstream fIn;
-	fIn.open(fInPath);
 
-	double matrixIn[3][3];
-	//string matrixFloatIn[3][3];
+	if (argc != 2)
+	{
+		std::cout << "Invalid argument count\n"
+			<< "Usage: invert.exe <matrix file1>\n";
+		return 1;
+	}
+
+	std::ifstream fIn;
+	fIn.open(argv[1]);
+
+	double ** startMatrix = new double* [3];
+	for (int i = 0; i < 3; i++)
+	{
+		startMatrix[i] = new double[3];
+	}
 
 	if (fIn.is_open())
 	{
@@ -170,53 +225,57 @@ int main()
 		{
 			for (int k = 0; k < 3; k++)
 			{
-				// Запись матрицы в двумерный массив.
-				double tempNumber;
-				fIn >> tempNumber;
-				matrixIn[i][k] = tempNumber;
+				double num;
+				fIn >> num;
+				startMatrix[i][k] = num;
 			}
 		}
-		double determinant = findTripleMatrixDeterminant(matrixIn);
+
+		double determinant = findTripleMatrixDeterminant(startMatrix);
+
 		if (determinant == 0)
 		{
 
 			std::cout << "Детерминант матрицы равен нулю, обратной матрицы не существует." << std::endl;
+			return 0;
 		}
-		else
+
+		double ** adjMatrix = new double*[3];
+		for (int i = 0; i < 3; i++)
 		{
-			std::cout << "Детерминант матрицы: " << determinant << std::endl << std::endl;
-
+			adjMatrix[i] = new double[3];
 		}
-		std::cout << std::endl;
-		findAdjugateMatrix(matrixIn);
-		std::cout << std::endl;
-		std::cout << std::endl;
-		//for (int i = 0; i < 3; i++)
-		//{
-		//	for (int k = 0; k < 3; k++)
-		//	{
-		//		double tempNumber;
-		//		tempNumber = (1.0 / matrixIn[i][k]);
-		//		tempNumber = round(1000 * tempNumber) / 1000.0;
-		//		matrixFloatIn[i][k] = transformDoubleToStringAndRound(tempNumber);
-		//		//matrixFloatIn[i][k] = 1.0 / matrixIn[i][k];
-		//	}
-		//}
+		adjMatrix = findTripleAdjugateMatrix(startMatrix);
 
+		double ** transposedMatrix = new double*[3];
+		for (int i = 0; i < 3; i++)
+		{
+			transposedMatrix[i] = new double[3];
+		}
+		transposedMatrix = transposeMatrix(adjMatrix);
 
+		double ** invertedMatrix = new double*[3];
+		for (int i = 0; i < 3; i++)
+		{
+			invertedMatrix[i] = new double[3];
+		}
+		invertedMatrix = invertMatrix(transposedMatrix, determinant);
+
+		printFinalMatrix(invertedMatrix);
+
+		cleanMatrix(startMatrix);
+		cleanMatrix(adjMatrix);
+		cleanMatrix(transposedMatrix);
+		cleanMatrix(invertedMatrix);
+		fIn.close();
 	}
 	else
 	{
 		std::cout << "Couldn't open the file" << std::endl;
+		return 1;
 	}
 
-	for (int i = 0; i < 3; i++)
-	{
-		for (int k = 0; k < 3; k++)
-		{
-			std::cout << matrixIn[i][k] << "\t";
-		}
-		std::cout << std::endl;
-	}
+	
+
 	return 0;
 }
