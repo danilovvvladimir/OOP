@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 
 
 
@@ -22,11 +23,11 @@ char swapBits(char startedByte, std::string mode)
 		{
 			if ((ENCRYPT_OFFSETS[i] - i) >= 0)
 			{
-				maskedByte <<= ENCRYPT_OFFSETS[i] - i;
+				maskedByte = maskedByte << (ENCRYPT_OFFSETS[i] - i);
 			}
 			else
 			{
-				maskedByte >>= i - ENCRYPT_OFFSETS[i];
+				maskedByte = maskedByte >> (i - ENCRYPT_OFFSETS[i]);
 			}
 		}
 		else
@@ -45,14 +46,107 @@ char swapBits(char startedByte, std::string mode)
 	}
 	return finalByte;
 }
+// encrypt decrypt BYTE
 
-
-int main()
+char encryptByte(char currentByte, int key)
 {
-	char ch = 5;
-	ch = swapBits(ch, "crypt");
-	ch = swapBits(ch, "encrypt");
-	std::cout << int(ch) << std::endl;
+	currentByte = currentByte ^ key;
+	return swapBits(currentByte, "crypt");
+}
+char decryptByte(char currentByte, int key)
+{
+	currentByte = swapBits(currentByte, "decrypt");
+	return currentByte ^ key;
+}
+
+void encryptFile(std::istream& inputFile, std::ostream& outputFile, int key)
+{
+	while (!inputFile.eof())
+	{
+		char currentByte;
+		inputFile.read(&currentByte, 1);
+		if (inputFile.eof())
+		{
+			return;
+		}
+		currentByte = encryptByte(currentByte, key);
+
+		outputFile << currentByte;
+	}
+}
+void decryptFile(std::istream& inputFile, std::ostream& outputFile, int key)
+{
+	while (!inputFile.eof())
+	{
+		char currentByte;
+		inputFile.read(&currentByte, 1);
+		if (inputFile.eof())
+		{
+			return;
+		}
+		currentByte = decryptByte(currentByte, key);
+
+		outputFile << currentByte;
+	}
+}
+
+int main(int argc, char* argv[])
+{
+
+	if (argc != 5)
+	{
+		std::cout << "Invalid arguments count\n"
+			<< "Usage crypt.exe crypt <input file> <output file> <key> \n"
+			<< "or\n Usage crypt.exe decrypt <input file> <output file> <key>\n";
+
+		return 1;
+	}
+
+	std::string cryptMode = argv[1];
+	if (cryptMode != "crypt" && cryptMode != "decrypt")
+	{
+		std::cout << "Invalid cryptMode: try \"crypt\" or \"decrypt\"" << std::endl;
+		return 1;
+	}
+	int key = std::stoi(argv[4]);
+	if (key < 0 || key > 255)
+	{
+		std::cout << "Invalid key: key should be in interval 0-255" << std::endl;
+		return 1;
+	}
+
+	std::ifstream inputFile;
+	std::ofstream outputFile;
+	
+	inputFile.open(argv[2], std::ios_base::binary);
+	if (inputFile.is_open())
+	{
+		outputFile.open(argv[3], std::ios_base::binary);
+		if (outputFile.is_open())
+		{
+			if (cryptMode == "crypt")
+			{
+				encryptFile(inputFile, outputFile, key);
+			}
+			else
+			{
+				decryptFile(inputFile, outputFile, key);
+			}
+			outputFile.close();
+			inputFile.close();
+		}
+		else
+		{
+			inputFile.close();
+			std::cout << "Couldn't open OUTPUT file" << std::endl;
+			return 1;
+		}
+	}
+	else
+	{
+		std::cout << "Couldn't open INPUT file" << std::endl;
+		return 1;
+	}
 
 	return 0;
 }
