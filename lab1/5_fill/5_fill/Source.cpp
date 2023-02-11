@@ -1,13 +1,16 @@
 #include <iostream>
 #include <queue>
 #include <vector>
+#include <Windows.h>
 #include <fstream>
 
 using namespace std;
 
-int directionX[4] = { 1, -1, 0, 0 };
-int directionY[4] = { 0, 0, 1, -1 };
-char field[10][10]{ 0 };
+const int MAX_SIZE = 5;
+const int directionX[4] = { 1, -1, 0, 0 };
+const int directionY[4] = { 0, 0, 1, -1 };
+char field[MAX_SIZE][MAX_SIZE]{ 0 };
+
 
 struct Point
 {
@@ -22,27 +25,29 @@ void exploreNeighbours(Point p)
 		Point ttPoint = p;
 		ttPoint.x += directionX[i];
 		ttPoint.y += directionY[i];
-		if (ttPoint.x < 0 || ttPoint.x > 9) continue;
-		if (ttPoint.y < 0 || ttPoint.y > 9) continue;
+		if (ttPoint.x < 0 || ttPoint.x > MAX_SIZE - 1) continue;
+		if (ttPoint.y < 0 || ttPoint.y > MAX_SIZE - 1) continue;
 		if (field[ttPoint.x][ttPoint.y] == '#') continue;
 		if (field[ttPoint.x][ttPoint.y] == 'O') continue;
 		if (field[ttPoint.x][ttPoint.y] == '.') continue;
-		
+
 		field[ttPoint.x][ttPoint.y] = '.';
 		q.push(ttPoint);
 	}
 }
 
-void showField()
+void showField(std::ostream& output)
 {
-	for (int i = 0; i < 10; i++)
+	system("cls");
+	for (int i = 0; i < MAX_SIZE; i++)
 	{
-		for (int j = 0; j < 10; j++)
+		for (int j = 0; j < MAX_SIZE; j++)
 		{
-			cout << field[i][j];
+			output << field[i][j];
 		}
-		cout << endl;
+		output << endl;
 	}
+	Sleep(20);
 }
 
 
@@ -58,11 +63,26 @@ int main()
 	}
 
 	char ch;
-	
-	for (int i = 0; i < 10; i++)
+
+
+	bool isEnd = false;
+
+	for (int i = 0; i < MAX_SIZE; i++)
 	{
-		for (int j = 0; j < 10; j++)
+		for (int j = 0; j < MAX_SIZE+1; j++)
 		{
+			if (j == MAX_SIZE)
+			{
+				isEnd = !isEnd;
+				continue;
+			}
+			if (isEnd)
+			{
+				field[i][j] = '_';
+				continue;
+			}
+			
+			ch = ' ';
 			inputFile.get(ch);
 			if (ch != '\n')
 			{
@@ -70,7 +90,11 @@ int main()
 			}
 			else
 			{
-				j--;
+				isEnd = true;
+				if (j == 0)
+				{
+					j--;
+				}
 			}
 
 			if (ch == 'O')
@@ -81,51 +105,37 @@ int main()
 		}
 	}
 
-	showField();
+	//showField(cout);
 
 	cout << endl << endl;
 
-	cout << startPoints.size() << endl;
 
 	if (startPoints.size() > 0)
 	{
-		q.push(startPoints[0]);
+		for (int i = 0; i < static_cast<int>(startPoints.size()); i++)
+		{
+			q.push(startPoints[i]);
 
-		if (q.empty())
-		{
-			cout << "Q is empty" << endl;
-		}
-		else
-		{
-			cout << "Q not empty" << endl;
-			while (!q.empty())
+			if (!q.empty())
 			{
-				// достаю Point, чекаю соседей
-				Point tempP = q.front();
-				q.pop();
-				exploreNeighbours(tempP);
+				cout << "Q not empty" << endl;
+				while (!q.empty())
+				{
+					Point tempP = q.front();
+					q.pop();
+					exploreNeighbours(tempP);
+					showField(cout);
+				}
 			}
-
 		}
 
 	}
 	inputFile.close();
+	ofstream outputFile;
+	outputFile.open("out.txt");
+	showField(outputFile);
 
-	showField();
-	
-
-	/*queue<Point> q;
-	q.push(Point{ 1, 1 });
-	q.push(Point{ 2, 2 });
-	q.push(Point{ 3, 3 });
-
-	while (!q.empty())
-	{
-		cout << q.front().x << endl;
-		q.pop();
-	}
-	cout << "Queue is empty" << endl;
-*/
+	outputFile.close();
 
 
 	return 0;
