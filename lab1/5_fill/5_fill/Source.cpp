@@ -6,7 +6,7 @@
 
 using namespace std;
 
-const int MAX_SIZE = 5;
+const int MAX_SIZE = 100;
 const int directionX[4] = { 1, -1, 0, 0 };
 const int directionY[4] = { 0, 0, 1, -1 };
 char field[MAX_SIZE][MAX_SIZE]{ 0 };
@@ -38,7 +38,7 @@ void exploreNeighbours(Point p)
 
 void showField(std::ostream& output)
 {
-	system("cls");
+	//system("cls");
 	for (int i = 0; i < MAX_SIZE; i++)
 	{
 		for (int j = 0; j < MAX_SIZE; j++)
@@ -47,7 +47,7 @@ void showField(std::ostream& output)
 		}
 		output << endl;
 	}
-	Sleep(20);
+	//Sleep(20);
 }
 
 
@@ -55,61 +55,82 @@ int main()
 {
 	vector<Point> startPoints;
 	ifstream inputFile;
-	inputFile.open("in.txt");
+	inputFile.open("emp.txt");
 	if (!inputFile.is_open())
 	{
 		cout << "FILE not opened" << endl;
 		return 1;
 	}
 
-	char ch;
-
-
 	bool isEnd = false;
+	bool isN = false;
+	bool isAddN = false;
 
+	char ch;
 	for (int i = 0; i < MAX_SIZE; i++)
 	{
-		for (int j = 0; j < MAX_SIZE+1; j++)
+		for (int j = 0; j < MAX_SIZE; j++)
 		{
-			if (j == MAX_SIZE)
+			ch = ' '; // Если inputFile пуст то вставляется этот символ
+			if (!isN && !isAddN)
 			{
-				isEnd = !isEnd;
-				continue;
+				inputFile.get(ch);
 			}
-			if (isEnd)
+			if (isAddN)
 			{
-				field[i][j] = '_';
-				continue;
+				ch = '\n';
+				isAddN = false;
+				isEnd = true;
 			}
-			
-			ch = ' ';
-			inputFile.get(ch);
-			if (ch != '\n')
-			{
-				field[i][j] = ch;
-			}
-			else
+			if (j == MAX_SIZE - 1)
 			{
 				isEnd = true;
-				if (j == 0)
+				if (isN)
 				{
-					j--;
+					isN = false;
+					ch = ' ';
+					isAddN = true;
+
 				}
 			}
 
+			if (isN && !isEnd)
+			{
+				field[i][j] = ' ';
+				continue;
+			}
+			if (ch != '\n')
+			{
+				if (!isN)
+				{
+					field[i][j] = ch;
+				}
+			}
+			else
+			{
+				if (j == 0 && isEnd)
+				{
+					j--;
+					isEnd = false;
+				}
+				else
+				{
+					
+					isN = true;
+					field[i][j] = ' ';
+					if (j == MAX_SIZE - 1)
+					{
+						isN = false;
+					}
+				}
+			}
 			if (ch == 'O')
 			{
 				startPoints.push_back(Point{ i,j });
 			}
-
 		}
 	}
-
 	//showField(cout);
-
-	cout << endl << endl;
-
-
 	if (startPoints.size() > 0)
 	{
 		for (int i = 0; i < static_cast<int>(startPoints.size()); i++)
@@ -118,13 +139,12 @@ int main()
 
 			if (!q.empty())
 			{
-				cout << "Q not empty" << endl;
 				while (!q.empty())
 				{
 					Point tempP = q.front();
 					q.pop();
 					exploreNeighbours(tempP);
-					showField(cout);
+					//showField(cout);
 				}
 			}
 		}
@@ -134,6 +154,7 @@ int main()
 	ofstream outputFile;
 	outputFile.open("out.txt");
 	showField(outputFile);
+	//showField(cout);
 
 	outputFile.close();
 
