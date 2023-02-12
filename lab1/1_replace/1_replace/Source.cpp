@@ -1,47 +1,47 @@
+#include <fstream>
 #include <iostream>
 #include <string>
-#include <fstream>
 
-int countSubstrings(std::string src, std::string sub) {
-	int start = 0;
-	int counter = 0;
+int CountSubstrings(std::string& src, std::string sub)
+{
+	int startIndex = 0;
+	int counterSubstr = 0;
 	int pos = 0;
 
 	while (true)
 	{
-		pos = src.find(sub.c_str(), start);
-		if (pos != -1) {
-			start = pos + sub.size();
-			counter++;
+		pos = src.find(sub.c_str(), startIndex);
+		if (pos != -1)
+		{
+			startIndex = pos + sub.size();
+			counterSubstr++;
 		}
-		else {
+		else
+		{
 			break;
 		}
 	}
-	return counter;
+	return counterSubstr;
 }
 
-std::string replaceSubstring(std::string mainStr, const std::string& searchString, const std::string& replacementString)
+std::string ReplaceSubstring(const std::string& mainStr, const std::string& searchString, const std::string& replacementString)
 {
 	std::string strResult = mainStr;
 	int searchStringLength = searchString.size();
 	int replacementStringLength = replacementString.size();
 	int startIndex = 0;
-	int substrCounter = countSubstrings(strResult, searchString);
+	int substrCounter = CountSubstrings(strResult, searchString);
 
 	if (substrCounter > 0)
 	{
 		for (int k = 0; k < substrCounter; k++)
 		{
-
 			std::string strFirstHalf = "";
 			std::string strSecondHalf = "";
 			int strResultLength = strResult.size();
 
-
 			int pos = strResult.find(searchString, startIndex);
 			startIndex = pos + replacementStringLength;
-
 
 			for (int i = 0; i < strResultLength; i++)
 			{
@@ -63,7 +63,7 @@ std::string replaceSubstring(std::string mainStr, const std::string& searchStrin
 	return strResult;
 }
 
-void copyStreamWithReplacement(std::istream& input, std::ostream& output, const std::string& searchString, const std::string& replacementString)
+void CopyStreamWithReplacement(std::istream& input, std::ostream& output, const std::string& searchString, const std::string& replacementString)
 {
 	while (!input.eof())
 	{
@@ -71,38 +71,25 @@ void copyStreamWithReplacement(std::istream& input, std::ostream& output, const 
 		std::getline(input, line);
 		if (searchString.size() != 0)
 		{
-			line = replaceSubstring(line, searchString, replacementString);
+			line = ReplaceSubstring(line, searchString, replacementString);
 		}
 		output << line << std::endl;
 	}
 }
 
-int main(int argc, char* argv[])
+int CopyFileWithReplacement(std::string inputFileName, std::string outputFileName, std::string searchedStr, std::string replacedStr)
 {
-	if (argc != 5)
-	{
-		std::cout << "Invalid argument count\n"
-			<< "Usage: replace.exe <inputFile> <outputFile> <searchString> <replacementString>\n";
-		return 1;
-	}
-
-	std::string searchedSubstring = argv[3];
-	std::string replacedSubstring = argv[4];
-
 	std::ifstream inputFile;
-	inputFile.open(argv[1]);
+	inputFile.open(inputFileName);
 
-	
 	if (inputFile.is_open())
 	{
 		std::ofstream outputFile;
-		outputFile.open(argv[2]);
+		outputFile.open(outputFileName);
 		if (outputFile.is_open())
 		{
-			copyStreamWithReplacement(inputFile, outputFile, searchedSubstring, replacedSubstring);
+			CopyStreamWithReplacement(inputFile, outputFile, searchedStr, replacedStr);
 			outputFile.flush();
-			outputFile.close();
-			inputFile.close();
 		}
 		else
 		{
@@ -115,5 +102,24 @@ int main(int argc, char* argv[])
 		std::cout << "INPUT File couldn't been opened" << std::endl;
 		return 1;
 	}
+	return 0;
+}
+
+int main(int argc, char* argv[])
+{
+	if (argc != 5)
+	{
+		std::cout << "Invalid argument count\n"
+				  << "Usage: replace.exe <inputFile> <outputFile> <searchString> <replacementString>\n";
+		return 1;
+	}
+
+	int statusCode = CopyFileWithReplacement(argv[1], argv[2], argv[3], argv[4]);
+	if (statusCode != 0)
+	{
+		return 1;
+	}
+	
+
 	return 0;
 }

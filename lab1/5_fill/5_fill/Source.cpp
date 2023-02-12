@@ -1,8 +1,8 @@
+#include <Windows.h>
+#include <fstream>
 #include <iostream>
 #include <queue>
 #include <vector>
-#include <Windows.h>
-#include <fstream>
 
 using namespace std;
 
@@ -10,7 +10,6 @@ const int MAX_SIZE = 100;
 const int directionX[4] = { 1, -1, 0, 0 };
 const int directionY[4] = { 0, 0, 1, -1 };
 char field[MAX_SIZE][MAX_SIZE]{ 0 };
-
 
 struct Point
 {
@@ -25,11 +24,16 @@ void exploreNeighbours(Point p)
 		Point ttPoint = p;
 		ttPoint.x += directionX[i];
 		ttPoint.y += directionY[i];
-		if (ttPoint.x < 0 || ttPoint.x > MAX_SIZE - 1) continue;
-		if (ttPoint.y < 0 || ttPoint.y > MAX_SIZE - 1) continue;
-		if (field[ttPoint.x][ttPoint.y] == '#') continue;
-		if (field[ttPoint.x][ttPoint.y] == 'O') continue;
-		if (field[ttPoint.x][ttPoint.y] == '.') continue;
+		if (ttPoint.x < 0 || ttPoint.x > MAX_SIZE - 1)
+			continue;
+		if (ttPoint.y < 0 || ttPoint.y > MAX_SIZE - 1)
+			continue;
+		if (field[ttPoint.x][ttPoint.y] == '#')
+			continue;
+		if (field[ttPoint.x][ttPoint.y] == 'O')
+			continue;
+		if (field[ttPoint.x][ttPoint.y] == '.')
+			continue;
 
 		field[ttPoint.x][ttPoint.y] = '.';
 		q.push(ttPoint);
@@ -50,9 +54,12 @@ void showField(std::ostream& output)
 	//Sleep(20);
 }
 
-
 int main()
 {
+	// Игнорирование символов за MAX_SIZE, делается так: если на крайнем J не \n, то пока не будет встречен конец строки inputFile.get(ch);
+	// Вынесение по функциям, validateFile, fill, showField на printField переименовать
+	// Константы для символов
+	// argc, argv
 	vector<Point> startPoints;
 	ifstream inputFile;
 	inputFile.open("emp.txt");
@@ -66,12 +73,13 @@ int main()
 	bool isN = false;
 	bool isAddN = false;
 
+
 	char ch;
 	for (int i = 0; i < MAX_SIZE; i++)
 	{
 		for (int j = 0; j < MAX_SIZE; j++)
 		{
-			ch = ' '; // Если inputFile пуст то вставляется этот символ
+			ch = ' ';
 			if (!isN && !isAddN)
 			{
 				inputFile.get(ch);
@@ -90,7 +98,6 @@ int main()
 					isN = false;
 					ch = ' ';
 					isAddN = true;
-
 				}
 			}
 
@@ -115,7 +122,7 @@ int main()
 				}
 				else
 				{
-					
+
 					isN = true;
 					field[i][j] = ' ';
 					if (j == MAX_SIZE - 1)
@@ -126,7 +133,7 @@ int main()
 			}
 			if (ch == 'O')
 			{
-				startPoints.push_back(Point{ i,j });
+				startPoints.push_back(Point{ i, j });
 			}
 		}
 	}
@@ -148,7 +155,6 @@ int main()
 				}
 			}
 		}
-
 	}
 	inputFile.close();
 	ofstream outputFile;
@@ -157,7 +163,6 @@ int main()
 	//showField(cout);
 
 	outputFile.close();
-
 
 	return 0;
 }
