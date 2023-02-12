@@ -1,11 +1,10 @@
-#include <iostream> 
-#include <string> 
+#include <iostream>
+#include <string>
 
-
-std::string numeralSystemSymbols = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const std::string numeralSystemSymbols = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 bool wasError = false;
 
-std::string reverseString(std::string &str)
+std::string ReverseString(std::string& str)
 {
 	std::string result = str;
 	char temp;
@@ -19,84 +18,83 @@ std::string reverseString(std::string &str)
 	return result;
 }
 
-int stringToInt(const std::string& str, int startedNumeralSystem, bool & wasError)
+int StringToInt(const std::string& str, int startedNumeralSystem, bool& wasError)
 {
-	std::string intMaxString = "2147483647";
-	std::string intMinString = "-2147483647";
-
-	std::string myString = str;
-	if (myString[0] != '-')
-	{
-		if (intMaxString.size() <= myString.size())
-		{
-			if (intMaxString < myString)
-			{
-				wasError = true;
-				return 1;
-			}
-
-		}
-	}
-	else
-	{
-		if (intMinString.size() <= myString.size())
-		{
-			if (intMinString < myString)
-			{
-				wasError = true;
-				return 2;
-			}
-
-		}
-	}
-
 	int result = 0;
 	int digit[91] = { 0 };
-
-
+	bool isNegative = false;
 
 	for (int i = 0; numeralSystemSymbols[i]; i++)
 	{
 		digit[numeralSystemSymbols[i]] = i;
 	}
 
-	for (int i = 0; str[i]; i++)
+	int iter = 0;
+	if (str[0] == '-')
 	{
-		if (digit[str[i]] >= startedNumeralSystem || (digit[str[i]] == 0 && (str[i] != '0' && str[i] != '-')))
+		iter = 1;
+		isNegative = true;
+	}
+	for (int i = iter; str[i]; i++)
+	{
+		if (digit[str[i]] >= startedNumeralSystem || (digit[str[i]] == 0 && (str[i] != '0')) || (int(str[i]) > 90 || int(str[i]) < 48))
 		{
 			wasError = true;
 			return 3;
 		}
-		result = result * startedNumeralSystem + digit[str[i]];
+		if (!isNegative)
+		{
+			result = result * startedNumeralSystem + digit[str[i]];
+		}
+		else
+		{
+			result = result * startedNumeralSystem - digit[str[i]];
+		}
 	}
 
 	if (str[0] == '-')
 	{
-		result = result * -1;
+		if (result != INT_MIN)
+		{
+			if (result > 0)
+			{
+				wasError = true;
+				return 2;
+			}
+		}
 	}
-
-
+	else
+	{
+		if (result < 0)
+		{
+			wasError = true;
+			return 1;
+		}
+	}
 	return result;
 }
 
-std::string intToString(int resInt, int finalNumeralSystem, bool & wasError)
+std::string IntToString(int resInt, int finalNumeralSystem, bool& wasError)
 {
 	std::string result;
 	bool isNegative = false;
+	if (resInt < 0)
+	{
+		isNegative = true;
+	}
 
 	if (resInt == 0)
 	{
 		return "0";
 	}
 
-	if (resInt < 0)
-	{
-		isNegative = true;
-		resInt = resInt * -1;
-	}
 	while (resInt)
 	{
 		int tempResInt = resInt % finalNumeralSystem;
+		if (isNegative)
+		{
+			tempResInt *= -1;
+		}
 		result += numeralSystemSymbols[tempResInt];
 		resInt = resInt / finalNumeralSystem;
 	}
@@ -105,56 +103,61 @@ std::string intToString(int resInt, int finalNumeralSystem, bool & wasError)
 		result += '-';
 	}
 
-	result = reverseString(result);
+	result = ReverseString(result);
 	return result;
 }
 
-void printResult(std::ostream& output, const std::string& strResult)
+int Radix(std::ostream& output, int srcNotation, int destNotation, std::string value)
 {
-	output << "Final: " <<strResult << "\n";
-}
 
-
-
-int main(int argc, char* argv[])
-{
-	// Русские буквы поправить, ограничение только что б английские использовались
-	system("chcp 1251 > nul");
-	if (argc != 4)
+	if (srcNotation < 2 || srcNotation > 36)
 	{
-		std::cout << "Invalid argument count\n"
-			<< "Usage: radix.exe <source notation> <destination notation> <value>\n";
+		std::cout << "Notation should be in interval 2-36\n";
 		return 1;
 	}
-
-	int startedNumeralSystem = atoi(argv[1]);
-	int finalNumeralSystem = atoi(argv[2]);
-	std::string value = argv[3];
-
-	int intResult = (stringToInt(value, startedNumeralSystem, wasError));
-
+	if (destNotation < 2 || destNotation > 36)
+	{
+		std::cout << "Notation should be in interval 2-36\n";
+		return 1;
+	}
+	int intResult = (StringToInt(value, srcNotation, wasError));
 	if (wasError)
 	{
 		if (intResult == 1)
 		{
-			std::cout << "Ошибка. Ввёденное число больше максимально допустимого." << std::endl;
+			std::cout << "Error. Input value is greater than MAX available." << std::endl;
 			return 1;
 		}
 		if (intResult == 2)
 		{
-			std::cout << "Ошибка. Ввёденное число меньше минимально допустимого." << std::endl;
+			std::cout << "Error. Input value is lesser than MIN available." << std::endl;
 			return 1;
 		}
 		if (intResult == 3)
 		{
-			std::cout << "Ошибка. Это число не входит в данную систему счисления." << std::endl;
+			std::cout << "Error. Input value is not in Source notation." << std::endl;
 			return 1;
 		}
-		
+	}
+	std::string strResult = IntToString(intResult, destNotation, wasError);
+	output << strResult << "\n";
+	return 0;
+}
+
+int main(int argc, char* argv[])
+{
+	if (argc != 4)
+	{
+		std::cout << "Invalid argument count\n"
+				  << "Usage: radix.exe <source notation> <destination notation> <value>\n";
+		return 1;
 	}
 
-	std::string strResult = intToString(intResult, finalNumeralSystem, wasError);
-	printResult(std::cout, strResult);
+	int statusCode = Radix(std::cout, atoi(argv[1]), atoi(argv[2]), argv[3]);
+	if (statusCode != 0)
+	{
+		return 1;
+	}
 
 	return 0;
 }

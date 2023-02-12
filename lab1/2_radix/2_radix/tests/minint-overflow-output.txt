@@ -1,0 +1,1 @@
+Error. Input value is lesser than MIN available.
