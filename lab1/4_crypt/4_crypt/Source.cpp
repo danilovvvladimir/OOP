@@ -1,11 +1,6 @@
+#include <fstream>
 #include <iostream>
 #include <string>
-#include <fstream>
-
-
-
-
-
 
 char swapBits(char startedByte, std::string mode)
 {
@@ -40,7 +35,6 @@ char swapBits(char startedByte, std::string mode)
 			{
 				maskedByte = maskedByte >> (i - DECRYPT_OFFSETS[i]);
 			}
-
 		}
 		finalByte = finalByte | maskedByte;
 	}
@@ -90,25 +84,15 @@ void decryptFile(std::istream& inputFile, std::ostream& outputFile, int key)
 	}
 }
 
-int main(int argc, char* argv[])
+int HandleCryptation(std::string mode, std::string inputFilePath, std::string outputFilePath, std::string keyString)
 {
-
-	if (argc != 5)
-	{
-		std::cout << "Invalid arguments count\n"
-			<< "Usage crypt.exe crypt <input file> <output file> <key> \n"
-			<< "or\n Usage crypt.exe decrypt <input file> <output file> <key>\n";
-
-		return 1;
-	}
-
-	std::string cryptMode = argv[1];
+	std::string cryptMode = mode;
 	if (cryptMode != "crypt" && cryptMode != "decrypt")
 	{
 		std::cout << "Invalid cryptMode: try \"crypt\" or \"decrypt\"" << std::endl;
 		return 1;
 	}
-	int key = std::stoi(argv[4]);
+	int key = std::stoi(keyString);
 	if (key < 0 || key > 255)
 	{
 		std::cout << "Invalid key: key should be in interval 0-255" << std::endl;
@@ -117,11 +101,11 @@ int main(int argc, char* argv[])
 
 	std::ifstream inputFile;
 	std::ofstream outputFile;
-	
-	inputFile.open(argv[2], std::ios_base::binary);
+
+	inputFile.open(inputFilePath, std::ios_base::binary);
 	if (inputFile.is_open())
 	{
-		outputFile.open(argv[3], std::ios_base::binary);
+		outputFile.open(outputFilePath, std::ios_base::binary);
 		if (outputFile.is_open())
 		{
 			if (cryptMode == "crypt")
@@ -132,8 +116,8 @@ int main(int argc, char* argv[])
 			{
 				decryptFile(inputFile, outputFile, key);
 			}
-			outputFile.close();
-			inputFile.close();
+			//outputFile.close();
+			//inputFile.close();
 		}
 		else
 		{
@@ -145,6 +129,27 @@ int main(int argc, char* argv[])
 	else
 	{
 		std::cout << "Couldn't open INPUT file" << std::endl;
+		return 1;
+	}
+
+	return 0;
+}
+
+int main(int argc, char* argv[])
+{
+
+	if (argc != 5)
+	{
+		std::cout << "Invalid arguments count\n"
+				  << "Usage crypt.exe crypt <input file> <output file> <key> \n"
+				  << "or\n Usage crypt.exe decrypt <input file> <output file> <key>\n";
+
+		return 1;
+	}
+
+	int statusCode = HandleCryptation(argv[1], argv[2], argv[3], argv[4]);
+	if (statusCode != 0)
+	{
 		return 1;
 	}
 
