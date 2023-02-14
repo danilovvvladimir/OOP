@@ -1,11 +1,16 @@
 #include <fstream>
 #include <iostream>
+#include <optional>
 #include <string>
+
+struct Args
+{
+	std::string matrixFileName;
+};
 
 double FindTripleMatrixDeterminant(double** matrix)
 {
-	double determinant = (((matrix[0][0] * matrix[1][1] * matrix[2][2]) + (matrix[0][2] * matrix[1][0] * matrix[2][1]) + (matrix[0][1] * matrix[1][2] * matrix[2][0])) - 
-		((matrix[0][2] * matrix[1][1] * matrix[2][0]) + (matrix[0][1] * matrix[1][0] * matrix[2][2]) + (matrix[0][0] * matrix[1][2] * matrix[2][1])));
+	double determinant = (((matrix[0][0] * matrix[1][1] * matrix[2][2]) + (matrix[0][2] * matrix[1][0] * matrix[2][1]) + (matrix[0][1] * matrix[1][2] * matrix[2][0])) - ((matrix[0][2] * matrix[1][1] * matrix[2][0]) + (matrix[0][1] * matrix[1][0] * matrix[2][2]) + (matrix[0][0] * matrix[1][2] * matrix[2][1])));
 	return determinant;
 }
 
@@ -145,8 +150,7 @@ double** InvertMatrix(double** transposedAdjMatrix, double determinant)
 	return invertedMatrix;
 }
 
-
-std::string TransformDoubleToString(double num)
+std::string TransformDoubleToCorrectString(double num)
 {
 	double number = round(1000 * num) / 1000.0;
 	std::string result;
@@ -174,7 +178,7 @@ void PrintMatrix(std::ostream& output, double** matrix)
 	{
 		for (int j = 0; j < 3; j++)
 		{
-			output << TransformDoubleToString(matrix[i][j]) << "\t\t";
+			output << TransformDoubleToCorrectString(matrix[i][j]) << "\t\t";
 		}
 		output << std::endl;
 	}
@@ -189,7 +193,18 @@ void CleanDinamicMatrix(double** matrix)
 	delete[] matrix;
 }
 
-int PrintInvertedMatrix(std::string inputFilePath, std::ostream& output)
+double** createTripleMatrix()
+{
+	double** TripleMatrix = new double*[3];
+	for (int i = 0; i < 3; i++)
+	{
+		TripleMatrix[i] = new double[3];
+	}
+
+	return TripleMatrix;
+}
+
+int Invert(std::string inputFilePath, std::ostream& output)
 {
 	std::ifstream fIn;
 	fIn.open(inputFilePath);
@@ -200,73 +215,73 @@ int PrintInvertedMatrix(std::string inputFilePath, std::ostream& output)
 		startMatrix[i] = new double[3];
 	}
 
-	if (fIn.is_open())
-	{
-		for (int i = 0; i < 3; i++)
-		{
-			for (int k = 0; k < 3; k++)
-			{
-				double num;
-				fIn >> num;
-				startMatrix[i][k] = num;
-			}
-		}
-
-		double determinant = FindTripleMatrixDeterminant(startMatrix);
-
-		if (determinant == 0)
-		{
-			std::cout << "Inverted matrix for this matrix doesn't exist." << std::endl;
-			return 1;
-		}
-
-		double** adjMatrix = new double*[3];
-		for (int i = 0; i < 3; i++)
-		{
-			adjMatrix[i] = new double[3];
-		}
-		adjMatrix = FindTripleAdjugateMatrix(startMatrix);
-
-		double** transposedMatrix = new double*[3];
-		for (int i = 0; i < 3; i++)
-		{
-			transposedMatrix[i] = new double[3];
-		}
-		transposedMatrix = TransposeMatrix(adjMatrix);
-
-		double** invertedMatrix = new double*[3];
-		for (int i = 0; i < 3; i++)
-		{
-			invertedMatrix[i] = new double[3];
-		}
-		invertedMatrix = InvertMatrix(transposedMatrix, determinant);
-
-		PrintMatrix(output, invertedMatrix);
-
-		CleanDinamicMatrix(startMatrix);
-		CleanDinamicMatrix(adjMatrix);
-		CleanDinamicMatrix(transposedMatrix);
-		CleanDinamicMatrix(invertedMatrix);
-	}
-	else
+	if (!fIn.is_open())
 	{
 		std::cout << "Couldn't open the file" << std::endl;
 		return 1;
 	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		for (int k = 0; k < 3; k++)
+		{
+			double num;
+			fIn >> num;
+			startMatrix[i][k] = num;
+		}
+	}
+
+	double determinant = FindTripleMatrixDeterminant(startMatrix);
+
+	if (determinant == 0)
+	{
+		std::cout << "Inverted matrix for this matrix doesn't exist." << std::endl;
+		return 1;
+	}
+
+	double** adjMatrix = createTripleMatrix();
+	adjMatrix = FindTripleAdjugateMatrix(startMatrix);
+
+	double** transposedMatrix = createTripleMatrix();
+	transposedMatrix = TransposeMatrix(adjMatrix);
+
+	double** invertedMatrix = createTripleMatrix();
+	invertedMatrix = InvertMatrix(transposedMatrix, determinant);
+
+	PrintMatrix(output, invertedMatrix);
+
+	CleanDinamicMatrix(startMatrix);
+	CleanDinamicMatrix(adjMatrix);
+	CleanDinamicMatrix(transposedMatrix);
+	CleanDinamicMatrix(invertedMatrix);
+
 	return 0;
+}
+
+std::optional<Args> ParseArgs(int argc, char* argv[])
+{
+	if (argc != 2)
+	{
+		std::cout << "Invalid arguments count" << std::endl;
+		std::cout << "Usage: Invert.exe <matrix file name>" << std::endl;
+		return std::nullopt;
+	}
+
+	Args args;
+	args.matrixFileName = argv[1];
+	return args;
 }
 
 int main(int argc, char* argv[])
 {
-	if (argc != 2)
+	auto args = ParseArgs(argc, argv);
+
+	if (!args)
 	{
-		std::cout << "Invalid argument count\n"
-				  << "Usage: invert.exe <matrix file1>\n";
 		return 1;
 	}
 
-
-	int statusCode = PrintInvertedMatrix(argv[1], std::cout);
+	int statusCode = Invert(args->matrixFileName, std::cout);
 	if (statusCode != 0)
 	{
 		return 1;

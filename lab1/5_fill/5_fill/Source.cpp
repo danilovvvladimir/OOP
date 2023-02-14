@@ -1,8 +1,31 @@
 #include <Windows.h>
 #include <fstream>
 #include <iostream>
+#include <optional>
 #include <queue>
 #include <vector>
+
+struct Args
+{
+	std::string inputFilePath;
+	std::string outputFilePath;
+};
+
+std::optional<Args> ParseArgs(int argc, char* argv[])
+{
+	if (argc != 3)
+	{
+		std::cout << "Invalid arguments count\n"
+				  << "Usage fill.exe <input file> <output file>\n";
+
+		return std::nullopt;
+	}
+
+	Args args;
+	args.inputFilePath = argv[1];
+	args.outputFilePath = argv[2];
+	return args;
+}
 
 const char CH_SPACE = ' ';
 const char CH_SPACE2 = '_';
@@ -21,7 +44,7 @@ struct Point
 std::vector<Point> startPoints;
 char field[MAX_SIZE][MAX_SIZE]{ 0 };
 
-std::queue<Point> q;
+std::queue<Point> queue;
 
 void exploreNeighbours(Point p)
 {
@@ -42,7 +65,7 @@ void exploreNeighbours(Point p)
 			continue;
 
 		field[neighbourPoint.x][neighbourPoint.y] = CH_DOT;
-		q.push(neighbourPoint);
+		queue.push(neighbourPoint);
 	}
 }
 
@@ -60,7 +83,7 @@ void showField(std::ostream& output)
 void validateField(std::ifstream& inputFile)
 {
 	bool markerEndLine = false;
-	bool markerLoop = false;
+	bool markerNotEndLoop = false;
 	bool markerEndLineLoop = false;
 
 	char ch;
@@ -68,7 +91,6 @@ void validateField(std::ifstream& inputFile)
 	{
 		for (int j = 0; j < MAX_SIZE; j++)
 		{
-
 			ch = CH_SPACE;
 			if (markerEndLineLoop)
 			{
@@ -85,11 +107,11 @@ void validateField(std::ifstream& inputFile)
 				markerEndLineLoop = false;
 			}
 
-			if (markerLoop)
+			if (markerNotEndLoop)
 			{
 				if (j == MAX_SIZE - 1)
 				{
-					markerLoop = false;
+					markerNotEndLoop = false;
 				}
 				field[i][j] = ch;
 				continue;
@@ -108,27 +130,18 @@ void validateField(std::ifstream& inputFile)
 			{
 				if (!markerEndLine)
 				{
-					markerLoop = true;
-					j--;
-					continue;
+					markerNotEndLoop = true;
 				}
-				else
-				{
-					j--;
-					continue;
-				}
+				j--;
+				continue;
 			}
 			else
 			{
 				if (markerEndLine)
 				{
 					markerEndLineLoop = true;
-					field[i][j] = ch;
 				}
-				else
-				{
-					field[i][j] = ch;
-				}
+				field[i][j] = ch;
 			}
 
 			if (ch == CH_FILL_POINT)
@@ -145,16 +158,13 @@ void fillField()
 	{
 		for (int i = 0; i < static_cast<int>(startPoints.size()); i++)
 		{
-			q.push(startPoints[i]);
+			queue.push(startPoints[i]);
 
-			if (!q.empty())
+			while (!queue.empty())
 			{
-				while (!q.empty())
-				{
-					Point tempP = q.front();
-					q.pop();
-					exploreNeighbours(tempP);
-				}
+				Point queueBottomPoint = queue.front();
+				queue.pop();
+				exploreNeighbours(queueBottomPoint);
 			}
 		}
 	}
@@ -165,40 +175,31 @@ int HandleFill(std::string inputFilePath, std::string outputFilePath)
 	std::ifstream inputFile;
 	inputFile.open(inputFilePath);
 
-	if (inputFile.is_open())
-	{
-		validateField(inputFile);
-		fillField();
-		std::ofstream outputFile;
-		outputFile.open(outputFilePath);
-		if (outputFile.is_open())
-		{
-
-			showField(outputFile);
-		}
-		else
-		{
-			std::cout << "OUTFILE not opened" << std::endl;
-			return 1;
-		}
-	}
-	else
+	if (!inputFile.is_open())
 	{
 		std::cout << "INFILE not opened" << std::endl;
 		return 1;
 	}
+	validateField(inputFile);
+	fillField();
+	std::ofstream outputFile;
+	outputFile.open(outputFilePath);
+	if (!outputFile.is_open())
+	{
+		std::cout << "OUTFILE not opened" << std::endl;
+		return 1;
+	}
+
+	showField(outputFile);
 
 	return 0;
 }
 
 int main(int argc, char* argv[])
 {
-
-	if (argc != 3)
+	auto args = ParseArgs(argc, argv);
+	if (!args)
 	{
-		std::cout << "Invalid arguments count\n"
-				  << "Usage fill.exe <input file> <output file>\n";
-
 		return 1;
 	}
 
