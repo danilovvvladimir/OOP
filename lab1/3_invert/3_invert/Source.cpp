@@ -1,12 +1,33 @@
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <optional>
 #include <string>
+
+const int TASK_PRECISION = 3;
 
 struct Args
 {
 	std::string matrixFileName;
 };
+double** CreateDynamicMatrix(int n)
+{
+	double** dynamicMatrix = new double*[n];
+	for (int i = 0; i < n; i++)
+	{
+		dynamicMatrix[i] = new double[n];
+	}
+	return dynamicMatrix;
+}
+
+void CleanDynamicMatrix(double** matrix, int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		delete[] matrix[i];
+	}
+	delete[] matrix;
+}
 
 double FindTripleMatrixDeterminant(double** matrix)
 {
@@ -14,92 +35,92 @@ double FindTripleMatrixDeterminant(double** matrix)
 	return determinant;
 }
 
-double FindDoubleMatrixDeterminant(double matrix[][2])
+double FindDoubleMatrixDeterminant(double** matrix)
 {
 	double determinant = ((matrix[0][0] * matrix[1][1]) - (matrix[0][1] * matrix[1][0]));
 	return determinant;
 }
 
+void fillDoubleMinor(int i, int j, double** minor, double** matrix)
+{
+	if (i == 0 && j == 0)
+	{
+		minor[0][0] = matrix[1][1];
+		minor[0][1] = matrix[1][2];
+		minor[1][0] = matrix[2][1];
+		minor[1][1] = matrix[2][2];
+	}
+	if (i == 0 && j == 1)
+	{
+		minor[0][0] = matrix[1][0];
+		minor[0][1] = matrix[1][2];
+		minor[1][0] = matrix[2][0];
+		minor[1][1] = matrix[2][2];
+	}
+	if (i == 0 && j == 2)
+	{
+		minor[0][0] = matrix[1][0];
+		minor[0][1] = matrix[1][1];
+		minor[1][0] = matrix[2][0];
+		minor[1][1] = matrix[2][1];
+	}
+	//
+	if (i == 1 && j == 0)
+	{
+		minor[0][0] = matrix[0][1];
+		minor[0][1] = matrix[0][2];
+		minor[1][0] = matrix[2][1];
+		minor[1][1] = matrix[2][2];
+	}
+	if (i == 1 && j == 1)
+	{
+		minor[0][0] = matrix[0][0];
+		minor[0][1] = matrix[0][2];
+		minor[1][0] = matrix[2][0];
+		minor[1][1] = matrix[2][2];
+	}
+	if (i == 1 && j == 2)
+	{
+		minor[0][0] = matrix[0][0];
+		minor[0][1] = matrix[0][1];
+		minor[1][0] = matrix[2][0];
+		minor[1][1] = matrix[2][1];
+	}
+	//
+	if (i == 2 && j == 0)
+	{
+		minor[0][0] = matrix[0][1];
+		minor[0][1] = matrix[0][2];
+		minor[1][0] = matrix[1][1];
+		minor[1][1] = matrix[1][2];
+	}
+	if (i == 2 && j == 1)
+	{
+		minor[0][0] = matrix[0][0];
+		minor[0][1] = matrix[0][2];
+		minor[1][0] = matrix[1][0];
+		minor[1][1] = matrix[1][2];
+	}
+	if (i == 2 && j == 2)
+	{
+		minor[0][0] = matrix[0][0];
+		minor[0][1] = matrix[0][1];
+		minor[1][0] = matrix[1][0];
+		minor[1][1] = matrix[1][1];
+	}
+}
+
 double** FindTripleAdjugateMatrix(double** matrix)
 {
-	double** adjugateMatrix = new double*[3];
-	for (int i = 0; i < 3; i++)
-	{
-		adjugateMatrix[i] = new double[3];
-	}
-	double minorAdjugateMatrix[2][2];
+	double** adjugateMatrix = CreateDynamicMatrix(3);
+	double** minorAdjugateMatrix = CreateDynamicMatrix(2);
 
 	bool isMinus = false;
 	for (int i = 0; i < 3; i++)
 	{
 		for (int j = 0; j < 3; j++)
 		{
-			if (i == 0 && j == 0)
-			{
-				minorAdjugateMatrix[0][0] = matrix[1][1];
-				minorAdjugateMatrix[0][1] = matrix[1][2];
-				minorAdjugateMatrix[1][0] = matrix[2][1];
-				minorAdjugateMatrix[1][1] = matrix[2][2];
-			}
-			if (i == 0 && j == 1)
-			{
-				minorAdjugateMatrix[0][0] = matrix[1][0];
-				minorAdjugateMatrix[0][1] = matrix[1][2];
-				minorAdjugateMatrix[1][0] = matrix[2][0];
-				minorAdjugateMatrix[1][1] = matrix[2][2];
-			}
-			if (i == 0 && j == 2)
-			{
-				minorAdjugateMatrix[0][0] = matrix[1][0];
-				minorAdjugateMatrix[0][1] = matrix[1][1];
-				minorAdjugateMatrix[1][0] = matrix[2][0];
-				minorAdjugateMatrix[1][1] = matrix[2][1];
-			}
-			//
-			if (i == 1 && j == 0)
-			{
-				minorAdjugateMatrix[0][0] = matrix[0][1];
-				minorAdjugateMatrix[0][1] = matrix[0][2];
-				minorAdjugateMatrix[1][0] = matrix[2][1];
-				minorAdjugateMatrix[1][1] = matrix[2][2];
-			}
-			if (i == 1 && j == 1)
-			{
-				minorAdjugateMatrix[0][0] = matrix[0][0];
-				minorAdjugateMatrix[0][1] = matrix[0][2];
-				minorAdjugateMatrix[1][0] = matrix[2][0];
-				minorAdjugateMatrix[1][1] = matrix[2][2];
-			}
-			if (i == 1 && j == 2)
-			{
-				minorAdjugateMatrix[0][0] = matrix[0][0];
-				minorAdjugateMatrix[0][1] = matrix[0][1];
-				minorAdjugateMatrix[1][0] = matrix[2][0];
-				minorAdjugateMatrix[1][1] = matrix[2][1];
-			}
-			//
-			if (i == 2 && j == 0)
-			{
-				minorAdjugateMatrix[0][0] = matrix[0][1];
-				minorAdjugateMatrix[0][1] = matrix[0][2];
-				minorAdjugateMatrix[1][0] = matrix[1][1];
-				minorAdjugateMatrix[1][1] = matrix[1][2];
-			}
-			if (i == 2 && j == 1)
-			{
-				minorAdjugateMatrix[0][0] = matrix[0][0];
-				minorAdjugateMatrix[0][1] = matrix[0][2];
-				minorAdjugateMatrix[1][0] = matrix[1][0];
-				minorAdjugateMatrix[1][1] = matrix[1][2];
-			}
-			if (i == 2 && j == 2)
-			{
-				minorAdjugateMatrix[0][0] = matrix[0][0];
-				minorAdjugateMatrix[0][1] = matrix[0][1];
-				minorAdjugateMatrix[1][0] = matrix[1][0];
-				minorAdjugateMatrix[1][1] = matrix[1][1];
-			}
-
+			fillDoubleMinor(i, j, minorAdjugateMatrix, matrix);
 			adjugateMatrix[i][j] = FindDoubleMatrixDeterminant(minorAdjugateMatrix);
 			if (isMinus && (adjugateMatrix[i][j] != 0))
 			{
@@ -108,6 +129,7 @@ double** FindTripleAdjugateMatrix(double** matrix)
 			isMinus = !isMinus;
 		}
 	}
+	CleanDynamicMatrix(minorAdjugateMatrix, 2);
 	return adjugateMatrix;
 }
 
@@ -150,58 +172,30 @@ double** InvertMatrix(double** transposedAdjMatrix, double determinant)
 	return invertedMatrix;
 }
 
-std::string TransformDoubleToCorrectString(double num)
-{
-	double number = round(1000 * num) / 1000.0;
-	std::string result;
-	std::string numStr = std::to_string(number);
-	int length = numStr.size();
-	int counter = 0;
-	for (int i = 0; i < length; i++)
-	{
-		if (counter == 4)
-		{
-			break;
-		}
-		if (numStr[i] == '.' || counter > 0)
-		{
-			counter++;
-		}
-		result += numStr[i];
-	}
-	return result;
-}
-
 void PrintMatrix(std::ostream& output, double** matrix)
 {
 	for (int i = 0; i < 3; i++)
 	{
 		for (int j = 0; j < 3; j++)
 		{
-			output << TransformDoubleToCorrectString(matrix[i][j]) << "\t\t";
+			output << std::fixed << std::setprecision(TASK_PRECISION);
+			output << matrix[i][j] << "\t\t";
 		}
 		output << std::endl;
 	}
 }
 
-void CleanDinamicMatrix(double** matrix)
+void ReadInputToMatrix(std::istream& input, double** matrix)
 {
+	double num;
 	for (int i = 0; i < 3; i++)
 	{
-		delete[] matrix[i];
+		for (int k = 0; k < 3; k++)
+		{
+			input >> num;
+			matrix[i][k] = num;
+		}
 	}
-	delete[] matrix;
-}
-
-double** createTripleMatrix()
-{
-	double** TripleMatrix = new double*[3];
-	for (int i = 0; i < 3; i++)
-	{
-		TripleMatrix[i] = new double[3];
-	}
-
-	return TripleMatrix;
 }
 
 int Invert(std::string inputFilePath, std::ostream& output)
@@ -209,27 +203,14 @@ int Invert(std::string inputFilePath, std::ostream& output)
 	std::ifstream fIn;
 	fIn.open(inputFilePath);
 
-	double** startMatrix = new double*[3];
-	for (int i = 0; i < 3; i++)
-	{
-		startMatrix[i] = new double[3];
-	}
-
 	if (!fIn.is_open())
 	{
 		std::cout << "Couldn't open the file" << std::endl;
 		return 1;
 	}
 
-	for (int i = 0; i < 3; i++)
-	{
-		for (int k = 0; k < 3; k++)
-		{
-			double num;
-			fIn >> num;
-			startMatrix[i][k] = num;
-		}
-	}
+	double** startMatrix = CreateDynamicMatrix(3);
+	ReadInputToMatrix(fIn, startMatrix);
 
 	double determinant = FindTripleMatrixDeterminant(startMatrix);
 
@@ -239,21 +220,21 @@ int Invert(std::string inputFilePath, std::ostream& output)
 		return 1;
 	}
 
-	double** adjMatrix = createTripleMatrix();
+	double** adjMatrix = CreateDynamicMatrix(3);
 	adjMatrix = FindTripleAdjugateMatrix(startMatrix);
 
-	double** transposedMatrix = createTripleMatrix();
+	double** transposedMatrix = CreateDynamicMatrix(3);
 	transposedMatrix = TransposeMatrix(adjMatrix);
 
-	double** invertedMatrix = createTripleMatrix();
+	double** invertedMatrix = CreateDynamicMatrix(3);
 	invertedMatrix = InvertMatrix(transposedMatrix, determinant);
 
 	PrintMatrix(output, invertedMatrix);
 
-	CleanDinamicMatrix(startMatrix);
-	CleanDinamicMatrix(adjMatrix);
-	CleanDinamicMatrix(transposedMatrix);
-	CleanDinamicMatrix(invertedMatrix);
+	CleanDynamicMatrix(startMatrix, 3);
+	CleanDynamicMatrix(adjMatrix, 3);
+	CleanDynamicMatrix(transposedMatrix, 3);
+	CleanDynamicMatrix(invertedMatrix, 3);
 
 	return 0;
 }
