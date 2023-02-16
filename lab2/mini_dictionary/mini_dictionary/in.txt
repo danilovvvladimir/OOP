@@ -1,10 +1,22 @@
-black dog
-черная собака
-red circle
-красный круг
+bye
+пока
+bye
+до свидания
+cat
+кошка
+cat
+кот
+frog
+лягушка
+goodbye
+пока
+hello
+привет
+horse
+лошадь
+later
+пока
 the red square
 красная площадь
-белая кошка
-white cat
-мой
-my
+word
+слово

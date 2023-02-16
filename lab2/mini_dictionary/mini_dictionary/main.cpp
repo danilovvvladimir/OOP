@@ -6,9 +6,11 @@
 
 int main()
 {
+	//trim нужно добавить
 	system("chcp 1251 > nul");
-
-	std::multimap<std::string, std::string> dictionary;
+	std::multimap<std::string, std::string> enToRuDict;
+	std::multimap<std::string, std::string> ruToEnDict;
+	std::multimap<std::string, std::string> mainDict;
 
 	std::fstream inputFile;
 	inputFile.open("in.txt");
@@ -18,27 +20,76 @@ int main()
 		std::getline(inputFile, engWord);
 		std::string ruWord;
 		std::getline(inputFile, ruWord);
-		//std::transform(engWord.begin(), engWord.end(), engWord.begin(), [](unsigned char c) { return tolower(c); });
-		//std::transform(ruWord.begin(), ruWord.end(), ruWord.begin(), [](unsigned char c) { return tolower(c); });
 
-		dictionary.emplace(engWord, ruWord);
-		dictionary.emplace(ruWord, engWord);
+		enToRuDict.emplace(engWord, ruWord);
+		ruToEnDict.emplace(ruWord, engWord);
 	}
 	std::string searchedString;
 	bool isWordAdded = false;
 
+	bool isRussian = false;
 	while (searchedString != "...")
 	{
+		isRussian = false;
 		std::getline(std::cin, searchedString);
+
 		if (searchedString == "...")
 		{
 			break;
 		}
-		auto it = dictionary.find(searchedString);
 
-		if (it != dictionary.end())
+		if (searchedString[0] > -65 && searchedString[0] < 0)
 		{
-			std::cout << it->second << std::endl;
+			isRussian = true;
+			mainDict = ruToEnDict;
+		}
+		else
+		{
+			mainDict = enToRuDict;
+		}
+
+		if (isRussian)
+		{
+			std::transform(searchedString.begin(), searchedString.end(), searchedString.begin(), [](char c) {
+				if (c < -32)
+				{
+					return char(int(c + 32));
+				}
+				else
+				{
+					return c;
+				}
+			});
+		}
+		else
+		{
+			std::transform(searchedString.begin(), searchedString.end(), searchedString.begin(), [](unsigned char c) { return tolower(c); });
+		}
+
+		auto it = mainDict.find(searchedString);
+
+		if (it != mainDict.end())
+		{
+			auto it = mainDict.find(searchedString);
+			int counter = 0;
+			while (it != mainDict.end())
+			{
+				if (it->first == searchedString)
+				{
+					if (counter > 0)
+					{
+						std::cout << ", ";
+					}
+					std::cout << it->second;
+					it++;
+					counter++;
+				}
+				else
+				{
+					std::cout << std::endl;
+					break;
+				}
+			}
 		}
 		else
 		{
@@ -48,8 +99,17 @@ int main()
 			if (translationString != "")
 			{
 				isWordAdded = true;
-				dictionary.emplace(searchedString, translationString);
-				dictionary.emplace(translationString, searchedString);
+				if (isRussian)
+				{
+					ruToEnDict.emplace(searchedString, translationString);
+					enToRuDict.emplace(translationString, searchedString);
+				}
+				else
+				{
+					enToRuDict.emplace(searchedString, translationString);
+					ruToEnDict.emplace(translationString, searchedString);
+				}
+				std::cout << "—лово У" << searchedString << "Ф добавлено с переводом У" << translationString << "Ф." << std::endl;
 			}
 			else
 			{
@@ -67,21 +127,12 @@ int main()
 			inputFile.close();
 			inputFile.open("in.txt");
 
-			int counter = 1;
-			for (auto mapElement : dictionary)
+			for (auto mapElement : enToRuDict)
 			{
 				if (mapElement.first != "" && mapElement.second != "")
 				{
-					if (counter % 2 != 0)
-					{
-						inputFile << mapElement.first << std::endl;
-						inputFile << mapElement.second << std::endl;
-						counter++;
-					}
-					else
-					{
-						counter--;
-					}
+					inputFile << mapElement.first << std::endl;
+					inputFile << mapElement.second << std::endl;
 				}
 			}
 			std::cout << "»зменени€ сохранены. ƒо свидани€." << std::endl;
