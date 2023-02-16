@@ -1,9 +1,9 @@
 #include <algorithm>
+#include <iomanip>
 #include <iostream>
 #include <iterator>
 #include <string>
 #include <vector>
-#include <iomanip>
 
 const int PRECISION = 3;
 
@@ -26,6 +26,26 @@ void PrintSortedVector(std::vector<double>& outputVector, std::ostream& output)
 	std::copy(outputVector.begin(), outputVector.end(), std::ostream_iterator<double>(std::cout, " "));
 }
 
+double FindMinElementInVector(std::vector<double>& outputVector)
+{
+	double minElement = INT_MAX;
+	std::for_each(outputVector.begin(), outputVector.end(), [&](const double& elem) {
+		if (elem < minElement)
+		{
+			minElement = elem;
+		}
+	});
+	return minElement;
+}
+
+void MultiplyEveryElementByMin(std::vector<double>& outputVector)
+{
+	double minValue = FindMinElementInVector(outputVector);
+	std::for_each(outputVector.begin(), outputVector.end(), [&](double& elem) {
+		elem *= minValue;
+	});
+}
+
 int main()
 {
 	std::vector<double> numbers;
@@ -36,6 +56,7 @@ int main()
 		return 1;
 	}
 
+	MultiplyEveryElementByMin(numbers);
 	PrintSortedVector(numbers, std::cout);
 
 	return 0;
