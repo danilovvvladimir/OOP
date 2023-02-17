@@ -5,6 +5,22 @@
 #include <queue>
 #include <vector>
 
+const char CH_SPACE = ' ';
+const char CH_SPACE2 = '_';
+const char CH_DOT = '.';
+const char CH_WALL = '#';
+const char CH_FILL_POINT = 'O';
+
+const int MAX_SIZE = 100;
+
+const int directionX[4] = { 1, -1, 0, 0 };
+const int directionY[4] = { 0, 0, 1, -1 };
+
+struct Point
+{
+	int x, y;
+};
+
 struct Args
 {
 	std::string inputFilePath;
@@ -27,24 +43,9 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 	return args;
 }
 
-const char CH_SPACE = ' ';
-const char CH_SPACE2 = '_';
-const char CH_DOT = '.';
-const char CH_WALL = '#';
-const char CH_FILL_POINT = 'O';
-
-const int MAX_SIZE = 100;
-const int directionX[4] = { 1, -1, 0, 0 };
-const int directionY[4] = { 0, 0, 1, -1 };
-
-struct Point
-{
-	int x, y;
-};
 std::vector<Point> startPoints;
-char field[MAX_SIZE][MAX_SIZE]{ 0 };
-
 std::queue<Point> queue;
+char field[MAX_SIZE][MAX_SIZE]{ 0 };
 
 void exploreNeighbours(Point p)
 {
@@ -80,6 +81,48 @@ void showField(std::ostream& output)
 		output << std::endl;
 	}
 }
+int CheckChInField(char& ch, int i, int& j, bool& markerEndLine, bool& markerNotEndLoop, bool& markerEndLineLoop)
+{
+	if (ch == '\n')
+	{
+		if (!markerEndLine)
+		{
+			markerNotEndLoop = true;
+		}
+		j--;
+		return 1;
+	}
+	else
+	{
+		if (markerEndLine)
+		{
+			markerEndLineLoop = true;
+		}
+		field[i][j] = ch;
+	}
+
+	if (ch == CH_FILL_POINT)
+	{
+		startPoints.push_back(Point{ i, j });
+	}
+	return 0;
+}
+
+void HandleEndLineLoop(char& ch, std::ifstream& inputFile, bool& markerEndLine, bool& markerEndLineLoop)
+{
+	ch = CH_SPACE2;
+	while (ch != '\n')
+	{
+		inputFile.get(ch);
+		if (ch == CH_SPACE2)
+		{
+			ch = '\n';
+		}
+	}
+	markerEndLine = false;
+	markerEndLineLoop = false;
+}
+
 void validateField(std::ifstream& inputFile)
 {
 	bool markerEndLine = false;
@@ -94,17 +137,7 @@ void validateField(std::ifstream& inputFile)
 			ch = CH_SPACE;
 			if (markerEndLineLoop)
 			{
-				ch = CH_SPACE2;
-				while (ch != '\n')
-				{
-					inputFile.get(ch);
-					if (ch == CH_SPACE2)
-					{
-						ch = '\n';
-					}
-				}
-				markerEndLine = false;
-				markerEndLineLoop = false;
+				HandleEndLineLoop(ch, inputFile, markerEndLine, markerEndLineLoop);
 			}
 
 			if (markerNotEndLoop)
@@ -126,27 +159,10 @@ void validateField(std::ifstream& inputFile)
 				markerEndLine = true;
 			}
 
-			if (ch == '\n')
+			int statusCh = CheckChInField(ch, i, j, markerEndLine, markerNotEndLoop, markerEndLineLoop);
+			if (statusCh == 1)
 			{
-				if (!markerEndLine)
-				{
-					markerNotEndLoop = true;
-				}
-				j--;
 				continue;
-			}
-			else
-			{
-				if (markerEndLine)
-				{
-					markerEndLineLoop = true;
-				}
-				field[i][j] = ch;
-			}
-
-			if (ch == CH_FILL_POINT)
-			{
-				startPoints.push_back(Point{ i, j });
 			}
 		}
 	}
@@ -154,18 +170,15 @@ void validateField(std::ifstream& inputFile)
 
 void fillField()
 {
-	if (startPoints.size() > 0)
+	for (int i = 0; i < static_cast<int>(startPoints.size()); i++)
 	{
-		for (int i = 0; i < static_cast<int>(startPoints.size()); i++)
-		{
-			queue.push(startPoints[i]);
+		queue.push(startPoints[i]);
 
-			while (!queue.empty())
-			{
-				Point queueBottomPoint = queue.front();
-				queue.pop();
-				exploreNeighbours(queueBottomPoint);
-			}
+		while (!queue.empty())
+		{
+			Point queueBottomPoint = queue.front();
+			queue.pop();
+			exploreNeighbours(queueBottomPoint);
 		}
 	}
 }
@@ -182,6 +195,7 @@ int HandleFill(std::string inputFilePath, std::string outputFilePath)
 	}
 	validateField(inputFile);
 	fillField();
+
 	std::ofstream outputFile;
 	outputFile.open(outputFilePath);
 	if (!outputFile.is_open())
