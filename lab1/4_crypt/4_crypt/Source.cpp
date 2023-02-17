@@ -104,7 +104,7 @@ char EncryptByte(char currentByte, int key)
 	currentByte = currentByte ^ key;
 	return SwapBits(currentByte, CryptMode::Crypt);
 }
-char decryptByte(char currentByte, int key)
+char DecryptByte(char currentByte, int key)
 {
 	currentByte = SwapBits(currentByte, CryptMode::Decrypt);
 	return currentByte ^ key;
@@ -135,7 +135,7 @@ void DecryptFile(std::istream& inputFile, std::ostream& outputFile, int key)
 		{
 			return;
 		}
-		currentByte = decryptByte(currentByte, key);
+		currentByte = DecryptByte(currentByte, key);
 
 		outputFile << currentByte;
 	}
