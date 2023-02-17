@@ -10,11 +10,11 @@ const int PRECISION = 3;
 int ReadInput(std::istream& input, std::vector<double>& outputVector)
 {
 	std::copy(std::istream_iterator<double>(input), std::istream_iterator<double>(), std::back_inserter(outputVector));
-	/*if (!std::cin.eof())
+	if (!std::cin.eof())
 	{
-		std::cout << "Invalid number value was found" << std::endl;
+		std::cout << "Invalid number value." << std::endl;
 		return 1;
-	}*/
+	}
 	return 0;
 }
 

@@ -2,9 +2,10 @@
 #include <iostream>
 #include <map>
 #include <string>
-using namespace std;
 
-map<string, char> myMap = { { "&apos;", '\'' }, { "&quot;", '\"' }, { "&lt;", '<' }, { "&gt;", '>' }, { "&amp;", '&' } };
+const char AMP_SYMBOL = '&';
+
+std::map<std::string, char> htmlEntities = { { "&apos;", '\'' }, { "&quot;", '\"' }, { "&lt;", '<' }, { "&gt;", '>' }, { "&amp;", '&' } };
 
 struct HTMLEntity
 {
@@ -12,41 +13,35 @@ struct HTMLEntity
 	size_t length;
 };
 
-HTMLEntity DecodeString(const string& str)
+HTMLEntity DecodeString(const std::string& str)
 {
-	for (auto mapEntity : myMap)
+	for (auto htmlEntity : htmlEntities)
 	{
-		size_t firstSize = mapEntity.first.size();
-		string temp = str.substr(0, firstSize);
-		if (temp == mapEntity.first)
+		size_t htmlEntityStringSize = htmlEntity.first.size();
+		std::string htmlEntityStringCut = str.substr(0, htmlEntityStringSize);
+
+		if (htmlEntityStringCut == htmlEntity.first)
 		{
-			return { mapEntity.second, mapEntity.first.size() - 1 };
+			return HTMLEntity{ htmlEntity.second, htmlEntity.first.size() - 1 };
 		}
 	}
-	return { '&', 0 };
+	return { AMP_SYMBOL, 0 };
 }
 
-int main()
+std::string HtmlDecodeText(std::string& inputText)
 {
+	std::string resultString;
 
-	string inString = "&quot;Hello&quot;&quot;";
-	//string inString = "&&lt;h1&gt;";
-
-	//string inString;
-	//getline(cin, inString);
-
-	string result;
-
-	for (size_t pos = 0; pos < inString.size(); pos++)
+	for (size_t pos = 0; pos < inputText.size(); pos++)
 	{
-		auto indexStart = inString.find('&', pos);
-		result += inString.substr(pos, indexStart - pos);
+		auto indexStart = inputText.find(AMP_SYMBOL, pos);
+		resultString += inputText.substr(pos, indexStart - pos);
 
-		if (indexStart < inString.size())
+		if (indexStart < inputText.size())
 		{
-			HTMLEntity decodedEntityMap = DecodeString(inString.substr(indexStart));
+			HTMLEntity decodedEntityMap = DecodeString(inputText.substr(indexStart));
 
-			result += decodedEntityMap.symbol;
+			resultString += decodedEntityMap.symbol;
 			pos = indexStart + decodedEntityMap.length;
 		}
 		else
@@ -54,7 +49,21 @@ int main()
 			break;
 		}
 	}
-	cout << result << endl;
+	return resultString;
+}
 
+void HtmlDecode(std::istream& input, std::ostream& output)
+{
+	std::string text;
+	while (!input.eof())
+	{
+		std::getline(input, text);
+		output << HtmlDecodeText(text) << std::endl;
+	}
+}
+
+int main()
+{
+	HtmlDecode(std::cin, std::cout);
 	return 0;
 }
