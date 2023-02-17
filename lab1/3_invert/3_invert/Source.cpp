@@ -41,72 +41,28 @@ double FindDoubleMatrixDeterminant(double** matrix)
 	return determinant;
 }
 
-void fillDoubleMinor(int i, int j, double** minor, double** matrix)
+void FillDoubleMinor(int i, int j, double** minor, double** matrix)
 {
-	if (i == 0 && j == 0)
+	int minorRow = 0;
+
+	for (int row = 0; row < 3; row++)
 	{
-		minor[0][0] = matrix[1][1];
-		minor[0][1] = matrix[1][2];
-		minor[1][0] = matrix[2][1];
-		minor[1][1] = matrix[2][2];
-	}
-	if (i == 0 && j == 1)
-	{
-		minor[0][0] = matrix[1][0];
-		minor[0][1] = matrix[1][2];
-		minor[1][0] = matrix[2][0];
-		minor[1][1] = matrix[2][2];
-	}
-	if (i == 0 && j == 2)
-	{
-		minor[0][0] = matrix[1][0];
-		minor[0][1] = matrix[1][1];
-		minor[1][0] = matrix[2][0];
-		minor[1][1] = matrix[2][1];
-	}
-	//
-	if (i == 1 && j == 0)
-	{
-		minor[0][0] = matrix[0][1];
-		minor[0][1] = matrix[0][2];
-		minor[1][0] = matrix[2][1];
-		minor[1][1] = matrix[2][2];
-	}
-	if (i == 1 && j == 1)
-	{
-		minor[0][0] = matrix[0][0];
-		minor[0][1] = matrix[0][2];
-		minor[1][0] = matrix[2][0];
-		minor[1][1] = matrix[2][2];
-	}
-	if (i == 1 && j == 2)
-	{
-		minor[0][0] = matrix[0][0];
-		minor[0][1] = matrix[0][1];
-		minor[1][0] = matrix[2][0];
-		minor[1][1] = matrix[2][1];
-	}
-	//
-	if (i == 2 && j == 0)
-	{
-		minor[0][0] = matrix[0][1];
-		minor[0][1] = matrix[0][2];
-		minor[1][0] = matrix[1][1];
-		minor[1][1] = matrix[1][2];
-	}
-	if (i == 2 && j == 1)
-	{
-		minor[0][0] = matrix[0][0];
-		minor[0][1] = matrix[0][2];
-		minor[1][0] = matrix[1][0];
-		minor[1][1] = matrix[1][2];
-	}
-	if (i == 2 && j == 2)
-	{
-		minor[0][0] = matrix[0][0];
-		minor[0][1] = matrix[0][1];
-		minor[1][0] = matrix[1][0];
-		minor[1][1] = matrix[1][1];
+		if (row == i)
+		{
+			continue;
+		}
+
+		int minorColumn = 0;
+		for (int column = 0; column < 3; column++)
+		{
+			if (column == j)
+			{
+				continue;
+			}
+			minor[minorRow][minorColumn] = matrix[row][column];
+			minorColumn++;
+		}
+		minorRow++;
 	}
 }
 
@@ -120,7 +76,8 @@ double** FindTripleAdjugateMatrix(double** matrix)
 	{
 		for (int j = 0; j < 3; j++)
 		{
-			fillDoubleMinor(i, j, minorAdjugateMatrix, matrix);
+			FillDoubleMinor(i, j, minorAdjugateMatrix, matrix);
+
 			adjugateMatrix[i][j] = FindDoubleMatrixDeterminant(minorAdjugateMatrix);
 			if (isMinus && (adjugateMatrix[i][j] != 0))
 			{
@@ -135,11 +92,7 @@ double** FindTripleAdjugateMatrix(double** matrix)
 
 double** TransposeMatrix(double** matrix)
 {
-	double** transposedMatrix = new double*[3];
-	for (int i = 0; i < 3; i++)
-	{
-		transposedMatrix[i] = new double[3];
-	}
+	double** transposedMatrix = CreateDynamicMatrix(3);
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -154,12 +107,7 @@ double** TransposeMatrix(double** matrix)
 
 double** InvertMatrix(double** transposedAdjMatrix, double determinant)
 {
-	double** invertedMatrix = new double*[3];
-
-	for (int i = 0; i < 3; i++)
-	{
-		invertedMatrix[i] = new double[3];
-	}
+	double** invertedMatrix = CreateDynamicMatrix(3);
 
 	for (int i = 0; i < 3; i++)
 	{
