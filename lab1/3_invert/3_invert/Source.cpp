@@ -20,7 +20,7 @@ double** CreateDynamicMatrix(int n)
 	return dynamicMatrix;
 }
 
-void CleanDynamicMatrix(double** matrix, int n)
+void CleanDynamicMatrix(double** const matrix, int n)
 {
 	for (int i = 0; i < n; i++)
 	{
@@ -29,13 +29,13 @@ void CleanDynamicMatrix(double** matrix, int n)
 	delete[] matrix;
 }
 
-double FindTripleMatrixDeterminant(double** matrix)
+double FindTripleMatrixDeterminant( double** const matrix)
 {
 	double determinant = (((matrix[0][0] * matrix[1][1] * matrix[2][2]) + (matrix[0][2] * matrix[1][0] * matrix[2][1]) + (matrix[0][1] * matrix[1][2] * matrix[2][0])) - ((matrix[0][2] * matrix[1][1] * matrix[2][0]) + (matrix[0][1] * matrix[1][0] * matrix[2][2]) + (matrix[0][0] * matrix[1][2] * matrix[2][1])));
 	return determinant;
 }
 
-double FindDoubleMatrixDeterminant(double** matrix)
+double FindDoubleMatrixDeterminant(double** const matrix)
 {
 	double determinant = ((matrix[0][0] * matrix[1][1]) - (matrix[0][1] * matrix[1][0]));
 	return determinant;
@@ -66,7 +66,7 @@ void FillDoubleMinor(int i, int j, double** minor, double** matrix)
 	}
 }
 
-double** FindTripleAdjugateMatrix(double** matrix)
+double** FindTripleAdjugateMatrix(double** const matrix)
 {
 	double** adjugateMatrix = CreateDynamicMatrix(3);
 	double** minorAdjugateMatrix = CreateDynamicMatrix(2);
@@ -90,7 +90,7 @@ double** FindTripleAdjugateMatrix(double** matrix)
 	return adjugateMatrix;
 }
 
-double** TransposeMatrix(double** matrix)
+double** TransposeMatrix(double** const matrix)
 {
 	double** transposedMatrix = CreateDynamicMatrix(3);
 
@@ -105,7 +105,7 @@ double** TransposeMatrix(double** matrix)
 	return transposedMatrix;
 }
 
-double** InvertMatrix(double** transposedAdjMatrix, double determinant)
+double** InvertMatrix(double** const transposedAdjMatrix, double determinant)
 {
 	double** invertedMatrix = CreateDynamicMatrix(3);
 
@@ -120,7 +120,7 @@ double** InvertMatrix(double** transposedAdjMatrix, double determinant)
 	return invertedMatrix;
 }
 
-void PrintMatrix(std::ostream& output, double** matrix)
+void PrintMatrix(std::ostream& output, double** const matrix)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -146,7 +146,7 @@ void ReadInputToMatrix(std::istream& input, double** matrix)
 	}
 }
 
-int Invert(std::string inputFilePath, std::ostream& output)
+int Invert(const std::string& inputFilePath, std::ostream& output)
 {
 	std::ifstream fIn;
 	fIn.open(inputFilePath);
