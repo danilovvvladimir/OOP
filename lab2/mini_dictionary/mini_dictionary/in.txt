@@ -2,10 +2,16 @@ bye
 пока
 bye
 до свидания
+castle
+замок
 cat
 кошка
 cat
 кот
+environment
+среда
+friday
+пятница
 frog
 лягушка
 goodbye
@@ -16,7 +22,13 @@ horse
 лошадь
 later
 пока
+lock
+замок
+sunday
+воскресенье
 the red square
 красная площадь
+wednesday
+среда
 word
 слово
