@@ -81,7 +81,7 @@ void PrintField(std::ostream& output)
 		output << std::endl;
 	}
 }
-int CheckChInField(char& ch, int i, int& j, bool& markerEndLine, bool& markerNotEndLoop, bool& markerEndLineLoop)
+int CheckChInField(char& ch, int i, int j, bool& markerEndLine, bool& markerNotEndLoop, bool& markerEndLineLoop)
 {
 	if (ch == '\n')
 	{
@@ -89,7 +89,6 @@ int CheckChInField(char& ch, int i, int& j, bool& markerEndLine, bool& markerNot
 		{
 			markerNotEndLoop = true;
 		}
-		j--;
 		return 1;
 	}
 	else
@@ -124,6 +123,36 @@ void HandleEndLineLoop(char& ch, std::istream& inputFile, bool& markerEndLine, b
 	markerEndLineLoop = false;
 }
 
+int HandleValidateLoops(char& ch, int i, int j, std::istream& inputFile, bool& markerEndLine, bool& markerNotEndLoop, bool& markerEndLineLoop)
+{
+	ch = CH_SPACE;
+	if (markerEndLineLoop)
+	{
+		HandleEndLineLoop(ch, inputFile, markerEndLine, markerEndLineLoop);
+	}
+
+	if (markerNotEndLoop)
+	{
+		if (j == MAX_SIZE - 1)
+		{
+			markerNotEndLoop = false;
+		}
+		field[i][j] = ch;
+		return 1;
+	}
+	else
+	{
+		inputFile.get(ch);
+	}
+
+	if (j == MAX_SIZE - 1)
+	{
+		markerEndLine = true;
+	}
+
+	return 0;
+}
+
 void ValidateField(std::istream& inputFile)
 {
 	bool markerEndLine = false;
@@ -135,34 +164,16 @@ void ValidateField(std::istream& inputFile)
 	{
 		for (int j = 0; j < MAX_SIZE; j++)
 		{
-			ch = CH_SPACE;
-			if (markerEndLineLoop)
+			int statusLoops = HandleValidateLoops(ch, i, j, inputFile, markerEndLine, markerNotEndLoop, markerEndLineLoop);
+			if (statusLoops == 1)
 			{
-				HandleEndLineLoop(ch, inputFile, markerEndLine, markerEndLineLoop);
-			}
-
-			if (markerNotEndLoop)
-			{
-				if (j == MAX_SIZE - 1)
-				{
-					markerNotEndLoop = false;
-				}
-				field[i][j] = ch;
 				continue;
-			}
-			else
-			{
-				inputFile.get(ch);
-			}
-
-			if (j == MAX_SIZE - 1)
-			{
-				markerEndLine = true;
 			}
 
 			int statusCh = CheckChInField(ch, i, j, markerEndLine, markerNotEndLoop, markerEndLineLoop);
 			if (statusCh == 1)
 			{
+				j--;
 				continue;
 			}
 		}
@@ -218,7 +229,7 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	int statusCode = HandleFill(argv[1], argv[2]);
+	int statusCode = HandleFill(args->inputFilePath, args->outputFilePath);
 	if (statusCode != 0)
 	{
 		return 1;
