@@ -6,7 +6,7 @@
 #include <vector>
 
 const char CH_SPACE = ' ';
-const char CH_SPACE2 = '_';
+const char CH_UNAVAILABLE = '_';
 const char CH_DOT = '.';
 const char CH_WALL = '#';
 const char CH_FILL_POINT = 'O';
@@ -47,7 +47,7 @@ std::vector<Point> startPoints;
 std::queue<Point> queue;
 char field[MAX_SIZE][MAX_SIZE]{ 0 };
 
-void exploreNeighbours(Point p)
+void ExploreNeighbours(Point p)
 {
 	for (int i = 0; i < 4; i++)
 	{
@@ -70,7 +70,7 @@ void exploreNeighbours(Point p)
 	}
 }
 
-void showField(std::ostream& output)
+void PrintField(std::ostream& output)
 {
 	for (int i = 0; i < MAX_SIZE; i++)
 	{
@@ -99,22 +99,23 @@ int CheckChInField(char& ch, int i, int& j, bool& markerEndLine, bool& markerNot
 			markerEndLineLoop = true;
 		}
 		field[i][j] = ch;
+
+		if (ch == CH_FILL_POINT)
+		{
+			startPoints.push_back(Point{ i, j });
+		}
 	}
 
-	if (ch == CH_FILL_POINT)
-	{
-		startPoints.push_back(Point{ i, j });
-	}
 	return 0;
 }
 
-void HandleEndLineLoop(char& ch, std::ifstream& inputFile, bool& markerEndLine, bool& markerEndLineLoop)
+void HandleEndLineLoop(char& ch, std::istream& inputFile, bool& markerEndLine, bool& markerEndLineLoop)
 {
-	ch = CH_SPACE2;
+	ch = CH_UNAVAILABLE;
 	while (ch != '\n')
 	{
 		inputFile.get(ch);
-		if (ch == CH_SPACE2)
+		if (ch == CH_UNAVAILABLE)
 		{
 			ch = '\n';
 		}
@@ -123,7 +124,7 @@ void HandleEndLineLoop(char& ch, std::ifstream& inputFile, bool& markerEndLine, 
 	markerEndLineLoop = false;
 }
 
-void validateField(std::ifstream& inputFile)
+void ValidateField(std::istream& inputFile)
 {
 	bool markerEndLine = false;
 	bool markerNotEndLoop = false;
@@ -168,7 +169,7 @@ void validateField(std::ifstream& inputFile)
 	}
 }
 
-void fillField()
+void FillField()
 {
 	for (int i = 0; i < static_cast<int>(startPoints.size()); i++)
 	{
@@ -178,12 +179,12 @@ void fillField()
 		{
 			Point queueBottomPoint = queue.front();
 			queue.pop();
-			exploreNeighbours(queueBottomPoint);
+			ExploreNeighbours(queueBottomPoint);
 		}
 	}
 }
 
-int HandleFill(std::string inputFilePath, std::string outputFilePath)
+int HandleFill(const std::string& inputFilePath, const std::string& outputFilePath)
 {
 	std::ifstream inputFile;
 	inputFile.open(inputFilePath);
@@ -193,8 +194,8 @@ int HandleFill(std::string inputFilePath, std::string outputFilePath)
 		std::cout << "INFILE not opened" << std::endl;
 		return 1;
 	}
-	validateField(inputFile);
-	fillField();
+	ValidateField(inputFile);
+	FillField();
 
 	std::ofstream outputFile;
 	outputFile.open(outputFilePath);
@@ -204,7 +205,7 @@ int HandleFill(std::string inputFilePath, std::string outputFilePath)
 		return 1;
 	}
 
-	showField(outputFile);
+	PrintField(outputFile);
 
 	return 0;
 }

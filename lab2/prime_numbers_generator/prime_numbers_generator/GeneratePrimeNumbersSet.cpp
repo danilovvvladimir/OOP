@@ -3,6 +3,11 @@
 std::set<size_t> GeneratePrimeNumbersSet(size_t upperBound)
 {
 	std::set<size_t> primesSet;
+	if (upperBound < FIRST_PRIME_NUMBER)
+	{
+		return primesSet;
+	}
+
 	std::vector<bool> sieve(upperBound + 1, true);
 
 	int sqrtUpperBound = static_cast<int>(round(sqrt(upperBound)));

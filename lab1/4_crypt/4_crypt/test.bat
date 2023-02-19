@@ -37,6 +37,10 @@ rem wrong crypt mode
 fc.exe tests\wrong-crypt-mode-output.txt %TEMPOUTPUT% > nul
 if ERRORLEVEL 1 goto err
 
+rem secured file
+%PROGRAM% necrypt tests\secured-file.txt tests\secured-file-output.txt 200 > %TEMPOUTPUT%
+fc.exe tests\secured-file-output.txt %TEMPOUTPUT% > nul
+if NOT ERRORLEVEL 1 goto err
 
 
 echo Program testing succeeded

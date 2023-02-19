@@ -37,6 +37,10 @@ if ERRORLEVEL 1 goto err
 fc.exe "%TEMP%\out-of-range-temp-out.txt" tests\out-of-range-output.txt > nul
 if ERRORLEVEL 1 goto err
 
+rem secured file
+%PROGRAM% tests\secured-file.txt tests\secured-file-output.txt 
+if NOT ERRORLEVEL 1 goto err
+
 echo Program testing succeeded
 exit 0
 

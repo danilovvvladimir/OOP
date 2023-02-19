@@ -15,16 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="prime_numbers_generator_tests.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="DictionaryHandler.cpp">
+    <ClCompile Include="..\prime_numbers_generator\GeneratePrimeNumbersSet.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DictionaryHandler.h">
-      <Filter>Файлы заголовков</Filter>
+    <ClInclude Include="..\prime_numbers_generator\GeneratePrimeNumbersSet.h">
+      <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

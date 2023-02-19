@@ -27,6 +27,11 @@ rem complicated matrix
 fc.exe tests\complicated-matrix-output.txt %OUTPUT% > nul
 if ERRORLEVEL 1 goto err
 
+rem secured file with simple matrix
+%PROGRAM% tests\secured-file.txt > %OUTPUT%
+fc.exe tests\simple-matrix-output.txt %OUTPUT% > nul
+if ERRORLEVEL 1 goto err
+
 
 echo Program testing succeeded
 exit 0
