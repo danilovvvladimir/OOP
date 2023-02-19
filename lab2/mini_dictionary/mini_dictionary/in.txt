@@ -1,7 +1,5 @@
 bye
 пока
-bye
-до свидания
 castle
 замок
 cat
@@ -26,9 +24,21 @@ lock
 замок
 sunday
 воскресенье
-the red square
-красная площадь
 wednesday
 среда
 word
 слово
+egg
+яйцо
+apple
+яблоко
+potato
+картошка
+milk
+молоко
+red
+красный
+blue
+синий
+green
+зел
