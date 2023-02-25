@@ -6,6 +6,6 @@
 #include <string>
 
 struct HTMLEntity;
-HTMLEntity DecodeString(const std::string& str);
+HTMLEntity DecodeEntity(const std::string& str);
 std::string HtmlDecodeText(std::string& inputText);
 void HtmlDecode(std::istream& input, std::ostream& output);

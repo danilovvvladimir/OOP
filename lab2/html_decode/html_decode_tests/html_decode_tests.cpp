@@ -23,31 +23,40 @@ SCENARIO("Decode Lines")
 			REQUIRE(output.str() == "There are no html entities\n");
 		}
 	}
-	WHEN("There is 1 html entity in input stream: &lt;h1&gt;")
+	WHEN("There is 1 html entity in istream: &lt;h1&gt;")
 	{
-		THEN("There is 1 html tag in output stream: <h1>")
+		THEN("There is 1 html tag in ostream: <h1>")
 		{
 			std::istringstream input("&lt;h1&gt;Hello World!&lt;/h1&gt;");
 			HtmlDecode(input, output);
 			REQUIRE(output.str() == "<h1>Hello World!</h1>\n");
 		}
 	}
-	WHEN("There are several html entities in input stream: &lt;&lt;&lt;It workes&gt;&gt;&gt;")
+	WHEN("There are several html entities in istream: &lt;&lt;&lt;It workes&gt;&gt;&gt;")
 	{
-		THEN("There are several html entities in output stream: <<<It workes>>>")
+		THEN("There are several html entities in ostream: <<<It workes>>>")
 		{
 			std::istringstream input("&lt;&lt;&lt;It workes&gt;&gt;&gt;");
 			HtmlDecode(input, output);
 			REQUIRE(output.str() == "<<<It workes>>>\n");
 		}
 	}
-	WHEN("There are several html entities with single & in input stream: &lt;&lt;&lt;& - this is single amp&gt;&gt;&gt;")
+	WHEN("There are several html entities with single & in istream: &lt;&lt;&lt;& - this is single amp&gt;&gt;&gt;")
 	{
-		THEN("There are several html entities with single & in output stream: <<<& - this is single amp>>>")
+		THEN("There are several html entities with single & in ostream: <<<& - this is single amp>>>")
 		{
 			std::istringstream input("&lt;&lt;&lt;& - this is single amp&gt;&gt;&gt;");
 			HtmlDecode(input, output);
 			REQUIRE(output.str() == "<<<& - this is single amp>>>\n");
+		}
+	}
+	WHEN("There are several lines in istream")
+	{
+		THEN("Several lines in ostream")
+		{
+			std::istringstream input("&lt;h1&gt;Hello World!&lt;/h1&gt;\n&lt;h2&gt;It workes!&lt;/h2&gt;");
+			HtmlDecode(input, output);
+			REQUIRE(output.str() == "<h1>Hello World!</h1>\n<h2>It workes!</h2>\n");
 		}
 	}
 }

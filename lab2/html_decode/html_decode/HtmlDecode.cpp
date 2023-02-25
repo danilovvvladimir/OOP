@@ -5,10 +5,11 @@ struct HTMLEntity
 	char symbol;
 	size_t length;
 };
+
 const std::map<std::string, char> HTML_ENTITIES_MAP = { { "&apos;", '\'' }, { "&quot;", '\"' }, { "&lt;", '<' }, { "&gt;", '>' }, { "&amp;", '&' } };
 const char AMP_SYMBOL = '&';
 
-HTMLEntity DecodeString(const std::string& str)
+HTMLEntity DecodeEntity(const std::string& str)
 {
 	for (auto htmlEntity : HTML_ENTITIES_MAP)
 	{
@@ -29,15 +30,15 @@ std::string HtmlDecodeText(std::string& inputText)
 
 	for (size_t pos = 0; pos < inputText.size(); pos++)
 	{
-		auto indexStart = inputText.find(AMP_SYMBOL, pos);
+		size_t indexStart = inputText.find(AMP_SYMBOL, pos);
 		resultString += inputText.substr(pos, indexStart - pos);
 
 		if (indexStart < inputText.size())
 		{
-			HTMLEntity decodedEntityMap = DecodeString(inputText.substr(indexStart));
+			HTMLEntity decodedEntity = DecodeEntity(inputText.substr(indexStart));
 
-			resultString += decodedEntityMap.symbol;
-			pos = indexStart + decodedEntityMap.length;
+			resultString += decodedEntity.symbol;
+			pos = indexStart + decodedEntity.length;
 		}
 		else
 		{
