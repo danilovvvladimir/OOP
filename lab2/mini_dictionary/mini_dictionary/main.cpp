@@ -23,7 +23,6 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 	{
 		args.inputFilePath = "";
 	}
-
 	return args;
 }
 
@@ -36,7 +35,7 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	int statusCode = HandleDictionary(args->inputFilePath);
+	int statusCode = HandleDictionary(args->inputFilePath, std::cin, std::cout);
 	if (statusCode != 0)
 	{
 		return 1;

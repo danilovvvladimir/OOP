@@ -1,34 +1,41 @@
 #include "DictionaryHandler.h"
 
-std::string TransormToLowerCase(bool const isRussian, std::string& searchedString)
+int HandleDictionary(std::string inputFilePath, std::istream& input, std::ostream& output)
 {
-	std::string str(searchedString);
-	if (isRussian)
+	Dictionaries dictionaries;
+	std::fstream inputFile;
+	bool isFileMissing = true;
+
+	if (inputFilePath != "")
 	{
-		std::transform(str.begin(), str.end(), str.begin(), [](char c) {
-			if (c < RUSSIAN_BIG_CHARS_UNICODE_END)
-			{
-				return char(int(c + RUSSIAN_BIG_TO_SMALL_CHARS_CODE));
-			}
-			return c;
-		});
+		inputFile.open(inputFilePath, std::ios_base::in | std::ios_base::app);
+		if (!inputFile.is_open())
+		{
+			output << "‘айл словар€ не удалось открыть." << std::endl;
+			return 1;
+		}
+		isFileMissing = false;
+		InitDictionary(inputFile, dictionaries.mainDict);
 	}
-	else
+
+	bool isWordAdded = false;
+	HandleSession(isWordAdded, dictionaries, input, output);
+
+	if (!isWordAdded)
 	{
-		std::transform(str.begin(), str.end(), str.begin(), [](unsigned char c) { return tolower(c); });
+		return 0;
 	}
-	return str;
+
+	bool isFileSaved = HandleSavingDictionary(isFileMissing, dictionaries, inputFile, input, output);
+	if (!isFileSaved)
+	{
+		return 1;
+	}
+
+	return 0;
 }
 
-std::string Trim(const std::string& source)
-{
-	std::string str(source);
-	str.erase(0, str.find_first_not_of(" \n\r\t"));
-	str.erase(str.find_last_not_of(" \n\r\t") + 1);
-	return str;
-}
-
-void InitDictionary(std::istream& inputFile, Dictionaries& dictionaries)
+void InitDictionary(std::istream& inputFile, Dictionary& mainDict)
 {
 	std::string engWord;
 	std::string ruWord;
@@ -37,20 +44,188 @@ void InitDictionary(std::istream& inputFile, Dictionaries& dictionaries)
 		std::getline(inputFile, engWord);
 		std::getline(inputFile, ruWord);
 
-		dictionaries.enToRuDict.emplace(engWord, ruWord);
-		dictionaries.ruToEnDict.emplace(ruWord, engWord);
+		mainDict.emplace(engWord, ruWord);
 	}
 	inputFile.clear();
 }
 
-void SaveDictionary(std::ostream& outputFile, Dictionary& sessionDict, bool& isFileMissing)
+void HandleSession(bool& isWordAdded, Dictionaries& dictionaries, std::istream& input, std::ostream& output)
+{
+	bool isRussian = false;
+	std::string searchedString;
+
+	while (true)
+	{
+		std::cout << ">";
+		std::getline(std::cin, searchedString);
+		isRussian = false;
+		searchedString = Trim(searchedString);
+
+		if (searchedString == "...")
+		{
+			break;
+		}
+		SwitchIsRussian(searchedString, isRussian);
+
+		if (isRussian)
+		{
+			searchedString = TransormToLowerCase(searchedString);
+		}
+
+		bool isTranslationFound = FindTranslation(isRussian, isWordAdded, dictionaries, searchedString, output);
+		if (!isTranslationFound)
+		{
+			HandleAddingTranslation(searchedString, isRussian, isWordAdded, dictionaries, input, output);
+		}
+	}
+}
+
+std::string Trim(const std::string& string)
+{
+	std::string str(string);
+	str.erase(0, str.find_first_not_of(" \n\r\t"));
+	str.erase(str.find_last_not_of(" \n\r\t") + 1);
+	return str;
+}
+
+void SwitchIsRussian(std::string const& searchedString, bool& isRussian)
+{
+	if (searchedString[0] >= RUSSIAN_CHARS_UNICODE_START && searchedString[0] <= RUSSIAN_CHARS_UNICODE_END)
+	{
+		isRussian = true;
+	}
+}
+
+std::string TransormToLowerCase(std::string& searchedString)
+{
+	std::string str(searchedString);
+	std::transform(str.begin(), str.end(), str.begin(), [](unsigned char c) { return tolower(c); });
+	return str;
+}
+
+void HandleAddingTranslation(std::string& searchedString, bool& isRussian, bool& isWordAdded, Dictionaries& dictionaries, std::istream& input, std::ostream& output)
+{
+	output << "Ќеизвестное слово У" << searchedString << "Ф. ¬ведите перевод или пустую строку дл€ отказа." << std::endl;
+	std::string translationString;
+	output << ">";
+	std::getline(input, translationString);
+
+	translationString = TransormToLowerCase(translationString);
+	translationString = Trim(translationString);
+
+	if (translationString != "")
+	{
+		AddTranslation(isWordAdded, isRussian, dictionaries, searchedString, translationString, output);
+	}
+	else
+	{
+		output << "—лово У" << searchedString << "Ф проигнорировано." << std::endl;
+	}
+}
+
+bool FindTranslation(bool& isRussian, bool& isWordAdded, Dictionaries& dictionaries, std::string& searchedString, std::ostream& output)
+{
+	bool isFirstTranslationFound = false;
+	std::string searchedEl;
+	std::string translationEl;
+
+	for (auto el : dictionaries.mainDict)
+	{
+		if (isRussian)
+		{
+			searchedEl = el.second;
+			translationEl = el.first;
+		}
+		else
+		{
+			translationEl = el.second;
+			searchedEl = el.first;
+		}
+
+		if (searchedEl == searchedString)
+		{
+			if (isFirstTranslationFound)
+			{
+				output << ", ";
+			}
+			output << translationEl;
+			isFirstTranslationFound = true;
+		}
+	}
+
+	if (isFirstTranslationFound)
+	{
+		output << std::endl;
+		return true;
+	}
+	return false;
+}
+
+void AddTranslation(bool& isWordAdded, bool& isRussian, Dictionaries& dictionaries, std::string& searchedString, std::string& translationString, std::ostream& output)
+{
+	if (isRussian)
+	{
+		dictionaries.mainDict.emplace(translationString, searchedString);
+		dictionaries.sessionDict.emplace(translationString, searchedString);
+	}
+	else
+	{
+		dictionaries.mainDict.emplace(searchedString, translationString);
+		dictionaries.sessionDict.emplace(searchedString, translationString);
+	}
+	isWordAdded = true;
+	output << "—лово У" << searchedString << "Ф добавлено с переводом У" << translationString << "Ф." << std::endl;
+}
+
+std::string GetNewDictionaryPath(std::ostream& output)
+{
+	output << "‘айл словар€ отсутствует, хотите создать новый? Ќапишите путь к новому файлу или N/n дл€ выхода: " << std::endl
+		   << ">";
+
+	std::string newDictionaryFilePath;
+	std::getline(std::cin, newDictionaryFilePath);
+	if (newDictionaryFilePath == "N" || newDictionaryFilePath == "n")
+	{
+		output << "»зменени€ не сохранены. ƒо свидани€." << std::endl;
+		return "";
+	}
+	return newDictionaryFilePath;
+}
+
+bool HandleSavingDictionary(bool& isFileMissing, Dictionaries& dictionaries, std::ostream& inputFile, std::istream& input, std::ostream& output)
+{
+	if (isFileMissing)
+	{
+		std::string newDictionaryFilePath = GetNewDictionaryPath(output);
+		if (newDictionaryFilePath == "")
+		{
+			return true;
+		}
+
+		std::ofstream outputFile;
+		outputFile.open(newDictionaryFilePath);
+		if (!outputFile.is_open())
+		{
+			output << "Ќовый файл словар€ не удалось открыть." << std::endl;
+			return false;
+		}
+
+		SaveDictionary(outputFile, dictionaries.sessionDict, isFileMissing, input, output);
+	}
+	else
+	{
+		SaveDictionary(inputFile, dictionaries.sessionDict, isFileMissing, input, output);
+	}
+	return true;
+}
+
+void SaveDictionary(std::ostream& outputFile, Dictionary& sessionDict, bool& isFileMissing, std::istream& input, std::ostream& output)
 {
 	std::string answer;
-
 	if (!isFileMissing)
 	{
-		std::cout << "¬ словарь были внесены изменени€. ¬ведите Y или y дл€ сохранени€ перед выходом." << std::endl;
-		std::cin >> answer;
+		output << "¬ словарь были внесены изменени€. ¬ведите Y или y дл€ сохранени€ перед выходом." << std::endl;
+		input >> answer;
 	}
 	else
 	{
@@ -67,171 +242,10 @@ void SaveDictionary(std::ostream& outputFile, Dictionary& sessionDict, bool& isF
 				outputFile << dictionaryElement.second << std::endl;
 			}
 		}
-		std::cout << "»зменени€ сохранены. ƒо свидани€." << std::endl;
+		output << "»зменени€ сохранены. ƒо свидани€." << std::endl;
 	}
 	else
 	{
-		std::cout << "»зменени€ не сохранены. ƒо свидани€." << std::endl;
+		output << "»зменени€ не сохранены. ƒо свидани€." << std::endl;
 	}
-}
-
-void AddTranslation(bool& isWordAdded, bool& isRussian, Dictionaries& dictionaries, std::string& searchedString, std::string& translationString)
-{
-	isWordAdded = true;
-	if (isRussian)
-	{
-		dictionaries.ruToEnDict.emplace(searchedString, translationString);
-		dictionaries.enToRuDict.emplace(translationString, searchedString);
-		dictionaries.sessionDict.emplace(translationString, searchedString);
-	}
-	else
-	{
-		dictionaries.enToRuDict.emplace(searchedString, translationString);
-		dictionaries.sessionDict.emplace(searchedString, translationString);
-		dictionaries.ruToEnDict.emplace(translationString, searchedString);
-	}
-	std::cout << "—лово У" << searchedString << "Ф добавлено с переводом У" << translationString << "Ф." << std::endl;
-}
-
-void FindTranslation(bool& isRussian, bool& isWordAdded, Dictionaries& dictionaries, std::string& searchedString)
-{
-	auto it = dictionaries.currentDict.find(searchedString);
-
-	if (it != dictionaries.currentDict.end())
-	{
-		auto it = dictionaries.currentDict.find(searchedString);
-		bool isFirstTranslationSkipped = false;
-
-		while (it != dictionaries.currentDict.end())
-		{
-			if (it->first == searchedString)
-			{
-				if (isFirstTranslationSkipped && it->second != "")
-				{
-					std::cout << ", ";
-				}
-
-				std::cout << it->second;
-				it++;
-				isFirstTranslationSkipped = true;
-			}
-			else
-			{
-				break;
-			}
-		}
-		std::cout << std::endl;
-	}
-	else
-	{
-		std::cout << "Ќеизвестное слово У" << searchedString << "Ф. ¬ведите перевод или пустую строку дл€ отказа." << std::endl;
-		std::string translationString;
-		std::getline(std::cin, translationString);
-
-		translationString = TransormToLowerCase(isRussian, translationString);
-		translationString = Trim(translationString);
-
-		if (translationString != "")
-		{
-			AddTranslation(isWordAdded, isRussian, dictionaries, searchedString, translationString);
-		}
-		else
-		{
-			std::cout << "—лово У" << searchedString << "Ф проигнорировано." << std::endl;
-		}
-	}
-}
-
-void HandleSession(bool& isWordAdded, Dictionaries& dictionaries)
-{
-	bool isRussian = false;
-	std::string searchedString;
-
-	while (std::getline(std::cin, searchedString))
-	{
-		isRussian = false;
-		searchedString = Trim(searchedString);
-		if (searchedString == "...")
-		{
-			break;
-		}
-
-		SwitchCurrentDict(searchedString, isRussian, dictionaries);
-
-		searchedString = TransormToLowerCase(isRussian, searchedString);
-		FindTranslation(isRussian, isWordAdded, dictionaries, searchedString);
-	}
-}
-
-void SwitchCurrentDict(std::string const& searchedString, bool& isRussian, Dictionaries& dictionaries)
-{
-	if (searchedString[0] >= RUSSIAN_CHARS_UNICODE_START && searchedString[0] <= RUSSIAN_CHARS_UNICODE_END)
-	{
-		isRussian = true;
-		dictionaries.currentDict = dictionaries.ruToEnDict;
-	}
-	else
-	{
-		dictionaries.currentDict = dictionaries.enToRuDict;
-	}
-}
-
-bool isFileOpened(std::fstream& file)
-{
-	if (!file.is_open())
-	{
-		std::cout << "‘айл не найден." << std::endl;
-		return false;
-	}
-	return true;
-}
-
-int HandleDictionary(std::string inputFilePath)
-{
-	Dictionaries dictionaries;
-	std::fstream inputFile;
-	bool isFileMissing = true;
-
-	if (inputFilePath != "")
-	{
-		inputFile.open(inputFilePath, std::ios_base::in | std::ios_base::app);
-		if (!isFileOpened(inputFile))
-		{
-			return 1;
-		}
-		isFileMissing = false;
-		InitDictionary(inputFile, dictionaries);
-	}
-
-	bool isWordAdded = false;
-	HandleSession(isWordAdded, dictionaries);
-
-	if (isWordAdded)
-	{
-		if (isFileMissing)
-		{
-			std::cout << "‘айл словар€ отсутствует, хотите создать новый? Ќапишите путь к новому файлу или N/n дл€ выхода: " << std::endl
-					  << ">";
-
-			std::string newDictionaryFilePath;
-			std::getline(std::cin, newDictionaryFilePath);
-			if (newDictionaryFilePath == "N" || newDictionaryFilePath == "n")
-			{
-				return 0;
-			}
-
-			std::fstream newOutputFile;
-			newOutputFile.open(newDictionaryFilePath, std::ios_base::out);
-			if (!isFileOpened(newOutputFile))
-			{
-				return 1;
-			}
-			SaveDictionary(newOutputFile, dictionaries.sessionDict, isFileMissing);
-		}
-		else
-		{
-			SaveDictionary(inputFile, dictionaries.sessionDict, isFileMissing);
-		}
-	}
-	return 0;
 }
