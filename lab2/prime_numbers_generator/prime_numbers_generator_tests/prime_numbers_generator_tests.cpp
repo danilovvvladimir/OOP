@@ -22,6 +22,14 @@ SCENARIO("Fill set with prime numbers in interval")
 			REQUIRE(expectedPrimeNumbersSet == std::set<size_t>{ 2, 3, 5, 7 });
 		}
 	}
+	WHEN("UpperBound is prime number 11")
+	{
+		THEN("Result SET will be 2, 3, 5, 7, 11")
+		{
+			expectedPrimeNumbersSet = GeneratePrimeNumbersSet(11);
+			REQUIRE(expectedPrimeNumbersSet == std::set<size_t>{ 2, 3, 5, 7, 11 });
+		}
+	}
 	WHEN("UpperBound is 100 mils")
 	{
 		THEN("Result SET's size will be 5761455")

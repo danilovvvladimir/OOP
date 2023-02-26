@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.2092
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "regex", "regex\regex.vcxproj", "{D219B9B5-F54C-4099-A9AD-4B2381ACFA93}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "url_parser", "regex\regex.vcxproj", "{D219B9B5-F54C-4099-A9AD-4B2381ACFA93}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "url_parser_tests", "url_parser_tests\url_parser_tests.vcxproj", "{67882557-DB2A-4EF4-9445-1B91F452F68B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,14 @@ Global
 		{D219B9B5-F54C-4099-A9AD-4B2381ACFA93}.Release|x64.Build.0 = Release|x64
 		{D219B9B5-F54C-4099-A9AD-4B2381ACFA93}.Release|x86.ActiveCfg = Release|Win32
 		{D219B9B5-F54C-4099-A9AD-4B2381ACFA93}.Release|x86.Build.0 = Release|Win32
+		{67882557-DB2A-4EF4-9445-1B91F452F68B}.Debug|x64.ActiveCfg = Debug|x64
+		{67882557-DB2A-4EF4-9445-1B91F452F68B}.Debug|x64.Build.0 = Debug|x64
+		{67882557-DB2A-4EF4-9445-1B91F452F68B}.Debug|x86.ActiveCfg = Debug|Win32
+		{67882557-DB2A-4EF4-9445-1B91F452F68B}.Debug|x86.Build.0 = Debug|Win32
+		{67882557-DB2A-4EF4-9445-1B91F452F68B}.Release|x64.ActiveCfg = Release|x64
+		{67882557-DB2A-4EF4-9445-1B91F452F68B}.Release|x64.Build.0 = Release|x64
+		{67882557-DB2A-4EF4-9445-1B91F452F68B}.Release|x86.ActiveCfg = Release|Win32
+		{67882557-DB2A-4EF4-9445-1B91F452F68B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

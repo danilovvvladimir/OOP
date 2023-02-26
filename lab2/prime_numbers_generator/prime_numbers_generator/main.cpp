@@ -1,5 +1,6 @@
 #include "GeneratePrimeNumbersSet.h"
 
+
 int main(int argc, char* argv[])
 {
 	auto args = ParseArgs(argc, argv);

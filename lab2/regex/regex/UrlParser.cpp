@@ -1,6 +1,16 @@
 #include "UrlParser.h"
 
 
+std::string StringToLowerCase(const std::string& str)
+{
+	std::string result = str;
+	std::transform(result.begin(), result.end(), result.begin(),
+		[](unsigned char c) {
+			return std::tolower(c);
+		});
+	return result;
+}
+
 Protocol StringToProtocol(std::string const& stringProtocol)
 {
 	if (stringProtocol == "http")
@@ -19,54 +29,62 @@ int ProtocolToPort(Protocol protocol)
 	{
 	case Protocol::HTTP:
 	{
-		return 80;
+		return HTTP_PORT;
 	}
 	case Protocol::HTTPS:
 	{
-		return 443;
+		return HTTPS_PORT;
 	}
 	case Protocol::FTP:
 	{
-		return 21;
+		return FTP_PORT;
 	}
 	default:
-		return 0;
+		return INVALID_PORT_CODE;
 	}
 }
 
 bool ParseURL(std::string const& url, Protocol& protocol, int& port, std::string& host, std::string& document)
 {
 	std::cmatch result;
-
+	std::string lowerCasedURL = StringToLowerCase(url);
 	std::regex urlRegexpression("(https|http|ftp)"
 								"://"
-								"([\\w-\\.]+)"
-								"(?::(\\d+))?"
-								"(?:/([\\S]+))?");
-
-	if (std::regex_match(url.c_str(), result, urlRegexpression))
+								"([\\w-]{1,63}(?:\\.[\\w-]{1,63})?)+"
+								"(?::(\\d{1,5}))?"
+								"(?:(?:/)([\\S]*))?");
+	if (std::regex_match(lowerCasedURL.c_str(), result, urlRegexpression))
 	{
 		protocol = StringToProtocol(result[1]);
 		host = result[2];
+		port = GetPort(port, result[3], protocol);
 
-		if (result[3] != "")
+		if (port == INVALID_PORT_CODE)
 		{
-			port = stoi(result[3]);
-			if (port < 0 || port > 65535)
-			{
-				return false;
-			}
-		}
-		else
-		{
-			port = ProtocolToPort(protocol);
+			return false;
 		}
 
 		document = result[4];
-
 		return true;
 	}
 	return false;
+}
+
+int GetPort(int port, std::string result, Protocol& protocol)
+{
+	if (result != "")
+	{
+		port = std::stoi(result);
+		if (port < PORT_MIN || port > PORT_MAX)
+		{
+			return INVALID_PORT_CODE;
+		}
+	}
+	else
+	{
+		port = ProtocolToPort(protocol);
+	}
+	return port;
 }
 
 void PrintUrlInfo(std::string const& url, std::ostream& output)
@@ -75,6 +93,7 @@ void PrintUrlInfo(std::string const& url, std::ostream& output)
 	int port = 0;
 	std::string host;
 	std::string document;
+
 	if (ParseURL(url, protocol, port, host, document))
 	{
 		output << url << std::endl;
@@ -90,10 +109,10 @@ void PrintUrlInfo(std::string const& url, std::ostream& output)
 
 void HandleUrlParsing(std::istream& input, std::ostream& output)
 {
-	std::string line;
+	std::string url;
 	while (!input.eof())
 	{
-		std::getline(input, line);
-		PrintUrlInfo(line, output);
+		std::getline(input, url);
+		PrintUrlInfo(url, output);
 	}
 }
