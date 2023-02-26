@@ -110,11 +110,11 @@ bool Car::SetSpeed(int speed)
 
 	return false;
 }
-
-void Car::PrintInfo()
-{
-	std::cout << "Speed: " << GetSpeed() << std::endl;
-	std::cout << "Direction: " << static_cast<int>(GetDirection()) << std::endl;
-	std::cout << "Gear: " << static_cast<int>(GetGear()) << std::endl;
-	std::cout << "Engine: " << IsTurnedOn() << std::endl;
-}
+//
+//void Car::PrintInfo()
+//{
+//	std::cout << "Speed: " << GetSpeed() << std::endl;
+//	std::cout << "Direction: " << static_cast<int>(GetDirection()) << std::endl;
+//	std::cout << "Gear: " << static_cast<int>(GetGear()) << std::endl;
+//	std::cout << "Engine: " << IsTurnedOn() << std::endl;
+//}

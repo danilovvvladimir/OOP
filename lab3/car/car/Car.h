@@ -1,6 +1,6 @@
 #pragma once
 #include <map>
-#include <iostream>
+
 
 const int MIN_GEAR = -1;
 const int MAX_GEAR = 5;
@@ -55,7 +55,6 @@ public:
 	bool SetGear(Gear gear);
 	bool SetSpeed(int speed);
 
-	void PrintInfo();
 
 private:
 	bool m_isEngineOn;
