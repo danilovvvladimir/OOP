@@ -51,31 +51,34 @@ bool Car::TurnOffEngine()
 
 bool Car::SetGear(Gear gear)
 {
+	if (!m_isEngineOn)
+	{
+		return false;
+	}
+
 	if (gear == Gear::Neutral)
 	{
-		// direction сохраняется
 		m_gear = gear;
 		return true;
 	}
 
 	if (gear == Gear::Reversed)
 	{
-		if (m_direction == Direction::Stopped)
-		{
-			m_gear = gear;
-			m_direction = Direction::Backwards;
-			return true;
-		}
-		else
+		if (m_direction != Direction::Stopped)
 		{
 			return false;
 		}
+
+		m_gear = gear;
+		m_direction = Direction::Backwards;
+		return true;
 	}
 
-	SpeedInterval speedPair = gearsSpeedIntervals.find(gear)->second;
-	if (m_speed >= speedPair.first && m_speed <= speedPair.second && (m_direction == Direction::Stopped || m_direction == Direction::Forwards))
+	SpeedInterval newGearSpeedInterval = gearsSpeedIntervals.find(gear)->second;
+	bool isSpeedOkForNewGear = (m_speed >= newGearSpeedInterval.first && m_speed <= newGearSpeedInterval.second);
+
+	if (isSpeedOkForNewGear)
 	{
-		//
 		if (m_direction == Direction::Stopped)
 		{
 			m_direction = Direction::Forwards;
@@ -88,8 +91,13 @@ bool Car::SetGear(Gear gear)
 
 bool Car::SetSpeed(int speed)
 {
-	SpeedInterval speedPair = gearsSpeedIntervals.find(m_gear)->second;
-	if (m_gear == Gear::Neutral && (speed >= MIN_SPEED && speed <= m_speed))
+	SpeedInterval currentGearSpeedInterval = gearsSpeedIntervals.find(m_gear)->second;
+
+	bool isGearNeutral= m_gear == Gear::Neutral;
+	bool isSpeedOKforNeutral = (speed >= MIN_SPEED && speed <= m_speed);
+	bool isSpeedOKforNotNeutral = (speed >= currentGearSpeedInterval.first && speed <= currentGearSpeedInterval.second);
+
+	if ((isGearNeutral && isSpeedOKforNeutral) || (!isGearNeutral && isSpeedOKforNotNeutral))
 	{
 		m_speed = speed;
 		if (speed == MIN_SPEED)
@@ -99,16 +107,6 @@ bool Car::SetSpeed(int speed)
 		return true;
 	}
 
-	if (m_gear != Gear::Neutral && (speed >= speedPair.first && speed <= speedPair.second))
-	{
-		m_speed = speed;
-
-		if (speed == MIN_SPEED)
-		{
-			m_direction = Direction::Stopped;
-		}
-		return true;
-	}
 
 	return false;
 }
