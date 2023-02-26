@@ -1,5 +1,6 @@
 #pragma once
 #include <map>
+#include <iostream>
 
 const int MIN_GEAR = -1;
 const int MAX_GEAR = 5;
@@ -9,12 +10,12 @@ const int MAX_SPEED = 150;
 
 enum class Direction
 {
-	Backwards,
-	Forwards,
+	Backwards = -1,
 	Stopped,
+	Forwards,
 };
 
-enum class Gears
+enum class Gear
 {
 	Reversed = MIN_GEAR,
 	Neutral,
@@ -26,38 +27,39 @@ enum class Gears
 };
 
 using SpeedInterval = std::pair<int, int>;
-using GearsSpeedInterval = std::map<Gears, SpeedInterval>;
+using GearsSpeedInterval = std::map<Gear, SpeedInterval>;
 
-const GearsSpeedInterval gearsSpeedInterval = {
-	{ Gears::Reversed, { MIN_SPEED, 20 } },
-	{ Gears::Neutral, { MIN_SPEED , MAX_SPEED} },
-	{ Gears::First, {0, 30} },
-	{ Gears::Second, {20, 50} },
-	{ Gears::Third, {30, 60} },
-	{ Gears::Thourth, {40, 90} },
-	{ Gears::Fifth, { 50, MAX_SPEED } }
+const GearsSpeedInterval gearsSpeedIntervals = {
+	{ Gear::Reversed, { MIN_SPEED, 20 } },
+	{ Gear::Neutral, { MIN_SPEED , MAX_SPEED} },
+	{ Gear::First, {0, 30} },
+	{ Gear::Second, {20, 50} },
+	{ Gear::Third, {30, 60} },
+	{ Gear::Thourth, {40, 90} },
+	{ Gear::Fifth, { 50, MAX_SPEED } }
 };
 
 
 class Car
 {
 public:
-	
-
 	Car();
 
 	bool IsTurnedOn() const;
-	int GetDirection() const;
+	Direction GetDirection() const;
+	Gear GetGear() const;
 	int GetSpeed() const; 
-	int GetGear() const;
 
 	bool TurnOnEngine();
 	bool TurnOffEngine();
-	bool SetGear(int gear);
+	bool SetGear(Gear gear);
 	bool SetSpeed(int speed);
+
+	void PrintInfo();
 
 private:
 	bool m_isEngineOn;
 	int m_speed;
-	int m_gear;
+	Gear m_gear;
+	Direction m_direction;
 };
