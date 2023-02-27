@@ -10,26 +10,15 @@ std::set<size_t> GeneratePrimeNumbersSet(size_t upperBound)
 
 	std::vector<bool> sieve(upperBound + 1, true);
 
-	int sqrtUpperBound = static_cast<int>(round(sqrt(upperBound)));
-	sieve[0] = false;
-	sieve[1] = false;
-
-	for (size_t i = 2; i <= sqrtUpperBound; i++)
-	{
-		if (sieve[i])
-		{
-			for (size_t j = i * i; j <= upperBound; j += i)
-			{
-				sieve[j] = false;
-			}
-		}
-	}
-
-	for (size_t i = 0; i <= upperBound; i++)
+	for (size_t i = 2; i <= upperBound; i++)
 	{
 		if (sieve[i])
 		{
 			primesSet.emplace(i);
+			for (size_t j = i * i; j <= upperBound; j += i)
+			{
+				sieve[j] = false;
+			}
 		}
 	}
 

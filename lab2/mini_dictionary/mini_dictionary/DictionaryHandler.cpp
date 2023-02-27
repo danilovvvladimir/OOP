@@ -20,7 +20,6 @@ int HandleDictionary(std::string inputFilePath, std::istream& input, std::ostrea
 
 	bool isWordAdded = false;
 	HandleSession(isWordAdded, dictionaries, input, output);
-
 	if (!isWordAdded)
 	{
 		return 0;
@@ -67,7 +66,7 @@ void HandleSession(bool& isWordAdded, Dictionaries& dictionaries, std::istream& 
 		}
 		SwitchIsRussian(searchedString, isRussian);
 
-		if (isRussian)
+		if (!isRussian)
 		{
 			searchedString = TransormToLowerCase(searchedString);
 		}
@@ -131,16 +130,7 @@ bool FindTranslation(bool& isRussian, bool& isWordAdded, Dictionaries& dictionar
 
 	for (auto el : dictionaries.mainDict)
 	{
-		if (isRussian)
-		{
-			searchedEl = el.second;
-			translationEl = el.first;
-		}
-		else
-		{
-			translationEl = el.second;
-			searchedEl = el.first;
-		}
+		SwitchFindingLanguage(isRussian, searchedEl, translationEl, el.first, el.second);
 
 		if (searchedEl == searchedString)
 		{
@@ -159,6 +149,20 @@ bool FindTranslation(bool& isRussian, bool& isWordAdded, Dictionaries& dictionar
 		return true;
 	}
 	return false;
+}
+
+void SwitchFindingLanguage(bool& isRussian, std::string& searchedEl, std::string& translationEl, std::string firstElement, std::string secondElement )
+{
+	if (isRussian)
+	{
+		searchedEl = secondElement;
+		translationEl = firstElement;
+	}
+	else
+	{
+		searchedEl = firstElement;
+		translationEl = secondElement;
+	}
 }
 
 void AddTranslation(bool& isWordAdded, bool& isRussian, Dictionaries& dictionaries, std::string& searchedString, std::string& translationString, std::ostream& output)

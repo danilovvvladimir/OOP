@@ -26,6 +26,7 @@ void SwitchIsRussian(std::string const& searchedString, bool& isRussian);
 bool FindTranslation(bool& isRussian, bool& isWordAdded, Dictionaries& dictionaries, std::string& searchedString, std::ostream& output);
 void HandleAddingTranslation(std::string& searchedString, bool& isRussian, bool& isWordAdded, Dictionaries& dictionaries, std::istream& input, std::ostream& output);
 void AddTranslation(bool& isWordAdded, bool& isRussian, Dictionaries& dictionaries, std::string& searchedString, std::string& translationString, std::ostream& output);
+void SwitchFindingLanguage(bool& isRussian, std::string& searchedEl, std::string& translationEl, std::string firstElement, std::string secondElement);
 void SaveDictionary(std::ostream& outputFile, Dictionary& sessionDict, bool& isFileMissing, std::istream& input, std::ostream& output);
 std::string GetNewDictionaryPath(std::ostream& output);
 bool HandleSavingDictionary(bool& isFileMissing, Dictionaries& dictionaries, std::ostream& inputFile, std::istream& input, std::ostream& output);
