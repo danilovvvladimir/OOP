@@ -7,7 +7,7 @@ CarRemoteController::CarRemoteController(Car& car, std::istream& input, std::ost
 	, m_actionMap({
 		  { "Info", bind(&CarRemoteController::Info, this, std::placeholders::_1) },
 		  { "EngineOn", bind(&CarRemoteController::EngineOn, this, std::placeholders::_1) },
-		  { "EngineOf", bind(&CarRemoteController::EngineOff, this, std::placeholders::_1) },
+		  { "EngineOff", bind(&CarRemoteController::EngineOff, this, std::placeholders::_1) },
 		  { "SetSpeed", bind(&CarRemoteController::SetSpeed, this, std::placeholders::_1) },
 		  { "SetGear", bind(&CarRemoteController::SetGear, this, std::placeholders::_1) },
 	  })
@@ -36,25 +36,102 @@ bool CarRemoteController::HandleCommand()
 
 bool CarRemoteController::Info(std::istream& args)
 {
-	return false;
+	std::string info;
+	info += "Engine: ";
+	info += (m_car.IsTurnedOn() ? "ON" : "OFF");
+
+	info += "\nDirection: ";
+	switch (m_car.GetDirection())
+	{
+	case Direction::Stopped:
+		info += "Stopped";
+		break;
+	case Direction::Forwards:
+		info += "Forward";
+		break;
+	case Direction::Backwards:
+		info += "Backward";
+		break;
+	}
+
+	info += "\nSpeed: ";
+	info += std::to_string(m_car.GetSpeed());
+	info += "\nGear: ";
+	info += std::to_string(static_cast<int>(m_car.GetGear()));
+
+	m_outputStream << info << std::endl;
+
+	return true;
 }
 
 bool CarRemoteController::EngineOn(std::istream& args)
 {
-	return false;
+	if (m_car.IsTurnedOn())
+	{
+		m_outputStream << "Engine is already turned ON" << std::endl;
+		return true;
+	}
+	m_car.TurnOnEngine();
+
+	m_outputStream << "Engine has been turned ON" << std::endl;
+	return true;
 }
 
 bool CarRemoteController::EngineOff(std::istream& args)
 {
-	return false;
+
+	if (!m_car.IsTurnedOn())
+	{
+		m_outputStream << "Engine is already turned OFF" << std::endl;
+		return true;
+	}
+
+	if (m_car.TurnOffEngine())
+	{
+		m_outputStream << "Engine has been turned OFF" << std::endl;
+		return true;
+	}
+
+	m_outputStream << "You can't turn OFF the engine: the speed must be 0 and gear must be Neutral" << std::endl;
+	return true;
 }
 
 bool CarRemoteController::SetGear(std::istream& args)
 {
-	return false;
+	int gear;
+	std::string gearString;
+
+	args >> gearString;
+	gear = stoi(gearString);
+
+	if (m_car.SetGear(static_cast<Gear>(gear)))
+	{
+		m_outputStream << "Gear has been set" << std::endl;
+	}
+	else
+	{
+		m_outputStream << "Unable to set the gear" << std::endl;
+	}
+
+	return true;
 }
 
 bool CarRemoteController::SetSpeed(std::istream& args)
 {
-	return false;
+	int speed;
+	std::string speedString;
+
+	args >> speedString;
+	speed = stoi(speedString);
+
+	if (m_car.SetSpeed(speed))
+	{
+		m_outputStream << "Speed has been set" << std::endl;
+	}
+	else
+	{
+		m_outputStream << "Unable to set the speed" << std::endl;
+	}
+
+	return true;
 }

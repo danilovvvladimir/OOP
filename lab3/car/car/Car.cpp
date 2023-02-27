@@ -70,7 +70,6 @@ bool Car::SetGear(Gear gear)
 		}
 
 		m_gear = gear;
-		m_direction = Direction::Backwards;
 		return true;
 	}
 
@@ -79,10 +78,6 @@ bool Car::SetGear(Gear gear)
 
 	if (isSpeedOkForNewGear)
 	{
-		if (m_direction == Direction::Stopped)
-		{
-			m_direction = Direction::Forwards;
-		}
 		m_gear = gear;
 		return true;
 	}
@@ -100,21 +95,23 @@ bool Car::SetSpeed(int speed)
 	if ((isGearNeutral && isSpeedOKforNeutral) || (!isGearNeutral && isSpeedOKforNotNeutral))
 	{
 		m_speed = speed;
+		if (m_direction == Direction::Stopped && (m_gear != Gear::Reversed && !isGearNeutral))
+		{
+			m_direction = Direction::Forwards;
+		}
+
+		if (m_direction == Direction::Stopped && m_gear == Gear::Reversed)
+		{
+			m_direction =  Direction::Backwards;
+		}
+
 		if (speed == MIN_SPEED)
 		{
 			m_direction = Direction::Stopped;
 		}
+
 		return true;
 	}
 
-
 	return false;
 }
-//
-//void Car::PrintInfo()
-//{
-//	std::cout << "Speed: " << GetSpeed() << std::endl;
-//	std::cout << "Direction: " << static_cast<int>(GetDirection()) << std::endl;
-//	std::cout << "Gear: " << static_cast<int>(GetGear()) << std::endl;
-//	std::cout << "Engine: " << IsTurnedOn() << std::endl;
-//}
