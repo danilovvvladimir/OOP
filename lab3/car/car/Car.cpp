@@ -3,8 +3,8 @@
 Car::Car()
 	: m_isEngineOn(false)
 	, m_speed(MIN_SPEED)
-	, m_gear(Gear::Neutral)
-	, m_direction(Direction::Stopped)
+	, m_gear(Gear::NEUTRAL)
+	, m_direction(Direction::STOPPED)
 {
 }
 
@@ -32,8 +32,8 @@ bool Car::TurnOnEngine()
 {
 	if (!m_isEngineOn)
 	{
-		m_direction = Direction::Stopped;
-		m_gear = Gear::Neutral;
+		m_direction = Direction::STOPPED;
+		m_gear = Gear::NEUTRAL;
 		m_isEngineOn = true;
 	}
 	return true;
@@ -41,7 +41,12 @@ bool Car::TurnOnEngine()
 
 bool Car::TurnOffEngine()
 {
-	if (m_direction == Direction::Stopped && m_gear == Gear::Neutral)
+	if (!m_isEngineOn)
+	{
+		return true;
+	}
+
+	if (m_direction == Direction::STOPPED && m_gear == Gear::NEUTRAL)
 	{
 		m_isEngineOn = false;
 		return true;
@@ -56,15 +61,15 @@ bool Car::SetGear(Gear gear)
 		return false;
 	}
 
-	if (gear == Gear::Neutral)
+	if (gear == Gear::NEUTRAL)
 	{
 		m_gear = gear;
 		return true;
 	}
 
-	if (gear == Gear::Reversed)
+	if (gear == Gear::REVERSED)
 	{
-		if (m_direction != Direction::Stopped)
+		if (m_direction != Direction::STOPPED)
 		{
 			return false;
 		}
@@ -86,28 +91,33 @@ bool Car::SetGear(Gear gear)
 
 bool Car::SetSpeed(int speed)
 {
-	SpeedInterval currentGearSpeedInterval = gearsSpeedIntervals.find(m_gear)->second;
+	if (!m_isEngineOn)
+	{
+		return false;
+	}
 
-	bool isGearNeutral= m_gear == Gear::Neutral;
+	SpeedInterval currentGearSpeedInterval = gearsSpeedIntervals.find(m_gear)->second;
+	bool isGearNeutral = (m_gear == Gear::NEUTRAL);
 	bool isSpeedOKforNeutral = (speed >= MIN_SPEED && speed <= m_speed);
 	bool isSpeedOKforNotNeutral = (speed >= currentGearSpeedInterval.first && speed <= currentGearSpeedInterval.second);
 
 	if ((isGearNeutral && isSpeedOKforNeutral) || (!isGearNeutral && isSpeedOKforNotNeutral))
 	{
 		m_speed = speed;
-		if (m_direction == Direction::Stopped && (m_gear != Gear::Reversed && !isGearNeutral))
+
+		if (m_direction == Direction::STOPPED && (m_gear != Gear::REVERSED && !isGearNeutral))
 		{
-			m_direction = Direction::Forwards;
+			m_direction = Direction::FORWARD;
 		}
 
-		if (m_direction == Direction::Stopped && m_gear == Gear::Reversed)
+		if (m_direction == Direction::STOPPED && m_gear == Gear::REVERSED)
 		{
-			m_direction =  Direction::Backwards;
+			m_direction =  Direction::BACKWARDS;
 		}
 
 		if (speed == MIN_SPEED)
 		{
-			m_direction = Direction::Stopped;
+			m_direction = Direction::STOPPED;
 		}
 
 		return true;

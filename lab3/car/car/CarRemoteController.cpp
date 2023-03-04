@@ -10,6 +10,7 @@ CarRemoteController::CarRemoteController(Car& car, std::istream& input, std::ost
 		  { "EngineOff", bind(&CarRemoteController::EngineOff, this, std::placeholders::_1) },
 		  { "SetSpeed", bind(&CarRemoteController::SetSpeed, this, std::placeholders::_1) },
 		  { "SetGear", bind(&CarRemoteController::SetGear, this, std::placeholders::_1) },
+		  { "Help", bind(&CarRemoteController::Help, this, std::placeholders::_1) },
 	  })
 {
 }
@@ -43,13 +44,13 @@ bool CarRemoteController::Info(std::istream& args)
 	info += "\nDirection: ";
 	switch (m_car.GetDirection())
 	{
-	case Direction::Stopped:
+	case Direction::STOPPED:
 		info += "Stopped";
 		break;
-	case Direction::Forwards:
+	case Direction::FORWARD:
 		info += "Forward";
 		break;
-	case Direction::Backwards:
+	case Direction::BACKWARDS:
 		info += "Backward";
 		break;
 	}
@@ -101,7 +102,14 @@ bool CarRemoteController::SetGear(std::istream& args)
 	int gear;
 	std::string gearString;
 
+	if (args.eof())
+	{
+		m_outputStream << "Correct usage: SetGear <gear>" << std::endl;
+		return false;
+	}
+
 	args >> gearString;
+
 	gear = stoi(gearString);
 
 	if (m_car.SetGear(static_cast<Gear>(gear)))
@@ -110,7 +118,9 @@ bool CarRemoteController::SetGear(std::istream& args)
 	}
 	else
 	{
-		m_outputStream << "Unable to set the gear" << std::endl;
+		m_outputStream << "Unable to set the gear:" << std::endl
+					   << "- Engine must be turned ON." << std::endl
+					   << "- Set REVERSED gear(-1) only when you are STOPPED." << std::endl;
 	}
 
 	return true;
@@ -121,17 +131,47 @@ bool CarRemoteController::SetSpeed(std::istream& args)
 	int speed;
 	std::string speedString;
 
+	if (args.eof())
+	{
+		m_outputStream << "Correct usage: SetSpeed <speed>." << std::endl;
+		return false;
+	}
+
 	args >> speedString;
+
 	speed = stoi(speedString);
 
 	if (m_car.SetSpeed(speed))
 	{
-		m_outputStream << "Speed has been set" << std::endl;
+		m_outputStream << "Speed has been set." << std::endl;
 	}
 	else
 	{
-		m_outputStream << "Unable to set the speed" << std::endl;
+		m_outputStream << "Unable to set the speed:" << std::endl
+					   << "- Engine must be turned ON." << std::endl
+					   << "- If you are on NEUTRAL gear, you can not speed up." << std::endl
+					   << "- If you are not on NEUTRAL gear, " << std::endl
+					   << "you can only set speed for your current gear." << std::endl;
 	}
+
+	return true;
+}
+
+bool CarRemoteController::Help(std::istream& args)
+{
+	m_outputStream << "Available commands:" << std::endl
+				   << "-Menu: shows available commands" << std::endl
+				   << "-Info: print current CAR info." << std::endl
+				   << "-Help: shows available commands." << std::endl
+				   << "-EngineOn: turn ON the engine." << std::endl
+				   << "-EngineOff: turn OFF the engine." << std::endl
+				   << "-SetGear: set car gear." << std::endl
+				   << "--- Engine must be turned ON." << std::endl
+				   << "--- Set REVERSED gear(-1) only when you are STOPPED." << std::endl
+				   << "-SetSpeed: set car speed." << std::endl
+				   << "--- If you are on NEUTRAL gear, you can not speed up." << std::endl
+				   << "--- If you are not on NEUTRAL gear, " << std::endl
+				   << "you can only set speed for your current gear." << std::endl;
 
 	return true;
 }

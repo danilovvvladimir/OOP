@@ -1,4 +1,6 @@
-﻿#include "Car.h"
+﻿#pragma once
+
+#include "Car.h"
 #include <stdio.h>
 #include <tchar.h>
 
@@ -8,15 +10,11 @@
 #include <functional>
 
 
-
-#pragma once
 class CarRemoteController
 {
 public:
 	CarRemoteController(Car& car, std::istream& input, std::ostream& output);
 	bool HandleCommand();
-	
-	//CarRemoteController& operator=(const CarRemoteController&) = delete;
 
 private:
 	bool Info(std::istream& args);
@@ -24,6 +22,7 @@ private:
 	bool EngineOff(std::istream& args);
 	bool SetGear(std::istream& args);
 	bool SetSpeed(std::istream& args);
+	bool Help(std::istream& args);
 
 	std::istream& m_inputStream;
 	std::ostream& m_outputStream;

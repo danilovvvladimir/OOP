@@ -8,35 +8,53 @@ const int MAX_GEAR = 5;
 const int MIN_SPEED = 0;
 const int MAX_SPEED = 150;
 
+const int REVERSED_GEAR_MIN_SPEED = MIN_SPEED;
+const int REVERSED_GEAR_MAX_SPEED = 20;
+
+const int FIRST_GEAR_MIN_SPEED = MIN_SPEED;
+const int FIRST_GEAR_MAX_SPEED = 30;
+
+const int SECOND_GEAR_MIN_SPEED = 20;
+const int SECOND_GEAR_MAX_SPEED = 50;
+
+const int THIRD_GEAR_MIN_SPEED = 30;
+const int THIRD_GEAR_MAX_SPEED = 60;
+
+const int FOURTH_GEAR_MIN_SPEED = 40;
+const int FOURTH_GEAR_MAX_SPEED = 90;
+
+const int FIFTH_GEAR_MIN_SPEED = 50;
+const int FIFTH_GEAR_MAX_SPEED = MAX_SPEED;
+
 enum class Direction
 {
-	Backwards = -1,
-	Stopped,
-	Forwards,
+	BACKWARDS = -1,
+	STOPPED,
+	FORWARD,
 };
 
 enum class Gear
 {
-	Reversed = MIN_GEAR,
-	Neutral,
-	First,
-	Second,
-	Third,
-	Thourth,
-	Fifth,
+	REVERSED = MIN_GEAR,
+	NEUTRAL,
+	FIRST,
+	SECOND,
+	THIRD,
+	FOURTH,
+	FIFTH,
 };
 
 using SpeedInterval = std::pair<int, int>;
 using GearsSpeedInterval = std::map<Gear, SpeedInterval>;
 
 const GearsSpeedInterval gearsSpeedIntervals = {
-	{ Gear::Reversed, { MIN_SPEED, 20 } },
-	{ Gear::Neutral, { MIN_SPEED , MAX_SPEED} },
-	{ Gear::First, {0, 30} },
-	{ Gear::Second, {20, 50} },
-	{ Gear::Third, {30, 60} },
-	{ Gear::Thourth, {40, 90} },
-	{ Gear::Fifth, { 50, MAX_SPEED } }
+	{ Gear::REVERSED, { REVERSED_GEAR_MIN_SPEED, REVERSED_GEAR_MAX_SPEED } },
+	{ Gear::NEUTRAL, { MIN_SPEED, MAX_SPEED } },
+	{ Gear::FIRST, { FIRST_GEAR_MIN_SPEED, FIRST_GEAR_MAX_SPEED } },
+	{ Gear::SECOND, { SECOND_GEAR_MIN_SPEED, SECOND_GEAR_MAX_SPEED } },
+	{ Gear::THIRD, { THIRD_GEAR_MIN_SPEED, FOURTH_GEAR_MAX_SPEED } },
+	{ Gear::FOURTH, { FOURTH_GEAR_MIN_SPEED, FOURTH_GEAR_MAX_SPEED } },
+	{ Gear::FIFTH, { FIFTH_GEAR_MIN_SPEED, FIFTH_GEAR_MAX_SPEED } }
 };
 
 

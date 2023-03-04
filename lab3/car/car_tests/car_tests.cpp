@@ -10,8 +10,8 @@ SCENARIO("Testing inited Car")
 		Car car;
 		THEN("Direction: stopped, gear: neutral, engine: turned off, speed: 0")
 		{
-			REQUIRE(car.GetDirection() == Direction::Stopped);
-			REQUIRE(car.GetGear() == Gear::Neutral);
+			REQUIRE(car.GetDirection() == Direction::STOPPED);
+			REQUIRE(car.GetGear() == Gear::NEUTRAL);
 			REQUIRE(car.GetSpeed() == MIN_SPEED);
 			REQUIRE(!car.IsTurnedOn());
 		}
@@ -26,6 +26,7 @@ SCENARIO("Turn ON/OFF engine")
 		THEN("Engine is turned ON")
 		{
 			REQUIRE(!car.IsTurnedOn());
+
 			REQUIRE(car.TurnOnEngine());
 			REQUIRE(car.IsTurnedOn());
 		}
@@ -38,6 +39,7 @@ SCENARIO("Turn ON/OFF engine")
 			REQUIRE(!car.IsTurnedOn());
 			REQUIRE(car.TurnOnEngine());
 			REQUIRE(car.IsTurnedOn());
+
 			REQUIRE(car.TurnOnEngine());
 			REQUIRE(car.IsTurnedOn());
 		}
@@ -49,6 +51,7 @@ SCENARIO("Turn ON/OFF engine")
 		{
 			REQUIRE(!car.IsTurnedOn());
 			REQUIRE(car.TurnOffEngine());
+
 			REQUIRE(!car.IsTurnedOn());
 		}
 	}
@@ -60,6 +63,7 @@ SCENARIO("Turn ON/OFF engine")
 			REQUIRE(!car.IsTurnedOn());
 			REQUIRE(car.TurnOnEngine());
 			REQUIRE(car.IsTurnedOn());
+
 			REQUIRE(car.TurnOffEngine());
 			REQUIRE(!car.IsTurnedOn());
 		}
@@ -74,9 +78,10 @@ SCENARIO("Test set gear")
 		THEN("Gear is still neutral")
 		{
 			REQUIRE(!car.IsTurnedOn());
-			REQUIRE(car.GetGear() == Gear::Neutral);
-			REQUIRE(!car.SetGear(Gear::Fifth));
-			REQUIRE(car.GetGear() == Gear::Neutral);
+			REQUIRE(car.GetGear() == Gear::NEUTRAL);
+
+			REQUIRE(!car.SetGear(Gear::FIFTH));
+			REQUIRE(car.GetGear() == Gear::NEUTRAL);
 		}
 	}
 	WHEN("Engine is turned ON and switch gear to first")
@@ -86,9 +91,10 @@ SCENARIO("Test set gear")
 		{
 			REQUIRE(car.TurnOnEngine());
 			REQUIRE(car.IsTurnedOn());
-			REQUIRE(car.GetGear() == Gear::Neutral);
-			REQUIRE(car.SetGear(Gear::First));
-			REQUIRE(car.GetGear() == Gear::First);
+			REQUIRE(car.GetGear() == Gear::NEUTRAL);
+
+			REQUIRE(car.SetGear(Gear::FIRST));
+			REQUIRE(car.GetGear() == Gear::FIRST);
 		}
 	}
 	WHEN("Engine is turned ON and switch gear to reversed")
@@ -98,9 +104,10 @@ SCENARIO("Test set gear")
 		{
 			REQUIRE(car.TurnOnEngine());
 			REQUIRE(car.IsTurnedOn());
-			REQUIRE(car.GetGear() == Gear::Neutral);
-			REQUIRE(car.SetGear(Gear::Reversed));
-			REQUIRE(car.GetGear() == Gear::Reversed);
+			REQUIRE(car.GetGear() == Gear::NEUTRAL);
+
+			REQUIRE(car.SetGear(Gear::REVERSED));
+			REQUIRE(car.GetGear() == Gear::REVERSED);
 		}
 	}
 	WHEN("Engine is turned ON and switch gear to second")
@@ -110,9 +117,10 @@ SCENARIO("Test set gear")
 		{
 			REQUIRE(car.TurnOnEngine());
 			REQUIRE(car.IsTurnedOn());
-			REQUIRE(car.GetGear() == Gear::Neutral);
-			REQUIRE(!car.SetGear(Gear::Second));
-			REQUIRE(car.GetGear() == Gear::Neutral);
+			REQUIRE(car.GetGear() == Gear::NEUTRAL);
+
+			REQUIRE(!car.SetGear(Gear::SECOND));
+			REQUIRE(car.GetGear() == Gear::NEUTRAL);
 		}
 	}
 }
@@ -126,6 +134,7 @@ SCENARIO("Test set speed")
 		{
 			REQUIRE(!car.IsTurnedOn());
 			REQUIRE(car.GetSpeed() == 0);
+
 			REQUIRE(!car.SetSpeed(10));
 			REQUIRE(car.GetSpeed() == 0);
 		}
@@ -137,8 +146,9 @@ SCENARIO("Test set speed")
 		{
 			REQUIRE(car.TurnOnEngine());
 			REQUIRE(car.IsTurnedOn());
-			REQUIRE(car.GetGear() == Gear::Neutral);
+			REQUIRE(car.GetGear() == Gear::NEUTRAL);
 			REQUIRE(car.GetSpeed() == 0);
+
 			REQUIRE(!car.SetSpeed(10));
 			REQUIRE(car.GetSpeed() == 0);
 		}
@@ -150,12 +160,13 @@ SCENARIO("Test set speed")
 		{
 			REQUIRE(car.TurnOnEngine());
 			REQUIRE(car.IsTurnedOn());
-			REQUIRE(car.GetGear() == Gear::Neutral);
+			REQUIRE(car.GetGear() == Gear::NEUTRAL);
 			REQUIRE(car.GetSpeed() == 0);
-			REQUIRE(car.SetGear(Gear::First));
+			REQUIRE(car.SetGear(Gear::FIRST));
 			REQUIRE(car.SetSpeed(10));
+
 			REQUIRE(car.GetSpeed() == 10);
-			REQUIRE(car.GetGear() == Gear::First);
+			REQUIRE(car.GetGear() == Gear::FIRST);
 		}
 	}
 	WHEN("Set speed to unavailable value for current gear")
@@ -164,11 +175,12 @@ SCENARIO("Test set speed")
 		THEN("speed is the same")
 		{
 			REQUIRE(car.TurnOnEngine());
-			REQUIRE(car.SetGear(Gear::First));
+			REQUIRE(car.SetGear(Gear::FIRST));
 			REQUIRE(car.GetSpeed() == 0);
+
 			REQUIRE(!car.SetSpeed(31));
 			REQUIRE(car.GetSpeed() == 0);
-			REQUIRE(car.GetGear() == Gear::First);
+			REQUIRE(car.GetGear() == Gear::FIRST);
 		}
 	}
 }
@@ -181,15 +193,15 @@ SCENARIO("Combined testing")
 		THEN("gear is fifth, speed it 150")
 		{
 			REQUIRE(car.TurnOnEngine());
-			REQUIRE(car.GetGear() == Gear::Neutral);
+			REQUIRE(car.GetGear() == Gear::NEUTRAL);
 			REQUIRE(car.GetSpeed() == 0);
-			REQUIRE(car.SetGear(Gear::First));
+			REQUIRE(car.SetGear(Gear::FIRST));
 			REQUIRE(car.SetSpeed(30));
 			REQUIRE(car.GetSpeed() == 30);
-			REQUIRE(car.SetGear(Gear::Second));
+			REQUIRE(car.SetGear(Gear::SECOND));
 			REQUIRE(car.SetSpeed(50));
 			REQUIRE(car.GetSpeed() == 50);
-			REQUIRE(car.SetGear(Gear::Fifth));
+			REQUIRE(car.SetGear(Gear::FIFTH));
 			REQUIRE(car.SetSpeed(150));
 			REQUIRE(car.GetSpeed() == 150);
 		}
@@ -200,28 +212,28 @@ SCENARIO("Combined testing")
 		THEN("gear is fifth, speed it 150")
 		{
 			REQUIRE(car.TurnOnEngine());
-			REQUIRE(car.GetGear() == Gear::Neutral);
+			REQUIRE(car.GetGear() == Gear::NEUTRAL);
 			REQUIRE(car.GetSpeed() == 0);
-			REQUIRE(car.SetGear(Gear::First));
+			REQUIRE(car.SetGear(Gear::FIRST));
 			REQUIRE(car.SetSpeed(30));
 			REQUIRE(car.GetSpeed() == 30);
-			REQUIRE(car.SetGear(Gear::Second));
+			REQUIRE(car.SetGear(Gear::SECOND));
 			REQUIRE(car.SetSpeed(50));
 			REQUIRE(car.GetSpeed() == 50);
-			REQUIRE(car.SetGear(Gear::Fifth));
+			REQUIRE(car.SetGear(Gear::FIFTH));
 			REQUIRE(car.SetSpeed(150));
 			REQUIRE(car.GetSpeed() == 150);
-			REQUIRE(car.GetDirection() == Direction::Forwards);
+			REQUIRE(car.GetDirection() == Direction::FORWARD);
 
 			REQUIRE(car.SetSpeed(50));
-			REQUIRE(car.SetGear(Gear::Second));
+			REQUIRE(car.SetGear(Gear::SECOND));
 			REQUIRE(car.SetSpeed(30));
-			REQUIRE(car.SetGear(Gear::First));
+			REQUIRE(car.SetGear(Gear::FIRST));
 			REQUIRE(car.SetSpeed(0));
-			REQUIRE(car.GetDirection() == Direction::Stopped);
-			REQUIRE(car.SetGear(Gear::Reversed));
+			REQUIRE(car.GetDirection() == Direction::STOPPED);
+			REQUIRE(car.SetGear(Gear::REVERSED));
 			REQUIRE(car.SetSpeed(20));
-			REQUIRE(car.GetDirection() == Direction::Backwards);
+			REQUIRE(car.GetDirection() == Direction::BACKWARDS);
 		}
 	}
 }
@@ -235,12 +247,13 @@ SCENARIO("Complicated testing")
 		THEN("Direction is reversed")
 		{
 			REQUIRE(car.TurnOnEngine());
-			REQUIRE(car.GetGear() == Gear::Neutral);
+			REQUIRE(car.GetGear() == Gear::NEUTRAL);
 			REQUIRE(car.GetSpeed() == 0);
-			REQUIRE(car.GetDirection() == Direction::Stopped);
+			REQUIRE(car.GetDirection() == Direction::STOPPED);
 
-			REQUIRE(car.SetGear(Gear::Reversed));
-			REQUIRE(car.GetDirection() == Direction::Backwards);
+			REQUIRE(car.SetGear(Gear::REVERSED));
+			REQUIRE(car.SetSpeed(10));
+			REQUIRE(car.GetDirection() == Direction::BACKWARDS);
 		}
 	}
 
@@ -250,16 +263,16 @@ SCENARIO("Complicated testing")
 		THEN("Direction is forward, gear is still first")
 		{
 			REQUIRE(car.TurnOnEngine());
-			REQUIRE(car.GetDirection() == Direction::Stopped);
-			REQUIRE(car.GetGear() == Gear::Neutral);
+			REQUIRE(car.GetDirection() == Direction::STOPPED);
+			REQUIRE(car.GetGear() == Gear::NEUTRAL);
 			REQUIRE(car.GetSpeed() == 0);
-			REQUIRE(car.SetGear(Gear::First));
+			REQUIRE(car.SetGear(Gear::FIRST));
 			REQUIRE(car.SetSpeed(1));
-			REQUIRE(car.GetDirection() == Direction::Forwards);
+			REQUIRE(car.GetDirection() == Direction::FORWARD);
 
-			REQUIRE(!car.SetGear(Gear::Reversed));
-			REQUIRE(car.GetGear() == Gear::First);
-			REQUIRE(car.GetDirection() == Direction::Forwards);
+			REQUIRE(!car.SetGear(Gear::REVERSED));
+			REQUIRE(car.GetGear() == Gear::FIRST);
+			REQUIRE(car.GetDirection() == Direction::FORWARD);
 		}
 	}
 
@@ -269,17 +282,17 @@ SCENARIO("Complicated testing")
 		THEN("Direction is still backwars, gear is neutral")
 		{
 			REQUIRE(car.TurnOnEngine());
-			REQUIRE(car.GetDirection() == Direction::Stopped);
-			REQUIRE(car.GetGear() == Gear::Neutral);
+			REQUIRE(car.GetDirection() == Direction::STOPPED);
+			REQUIRE(car.GetGear() == Gear::NEUTRAL);
 			REQUIRE(car.GetSpeed() == 0);
-			REQUIRE(car.SetGear(Gear::Reversed));
+			REQUIRE(car.SetGear(Gear::REVERSED));
 			REQUIRE(car.SetSpeed(1));
-			REQUIRE(car.GetDirection() == Direction::Backwards);
-			REQUIRE(car.SetGear(Gear::Neutral));
-			REQUIRE(car.GetGear() == Gear::Neutral);
+			REQUIRE(car.GetDirection() == Direction::BACKWARDS);
+			REQUIRE(car.SetGear(Gear::NEUTRAL));
+			REQUIRE(car.GetGear() == Gear::NEUTRAL);
 
-			REQUIRE(!car.SetGear(Gear::Reversed));
-			REQUIRE(car.GetGear() == Gear::Neutral);
+			REQUIRE(!car.SetGear(Gear::REVERSED));
+			REQUIRE(car.GetGear() == Gear::NEUTRAL);
 		}
 	}
 
@@ -290,14 +303,16 @@ SCENARIO("Complicated testing")
 		{
 			REQUIRE(car.TurnOnEngine());
 			REQUIRE(car.GetSpeed() == 0);
-			REQUIRE(car.SetGear(Gear::Reversed));
+			REQUIRE(car.SetGear(Gear::REVERSED));
 			REQUIRE(car.SetSpeed(10));
-			REQUIRE(car.GetDirection() == Direction::Backwards);
+			REQUIRE(car.GetDirection() == Direction::BACKWARDS);
 
 			REQUIRE(car.SetSpeed(0));
-			REQUIRE(car.SetGear(Gear::First));
-			REQUIRE(car.GetGear() == Gear::First);
-			REQUIRE(car.GetDirection() == Direction::Forwards);
+			REQUIRE(car.GetDirection() == Direction::STOPPED);
+			REQUIRE(car.SetGear(Gear::FIRST));
+			REQUIRE(car.GetGear() == Gear::FIRST);
+			REQUIRE(car.SetSpeed(10));
+			REQUIRE(car.GetDirection() == Direction::FORWARD);
 		}
 	}
 }
