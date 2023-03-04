@@ -123,7 +123,6 @@ SCENARIO("Testing DefineVariable")
 	}
 }
 
-// Тест на значения после добавления assign
 SCENARIO("Testing GetVariableValue")
 {
 	WHEN("Variable doesn't exist")
@@ -145,6 +144,18 @@ SCENARIO("Testing GetVariableValue")
 			REQUIRE(calculator.DefineVariable(identifier));
 
 			REQUIRE(isnan(calculator.GetVariableValue(identifier).value()));
+		}
+	}
+	WHEN("Variable exist, and has value")
+	{
+		Calculator calculator;
+		THEN("Returned Value is 777.888")
+		{
+			Identifier identifier = "x";
+			Value value = 777.888;
+			REQUIRE(calculator.AssignVariable(identifier, value));
+
+			REQUIRE(calculator.GetVariableValue(identifier).value() == value);
 		}
 	}
 }
@@ -254,6 +265,34 @@ SCENARIO("Testing AssignVariable with another variable")
 			REQUIRE(calculator.AssignVariable(identifier1, identifier2));
 			REQUIRE(calculator.GetVariableValue(identifier2).value() == value2);
 			
+		}
+	}
+}
+
+SCENARIO("Testing GetAllVariables")
+{
+	WHEN("No vars defined")
+	{
+		Calculator calculator;
+		THEN("Result is empty map")
+		{
+			REQUIRE(calculator.GetAllVariables().empty());
+		}
+	}
+	WHEN("Some vars defined")
+	{
+		Calculator calculator;
+		THEN("Result is map with defined vars")
+		{
+			Identifier identifier1 = "var1";
+			Value value1 = 9014.21214;
+			Identifier identifier2 = "var2";
+			Value value2 = 124.124;
+			REQUIRE(calculator.AssignVariable(identifier1, value1));
+			REQUIRE(calculator.AssignVariable(identifier2, value2));
+			
+
+			REQUIRE(calculator.GetAllVariables() == Variables{{identifier1, value1}, {identifier2, value2}});
 		}
 	}
 }
