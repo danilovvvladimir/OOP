@@ -99,8 +99,6 @@ bool CarRemoteController::EngineOff(std::istream& args)
 
 bool CarRemoteController::SetGear(std::istream& args)
 {
-	int gear;
-	std::string gearString;
 
 	if (args.eof())
 	{
@@ -108,9 +106,20 @@ bool CarRemoteController::SetGear(std::istream& args)
 		return false;
 	}
 
+	std::string gearString;
 	args >> gearString;
 
-	gear = stoi(gearString);
+	int gear;
+	try
+	{
+		gear = stoi(gearString);
+	}
+	catch (...)
+	{
+		m_outputStream << "<Gear> must be a number." << std::endl;
+		return false;
+	}
+
 
 	if (m_car.SetGear(static_cast<Gear>(gear)))
 	{
@@ -120,6 +129,7 @@ bool CarRemoteController::SetGear(std::istream& args)
 	{
 		m_outputStream << "Unable to set the gear:" << std::endl
 					   << "- Engine must be turned ON." << std::endl
+					   << "- Gear must be a number in interval [-1 ... 5]." << std::endl
 					   << "- Set REVERSED gear(-1) only when you are STOPPED." << std::endl;
 	}
 
@@ -128,18 +138,25 @@ bool CarRemoteController::SetGear(std::istream& args)
 
 bool CarRemoteController::SetSpeed(std::istream& args)
 {
-	int speed;
-	std::string speedString;
-
 	if (args.eof())
 	{
 		m_outputStream << "Correct usage: SetSpeed <speed>." << std::endl;
 		return false;
 	}
 
+	std::string speedString;
 	args >> speedString;
 
-	speed = stoi(speedString);
+	int speed;
+	try
+	{
+		speed = stoi(speedString);
+	}
+	catch (...)
+	{
+		m_outputStream << "<Speed> must be a number." << std::endl;
+		return false;
+	}
 
 	if (m_car.SetSpeed(speed))
 	{
