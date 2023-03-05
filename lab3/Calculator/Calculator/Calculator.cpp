@@ -15,7 +15,7 @@ bool Calculator::DefineVariable(Identifier& identifier)
 		return false;
 	}
 
-	m_variables.emplace(identifier, NAN);
+	m_variables.emplace(identifier, NAN_VALUE);
 	return true;
 }
 
@@ -66,7 +66,7 @@ bool Calculator::AssignVariable(Identifier& identifier1, Identifier& identifier2
 
 std::optional<Value> Calculator::GetVariableValue(Identifier& identifier) const
 {
-	if (!IsIdentifierCorrect(identifier) || !IsIdentifierExist(identifier))
+	if (!IsIdentifierExist(identifier))
 	{
 		return std::nullopt;
 	}
@@ -113,26 +113,83 @@ bool Calculator::AssignFunction(Identifier& identifier, Expression expression)
 	}
 
 	m_functions.emplace(identifier, expression);
-	return false;
+	return true;
 }
-//---
+
 bool Calculator::AssignFunction(Identifier& identifier1, Identifier& identifier2)
 {
-	return false;
+	if (IsIdentifierExist(identifier1) || !IsIdentifierExist(identifier2))
+	{
+		return false;
+	}
+
+	if (!IsIdentifierCorrect(identifier1))
+	{
+		return false;
+	}
+
+	m_functions.emplace(identifier1, Expression{ identifier2, Operation::NONE, identifier2 });
+	return true;
 }
 
-//---
-// Вычисленное значение функции
-// т.е, я нахожу expression и его прогоняю
 std::optional<Expression> Calculator::GetFunctionExpression(Identifier& identifier) const
 {
-	return std::optional<Expression>();
+	if (!IsIdentifierExist(identifier))
+	{
+		return std::nullopt;
+	}
+	auto expression = m_functions.find(identifier);
+	return expression->second;
 }
 
-//---
 Value Calculator::GetExpressionValue(Expression& expression) const
 {
-	return Value();
+	Value firstOperandValue;
+	Value secondOperandValue;
+
+	if (m_variables.find(expression.firstOperand) != m_variables.end())
+	{
+		firstOperandValue = GetVariableValue(expression.firstOperand).value();
+	}
+	else
+	{
+		Expression tempExpression = m_functions.find(expression.firstOperand)->second;
+		firstOperandValue = GetExpressionValue(tempExpression);
+	}
+
+	if (m_variables.find(expression.secondOperand) != m_variables.end())
+	{
+		secondOperandValue = GetVariableValue(expression.secondOperand).value();
+	}
+	else
+	{
+		Expression tempExpression = m_functions.find(expression.secondOperand)->second;
+		secondOperandValue = GetExpressionValue(tempExpression);
+	}
+
+	switch (expression.operation)
+	{
+	case Operation::ADDITION:
+		return firstOperandValue + secondOperandValue;
+	case Operation::SUBTRACTION:
+		return firstOperandValue - secondOperandValue;
+	case Operation::MULTIPLICATION:
+		return firstOperandValue * secondOperandValue;
+	case Operation::DIVISION:
+		return firstOperandValue / secondOperandValue;
+	default:
+		return firstOperandValue;
+	}
+}
+
+std::optional<Value> Calculator::GetFunctionValue(Identifier& identifier) const
+{
+	if (!IsIdentifierExist(identifier))
+	{
+		return std::nullopt;
+	}
+	Expression functionExpression = GetFunctionExpression(identifier).value();
+	return GetExpressionValue(functionExpression);
 }
 
 Functions Calculator::GetAllFunctions() const
