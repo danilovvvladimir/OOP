@@ -87,6 +87,20 @@ SCENARIO("Testing IsIdentifierExist")
 			REQUIRE(calculator.IsIdentifierExist(identifierCopy));
 		}
 	}
+	WHEN("Identifier exists")
+	{
+		Calculator calculator;
+		Identifier identifier = "amount";
+		calculator.DefineVariable(identifier);
+
+		Identifier functionIdentifier = "fn1";
+		calculator.AssignFunction(functionIdentifier, identifier);
+		THEN("Return TRUE = identifier is occupied")
+		{
+			Identifier functionIdentifierCopy = "amount";
+			calculator.AssignFunction(functionIdentifierCopy, identifier);
+		}
+	}
 }
 
 SCENARIO("Testing DefineVariable")
@@ -315,6 +329,8 @@ SCENARIO("Testing AssingFunction with expression")
 			Identifier functionIdentifier = "functionId";
 			Identifier identifier1 = "var1";
 			Identifier identifier2 = "var2";
+			REQUIRE(calculator.DefineVariable(identifier1));
+			REQUIRE(calculator.DefineVariable(identifier2));
 			Expression expression = { identifier1, Operation::ADDITION, identifier2 };
 			REQUIRE(calculator.AssignFunction(functionIdentifier, expression));
 		}
@@ -327,6 +343,8 @@ SCENARIO("Testing AssingFunction with expression")
 			Identifier functionIdentifier = "functionId";
 			Identifier identifier1 = "var1";
 			Identifier identifier2 = "var2";
+			REQUIRE(calculator.DefineVariable(identifier1));
+			REQUIRE(calculator.DefineVariable(identifier2));
 			Expression expression = { identifier1, Operation::ADDITION, identifier2 };
 			REQUIRE(calculator.AssignFunction(functionIdentifier, expression));
 
@@ -346,6 +364,8 @@ SCENARIO("Testin AssignFunctionWithIdentifier")
 			Identifier functionIdentifier2 = "functionId2";
 			Identifier identifier1 = "var1";
 			Identifier identifier2 = "var2";
+			REQUIRE(calculator.DefineVariable(identifier1));
+			REQUIRE(calculator.DefineVariable(identifier2));
 			Expression expression = { identifier1, Operation::ADDITION, identifier2 };
 			REQUIRE(calculator.AssignFunction(functionIdentifier, expression));
 			REQUIRE(calculator.AssignFunction(functionIdentifier2, expression));
@@ -362,6 +382,8 @@ SCENARIO("Testin AssignFunctionWithIdentifier")
 			Identifier functionIdentifier2 = "functionId2";
 			Identifier identifier1 = "var1";
 			Identifier identifier2 = "var2";
+			REQUIRE(calculator.DefineVariable(identifier1));
+			REQUIRE(calculator.DefineVariable(identifier2));
 			Expression expression = { identifier1, Operation::ADDITION, identifier2 };
 			REQUIRE(calculator.AssignFunction(functionIdentifier, expression));
 
@@ -387,6 +409,8 @@ SCENARIO("Testin AssignFunctionWithIdentifier")
 			Identifier functionIdentifier2 = "functionId2";
 			Identifier identifier1 = "var1";
 			Identifier identifier2 = "var2";
+			REQUIRE(calculator.DefineVariable(identifier1));
+			REQUIRE(calculator.DefineVariable(identifier2));
 			Expression expression = { identifier1, Operation::ADDITION, identifier2 };
 			REQUIRE(calculator.AssignFunction(functionIdentifier2, expression));
 
@@ -406,6 +430,8 @@ SCENARIO("Testing GetFunctionExpression")
 			Identifier functionIdentifier = "functionId";
 			Identifier identifier1 = "var1";
 			Identifier identifier2 = "var2";
+			REQUIRE(calculator.DefineVariable(identifier1));
+			REQUIRE(calculator.DefineVariable(identifier2));
 			Expression expression = { identifier1, Operation::ADDITION, identifier2 };
 			REQUIRE(calculator.AssignFunction(functionIdentifier, expression));
 

@@ -1,7 +1,5 @@
 #include "Calculator.h"
 
-// AssingFunction tests nado!
-
 Calculator::Calculator()
 	: m_functions({})
 	, m_variables({})
@@ -21,8 +19,6 @@ bool Calculator::DefineVariable(Identifier& identifier)
 
 bool Calculator::AssignVariable(Identifier& identifier, Value value)
 {
-	// если не существует, то провер€ю на корректность и создаю
-	// если существует то, значение прибавл€ю
 	if (IsIdentifierExist(identifier))
 	{
 		m_variables[identifier] = value;
@@ -41,10 +37,6 @@ bool Calculator::AssignVariable(Identifier& identifier, Value value)
 
 bool Calculator::AssignVariable(Identifier& identifier1, Identifier& identifier2)
 {
-	// если не существует id2, to false
-
-	// если не существует id1, то чекаю на корректность, если incorrect то false
-	// ищу в мэпе id2 и создаю новую пару id1 + id2->value
 	if (!IsIdentifierExist(identifier2))
 	{
 		return false;
@@ -57,6 +49,13 @@ bool Calculator::AssignVariable(Identifier& identifier1, Identifier& identifier2
 			return false;
 		}
 		DefineVariable(identifier1);
+	}
+
+	if (IsFunctionExist(identifier2))
+	{
+		auto it = m_functions.find(identifier2);
+		m_variables[identifier1] = GetExpressionValue(it->second);
+		return true;
 	}
 
 	auto it = m_variables.find(identifier2);
@@ -92,14 +91,31 @@ bool Calculator::IsIdentifierCorrect(Identifier& identifier) const
 
 bool Calculator::IsIdentifierExist(Identifier& identifier) const
 {
-	if (m_functions.find(identifier) == m_functions.end() && m_variables.find(identifier) == m_variables.end())
+	if (!IsFunctionExist(identifier) && !IsVariableExist(identifier))
 	{
-		return false; // doesn't exist
+		return false;
 	}
-	return true; // exist
+	return true;
 }
 
-//---
+bool Calculator::IsFunctionExist(Identifier& identifier) const
+{
+	if (m_functions.find(identifier) == m_functions.end())
+	{
+		return false;
+	}
+	return true;
+}
+
+bool Calculator::IsVariableExist(Identifier& identifier) const
+{
+	if (m_variables.find(identifier) == m_variables.end())
+	{
+		return false;
+	}
+	return true;
+}
+
 bool Calculator::AssignFunction(Identifier& identifier, Expression expression)
 {
 	if (!IsIdentifierCorrect(identifier))
@@ -108,6 +124,11 @@ bool Calculator::AssignFunction(Identifier& identifier, Expression expression)
 	}
 
 	if (IsIdentifierExist(identifier))
+	{
+		return false;
+	}
+
+	if (!IsIdentifierExist(expression.firstOperand) || !IsIdentifierExist(expression.secondOperand))
 	{
 		return false;
 	}

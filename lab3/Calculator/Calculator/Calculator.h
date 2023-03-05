@@ -52,6 +52,8 @@ public:
 	Value GetExpressionValue(Expression& expression) const;
 	bool IsIdentifierCorrect(Identifier& identifier) const;
 	bool IsIdentifierExist(Identifier& identifier) const;
+	bool IsFunctionExist(Identifier& identifier) const;
+	bool IsVariableExist(Identifier& identifier) const;
 private:
 	Functions m_functions;
 	Variables m_variables;
