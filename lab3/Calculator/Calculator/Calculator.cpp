@@ -6,7 +6,7 @@ Calculator::Calculator()
 {
 }
 
-bool Calculator::DefineVariable(Identifier& identifier)
+bool Calculator::DefineVariable(Identifier const& identifier)
 {
 	if (!IsIdentifierCorrect(identifier) || IsIdentifierExist(identifier))
 	{
@@ -17,7 +17,7 @@ bool Calculator::DefineVariable(Identifier& identifier)
 	return true;
 }
 
-bool Calculator::AssignVariable(Identifier& identifier, Value value)
+bool Calculator::AssignVariable(Identifier const& identifier, Value const& value)
 {
 	if (IsIdentifierExist(identifier))
 	{
@@ -35,7 +35,7 @@ bool Calculator::AssignVariable(Identifier& identifier, Value value)
 	return false;
 }
 
-bool Calculator::AssignVariable(Identifier& identifier1, Identifier& identifier2)
+bool Calculator::AssignVariable(Identifier const& identifier1, Identifier const& identifier2)
 {
 	if (!IsIdentifierExist(identifier2))
 	{
@@ -63,7 +63,7 @@ bool Calculator::AssignVariable(Identifier& identifier1, Identifier& identifier2
 	return true;
 }
 
-std::optional<Value> Calculator::GetVariableValue(Identifier& identifier) const
+std::optional<Value> Calculator::GetVariableValue(Identifier const& identifier) const
 {
 	if (!IsIdentifierExist(identifier))
 	{
@@ -78,7 +78,7 @@ Variables Calculator::GetAllVariables() const
 	return m_variables;
 }
 
-bool Calculator::IsIdentifierCorrect(Identifier& identifier) const
+bool Calculator::IsIdentifierCorrect(Identifier const& identifier) const
 {
 	std::smatch result;
 	std::regex regex("([a-zA-Z_][a-zA-Z0-9_]*)");
@@ -89,7 +89,7 @@ bool Calculator::IsIdentifierCorrect(Identifier& identifier) const
 	return true;
 }
 
-bool Calculator::IsIdentifierExist(Identifier& identifier) const
+bool Calculator::IsIdentifierExist(Identifier const& identifier) const
 {
 	if (!IsFunctionExist(identifier) && !IsVariableExist(identifier))
 	{
@@ -98,7 +98,7 @@ bool Calculator::IsIdentifierExist(Identifier& identifier) const
 	return true;
 }
 
-bool Calculator::IsFunctionExist(Identifier& identifier) const
+bool Calculator::IsFunctionExist(Identifier const& identifier) const
 {
 	if (m_functions.find(identifier) == m_functions.end())
 	{
@@ -107,7 +107,7 @@ bool Calculator::IsFunctionExist(Identifier& identifier) const
 	return true;
 }
 
-bool Calculator::IsVariableExist(Identifier& identifier) const
+bool Calculator::IsVariableExist(Identifier const& identifier) const
 {
 	if (m_variables.find(identifier) == m_variables.end())
 	{
@@ -116,7 +116,9 @@ bool Calculator::IsVariableExist(Identifier& identifier) const
 	return true;
 }
 
-bool Calculator::AssignFunction(Identifier& identifier, Expression expression)
+
+
+bool Calculator::AssignFunction(Identifier const& identifier, Expression const& expression)
 {
 	if (!IsIdentifierCorrect(identifier))
 	{
@@ -137,7 +139,7 @@ bool Calculator::AssignFunction(Identifier& identifier, Expression expression)
 	return true;
 }
 
-bool Calculator::AssignFunction(Identifier& identifier1, Identifier& identifier2)
+bool Calculator::AssignFunction(Identifier const& identifier1, Identifier const& identifier2)
 {
 	if (IsIdentifierExist(identifier1) || !IsIdentifierExist(identifier2))
 	{
@@ -153,7 +155,7 @@ bool Calculator::AssignFunction(Identifier& identifier1, Identifier& identifier2
 	return true;
 }
 
-std::optional<Expression> Calculator::GetFunctionExpression(Identifier& identifier) const
+std::optional<Expression> Calculator::GetFunctionExpression(Identifier const& identifier) const
 {
 	if (!IsIdentifierExist(identifier))
 	{
@@ -163,30 +165,10 @@ std::optional<Expression> Calculator::GetFunctionExpression(Identifier& identifi
 	return expression->second;
 }
 
-Value Calculator::GetExpressionValue(Expression& expression) const
+Value Calculator::GetExpressionValue(Expression const& expression) const
 {
-	Value firstOperandValue;
-	Value secondOperandValue;
-
-	if (m_variables.find(expression.firstOperand) != m_variables.end())
-	{
-		firstOperandValue = GetVariableValue(expression.firstOperand).value();
-	}
-	else
-	{
-		Expression tempExpression = m_functions.find(expression.firstOperand)->second;
-		firstOperandValue = GetExpressionValue(tempExpression);
-	}
-
-	if (m_variables.find(expression.secondOperand) != m_variables.end())
-	{
-		secondOperandValue = GetVariableValue(expression.secondOperand).value();
-	}
-	else
-	{
-		Expression tempExpression = m_functions.find(expression.secondOperand)->second;
-		secondOperandValue = GetExpressionValue(tempExpression);
-	}
+	Value firstOperandValue = GetExpressionValueRecursive(expression.firstOperand);
+	Value secondOperandValue = GetExpressionValueRecursive(expression.secondOperand);
 
 	switch (expression.operation)
 	{
@@ -203,7 +185,20 @@ Value Calculator::GetExpressionValue(Expression& expression) const
 	}
 }
 
-std::optional<Value> Calculator::GetFunctionValue(Identifier& identifier) const
+Value Calculator::GetExpressionValueRecursive(Identifier const& identifier) const
+{
+	if (IsVariableExist(identifier))
+	{
+		return GetVariableValue(identifier).value();
+	}
+	else
+	{
+		Expression tempExpression = m_functions.find(identifier)->second;
+		return GetExpressionValue(tempExpression);
+	}
+}
+
+std::optional<Value> Calculator::GetFunctionValue(Identifier const& identifier)
 {
 	if (!IsIdentifierExist(identifier))
 	{

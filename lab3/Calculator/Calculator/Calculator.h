@@ -34,27 +34,29 @@ class Calculator
 {
 public:
 	Calculator();
-	bool DefineVariable(Identifier& identifier);
+	bool DefineVariable(Identifier const& identifier);
 
-	bool AssignVariable(Identifier& identifier, Value value);
-	bool AssignVariable(Identifier& identifier1, Identifier& identifier2);
-	bool AssignFunction(Identifier& identifier, Expression expression);
-	bool AssignFunction(Identifier& identifier1, Identifier& identifier2);
+	bool AssignVariable(Identifier const& identifier, Value const& value);
+	bool AssignVariable(Identifier const& identifier1, Identifier const& identifier2);
+	bool AssignFunction(Identifier const& identifier, Expression const& expression);
+	bool AssignFunction(Identifier const& identifier1, Identifier const& identifier2);
 
 	Variables GetAllVariables() const;
 	Functions GetAllFunctions() const; 
 
-	std::optional<Value> GetVariableValue(Identifier& identifier) const;
-	std::optional<Value> GetFunctionValue(Identifier& identifier) const;
+	std::optional<Value> GetVariableValue(Identifier const& identifier) const;
+	std::optional<Value> GetFunctionValue(Identifier const& identifier);
 
 	// mb private
-	std::optional<Expression> GetFunctionExpression(Identifier& Expression) const;
-	Value GetExpressionValue(Expression& expression) const;
-	bool IsIdentifierCorrect(Identifier& identifier) const;
-	bool IsIdentifierExist(Identifier& identifier) const;
-	bool IsFunctionExist(Identifier& identifier) const;
-	bool IsVariableExist(Identifier& identifier) const;
+	std::optional<Expression> GetFunctionExpression(Identifier const& Expression) const;
+	Value GetExpressionValue(Expression const& expression) const;
+	bool IsIdentifierCorrect(Identifier const& identifier) const;
+	bool IsIdentifierExist(Identifier const& identifier) const;
+	bool IsFunctionExist(Identifier const& identifier) const;
+	bool IsVariableExist(Identifier const& identifier) const;
+
 private:
+	Value GetExpressionValueRecursive(Identifier const& identifier) const;
 	Functions m_functions;
 	Variables m_variables;
 };

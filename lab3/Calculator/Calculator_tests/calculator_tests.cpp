@@ -63,7 +63,6 @@ SCENARIO("Testing isIdentifierCorrect")
 	}
 }
 
-// Тест при existed function with needed identifier
 SCENARIO("Testing IsIdentifierExist")
 {
 
@@ -280,6 +279,29 @@ SCENARIO("Testing AssignVariable with another variable")
 	}
 }
 
+SCENARIO("Testing AssignVariable with function")
+{
+	WHEN("Variable exist")
+	{
+		Calculator calculator;
+		THEN("Variable assinged with the value")
+		{
+			Identifier x = "x";
+			Value xValue = 2;
+			REQUIRE(calculator.DefineVariable(x));
+			REQUIRE(calculator.IsIdentifierExist(x));
+			REQUIRE(calculator.AssignVariable(x, xValue));
+			Identifier functionIdentifier = "fn1";
+			Expression expression{ x, Operation::MULTIPLICATION, x };
+			REQUIRE(calculator.AssignFunction(functionIdentifier, expression));
+
+			Identifier y = "y";
+			REQUIRE(calculator.AssignVariable(y, functionIdentifier));
+			REQUIRE(calculator.GetVariableValue(y) == xValue * xValue);
+		}
+	}
+}
+
 SCENARIO("Testing GetAllVariables")
 {
 	WHEN("No vars defined")
@@ -353,7 +375,7 @@ SCENARIO("Testing AssingFunction with expression")
 	}
 }
 
-SCENARIO("Testin AssignFunctionWithIdentifier")
+SCENARIO("Testin AssignFunction With function")
 {
 	WHEN("Identifier1 and identifier2 is already existing")
 	{
@@ -417,6 +439,21 @@ SCENARIO("Testin AssignFunctionWithIdentifier")
 			Identifier functionIdentifier = "functionId";
 			REQUIRE(calculator.AssignFunction(functionIdentifier, functionIdentifier2));
 		}
+	}
+}
+SCENARIO("Testin AssignFunction With variable")
+{
+	WHEN("")
+	{
+		Calculator calculator;
+		Identifier var1 = "var1";
+		Value var1Value = 3.842;
+		Identifier function1 = "function1";
+		REQUIRE(calculator.AssignVariable(var1, var1Value));
+		REQUIRE(calculator.AssignFunction(function1, var1));
+
+		REQUIRE(calculator.GetFunctionValue(function1) == var1Value);
+
 	}
 }
 
@@ -627,5 +664,43 @@ SCENARIO("Testing calculator")
 		REQUIRE(calculator.AssignVariable(radius, radiusValue));
 
 		REQUIRE(calculator.GetFunctionValue(circleArea).value() == (radiusValue * radiusValue) * piValue);
+	}
+	WHEN("Fibonacci test")
+	{
+		Calculator calculator;
+		Identifier v0 = "v0";
+		Value v0Value = 0;
+		Identifier v1 = "v1";
+		Value v1Value = 1;
+
+		REQUIRE(calculator.AssignVariable(v0, v0Value));
+		REQUIRE(calculator.AssignVariable(v1, v1Value));
+
+		Identifier fib0 = "fib0";
+		REQUIRE(calculator.AssignFunction(fib0, v0));
+		Identifier fib1 = "fib1";
+		REQUIRE(calculator.AssignFunction(fib1, v1));
+
+		Identifier fib2 = "fib2";
+		Expression fib2Expression{ fib0, Operation::ADDITION, fib1 };
+		REQUIRE(calculator.AssignFunction(fib2, fib2Expression));
+
+		Identifier fib3 = "fib3";
+		Expression fib3Expression{ fib2, Operation::ADDITION, fib1 };
+		REQUIRE(calculator.AssignFunction(fib3, fib3Expression));
+
+		Identifier fib4 = "fib4";
+		Expression fib4Expression{ fib3, Operation::ADDITION, fib2 };
+		REQUIRE(calculator.AssignFunction(fib4, fib4Expression));
+
+		Identifier fib5 = "fib5";
+		Expression fib5Expression{ fib4, Operation::ADDITION, fib3 };
+		REQUIRE(calculator.AssignFunction(fib5, fib5Expression));
+
+		Identifier fib6 = "fib6";
+		Expression fib6Expression{ fib5, Operation::ADDITION, fib4 };
+		REQUIRE(calculator.AssignFunction(fib6, fib6Expression));
+
+		REQUIRE(calculator.GetFunctionValue(fib6).value() == 8);
 	}
 }
