@@ -38,7 +38,13 @@
 
 // потом с SFML разобраться.
 
+#include "Shapes/SolidShapes/Triangle/CTriangle.h"
+#include <iostream>
+
 int main()
 {
+	CTriangle triange(CPoint{ 0, 0 }, CPoint{ 3, 0 }, CPoint{ 2, 2 });
+	std::cout << triange.ToString() << std::endl;
+	CPoint p = { 1, 2 };
 	return 0;
 }

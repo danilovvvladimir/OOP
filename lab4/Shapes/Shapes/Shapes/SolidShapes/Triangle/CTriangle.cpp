@@ -1,1 +1,73 @@
 #include "CTriangle.h"
+
+CTriangle::CTriangle(CPoint vertex1, CPoint vertex2, CPoint vertex3, HexColor fillColor, HexColor outlineColor)
+	: m_vertex1(vertex1)
+	, m_vertex2(vertex2)
+	, m_vertex3(vertex3)
+	, m_fillColor(fillColor)
+	, m_outlineColor(outlineColor)
+{
+}
+
+double CTriangle::GetArea() const
+{
+	double halfPerimeter = GetPerimeter() / 2;
+	double distanceVertex12 = CPoint::GetDistance(m_vertex1, m_vertex2);
+	double distanceVertex13 = CPoint::GetDistance(m_vertex1, m_vertex3);
+	double distanceVertex23 = CPoint::GetDistance(m_vertex2, m_vertex3);
+
+	double triangleArea = sqrt(halfPerimeter * (halfPerimeter - distanceVertex12) * (halfPerimeter - distanceVertex12) * (halfPerimeter - distanceVertex12));
+	return triangleArea;
+}
+
+double CTriangle::GetPerimeter() const
+{
+	double distanceVertex12 = CPoint::GetDistance(m_vertex1, m_vertex2);
+	double distanceVertex13 = CPoint::GetDistance(m_vertex1, m_vertex3);
+	double distanceVertex23 = CPoint::GetDistance(m_vertex2, m_vertex3);
+
+	double trianglePerimeter = distanceVertex12 + distanceVertex13 + distanceVertex23;
+	return trianglePerimeter;
+}
+
+std::string CTriangle::ToString() const
+{
+	// output color fix
+	std::ostringstream outputStream;
+	outputStream << std::fixed << std::setprecision(2)
+				 << "TRIANGLE" << std::endl
+				 << "Vertex #1: (" << m_vertex1.GetPointX() << ", " << m_vertex1.GetPointY() << ")" << std::endl
+				 << "Vertex #2: (" << m_vertex2.GetPointX() << ", " << m_vertex2.GetPointY() << ")" << std::endl
+				 << "Vertex #3: (" << m_vertex3.GetPointX() << ", " << m_vertex3.GetPointY() << ")" << std::endl
+				 << "Outline Color: " << std::setfill('0') << std::setw(8) << GetFillColor() << std::endl
+				 << "Fill Color: " << std::setfill('0') << std::setw(8) << GetFillColor() << std::endl
+				 << "Fill Color: " << std::setfill('0') << std::setw(8) << GetFillColor() << std::endl
+				 << "Area: " << GetArea() << std::endl
+				 << "Perimiter: " << GetPerimeter() << std::endl;
+	return outputStream.str();
+}
+
+HexColor CTriangle::GetOutlineColor() const
+{
+	return m_outlineColor;
+}
+
+HexColor CTriangle::GetFillColor() const
+{
+	return m_fillColor;
+}
+
+CPoint CTriangle::GetVertex1() const
+{
+	return m_vertex1;
+}
+
+CPoint CTriangle::GetVertex2() const
+{
+	return m_vertex2;
+}
+
+CPoint CTriangle::GetVertex3() const
+{
+	return m_vertex3;
+}
