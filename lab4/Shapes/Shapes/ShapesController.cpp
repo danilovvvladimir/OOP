@@ -9,8 +9,7 @@ ShapesController::ShapesController(std::istream& input, std::ostream& output)
 		  { "rectangle", bind(&ShapesController::CreateRectangle, this, std::placeholders::_1) },
 		  { "triangle", bind(&ShapesController::CreateTriangle, this, std::placeholders::_1) },
 		  { "help", bind(&ShapesController::Help, this, std::placeholders::_1) },
-		  { "maxAreaShape", bind(&ShapesController::PrintMaxAreaShape, this, std::placeholders::_1) },
-		  { "minPerimeterShape", bind(&ShapesController::PrintMinPerimeterShape, this, std::placeholders::_1) } })
+		  { "printAllShapes", bind(&ShapesController::PrintAllShapes, this, std::placeholders::_1) } })
 {
 }
 
@@ -160,26 +159,43 @@ bool ShapesController::CreateTriangle(std::istream& args)
 	return true;
 }
 
-bool ShapesController::PrintMaxAreaShape(std::istream& args)
+bool ShapesController::PrintMaxAreaShape()
 {
 	if (m_shapes.size() == 0)
 	{
 		m_outputStream << "There are no shapes yet" << std::endl;
-		return true;
+		return false;
 	}
-	// mb sort all with lambda and then [lastindex]
+
+	auto maxAreaShapeIt = std::max_element(m_shapes.begin(),
+		m_shapes.end(),
+		[](const std::shared_ptr<IShape>& shape1, const std::shared_ptr<IShape>& shape2) { return shape1->GetArea() < shape2->GetArea(); });
+	m_outputStream << (*maxAreaShapeIt)->ToString() << std::endl;
 	return true;
 }
 
-bool ShapesController::PrintMinPerimeterShape(std::istream& args)
+bool ShapesController::PrintMinPerimeterShape()
 {
 	if (m_shapes.size() == 0)
 	{
 		m_outputStream << "There are no shapes yet" << std::endl;
-		return true;
+		return false;
 	}
-	// mb sort all with lambda and then [0 index]
-	return false;
+
+	auto minPerimeterShape = std::max_element(m_shapes.begin(),
+		m_shapes.end(),
+		[](const std::shared_ptr<IShape>& shape1, const std::shared_ptr<IShape>& shape2) { return shape1->GetPerimeter() > shape2->GetPerimeter(); });
+	m_outputStream << (*minPerimeterShape)->ToString() << std::endl;
+	return true;
+}
+
+bool ShapesController::PrintAllShapes(std::istream& args)
+{
+	for (auto &shape : m_shapes)
+	{
+		m_outputStream << shape->ToString() << std::endl;
+	}
+	return true;
 }
 
 bool ShapesController::Help(std::istream& args)

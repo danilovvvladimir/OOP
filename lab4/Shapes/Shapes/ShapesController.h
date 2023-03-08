@@ -13,6 +13,8 @@ class ShapesController
 public:
 	ShapesController(std::istream& input, std::ostream& output);
 	bool HandleCommand();
+	bool PrintMaxAreaShape();
+	bool PrintMinPerimeterShape();
 
 private:
 	enum class Shape
@@ -27,8 +29,7 @@ private:
 	bool CreateCircle(std::istream& args);
 	bool CreateRectangle(std::istream& args);
 	bool CreateTriangle(std::istream& args);
-	bool PrintMaxAreaShape(std::istream& args);
-	bool PrintMinPerimeterShape(std::istream& args);
+	bool PrintAllShapes(std::istream& args);
 	bool Help(std::istream& args);
 
 	using Handler = std::function<bool(std::istream& args)>;

@@ -4,7 +4,7 @@
 int main()
 {
 	//make_shared -> static method in point
-	// maxarea, minperimeter
+	// parse args сделать для каждого create shape
 	ShapesController shapesController(std::cin, std::cout);
 
 	while (!std::cin.eof() && !std::cin.fail())
@@ -15,5 +15,7 @@ int main()
 			std::cout << "Unknown command!" << std::endl;
 		}
 	}
+	shapesController.PrintMaxAreaShape();
+	shapesController.PrintMinPerimeterShape();
 	return 0;
 }
