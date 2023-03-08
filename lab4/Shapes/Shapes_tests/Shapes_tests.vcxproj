@@ -136,11 +136,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Shapes\Point\CPoint.cpp" />
+    <ClCompile Include="..\Shapes\Shapes\LineSegment\CLineSegment.cpp" />
+    <ClCompile Include="..\Shapes\Shapes\SolidShapes\Circle\CCircle.cpp" />
+    <ClCompile Include="..\Shapes\Shapes\SolidShapes\Rectangle\CRectangle.cpp" />
     <ClCompile Include="..\Shapes\Shapes\SolidShapes\Triangle\CTriangle.cpp" />
     <ClCompile Include="shapes_tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shapes\Point\CPoint.h" />
+    <ClInclude Include="..\Shapes\Shapes\LineSegment\CLineSegment.h" />
+    <ClInclude Include="..\Shapes\Shapes\SolidShapes\Circle\CCircle.h" />
+    <ClInclude Include="..\Shapes\Shapes\SolidShapes\Rectangle\CRectangle.h" />
     <ClInclude Include="..\Shapes\Shapes\SolidShapes\Triangle\CTriangle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

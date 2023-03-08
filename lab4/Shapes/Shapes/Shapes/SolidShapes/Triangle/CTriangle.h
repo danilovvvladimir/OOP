@@ -1,13 +1,13 @@
 #pragma once
 #include "../../../Point/CPoint.h"
 #include "../ISolidShape.h"
-#include <sstream>
 #include <iomanip>
+#include <sstream>
 
 class CTriangle : public ISolidShape
 {
 public:
-	CTriangle(CPoint vertex1, CPoint vertex2, CPoint vertex3, HexColor fillColor = DEFAULT_HEX_FILL_COLOR, HexColor outlineColor = DEFAULT_HEX_OUTPUT_COLOR);
+	CTriangle(const CPoint& vertex1, const CPoint& vertex2, const CPoint& vertex3, HexColor fillColor = DEFAULT_HEX_FILL_COLOR, HexColor outlineColor = DEFAULT_HEX_OUTPUT_COLOR);
 	double GetArea() const override;
 	double GetPerimeter() const override;
 	std::string ToString() const override;

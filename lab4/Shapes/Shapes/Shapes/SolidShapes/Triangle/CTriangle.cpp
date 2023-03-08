@@ -1,6 +1,6 @@
 #include "CTriangle.h"
 
-CTriangle::CTriangle(CPoint vertex1, CPoint vertex2, CPoint vertex3, HexColor fillColor, HexColor outlineColor)
+CTriangle::CTriangle(const CPoint& vertex1, const CPoint& vertex2, const CPoint& vertex3, HexColor fillColor, HexColor outlineColor)
 	: m_vertex1(vertex1)
 	, m_vertex2(vertex2)
 	, m_vertex3(vertex3)
@@ -39,8 +39,7 @@ std::string CTriangle::ToString() const
 				 << "Vertex #1: (" << m_vertex1.GetPointX() << ", " << m_vertex1.GetPointY() << ")" << std::endl
 				 << "Vertex #2: (" << m_vertex2.GetPointX() << ", " << m_vertex2.GetPointY() << ")" << std::endl
 				 << "Vertex #3: (" << m_vertex3.GetPointX() << ", " << m_vertex3.GetPointY() << ")" << std::endl
-				 << "Outline Color: " << std::setfill('0') << std::setw(8) << GetFillColor() << std::endl
-				 << "Fill Color: " << std::setfill('0') << std::setw(8) << GetFillColor() << std::endl
+				 << "Outline Color: " << std::setfill('0') << std::setw(8) << GetOutlineColor() << std::endl
 				 << "Fill Color: " << std::setfill('0') << std::setw(8) << GetFillColor() << std::endl
 				 << "Area: " << GetArea() << std::endl
 				 << "Perimiter: " << GetPerimeter() << std::endl;

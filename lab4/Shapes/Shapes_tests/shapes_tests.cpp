@@ -23,14 +23,14 @@ SCENARIO("Testing CPoint")
 	}
 }
 
-SCENARIO("Testing Triangle")
+SCENARIO("Testing CTriangle")
 {
 	CPoint triangleVertex1 = { 0, 0 };
 	CPoint triangleVertex2 = { 3, 0 };
 	CPoint triangleVertex3 = { 2, 2 };
 	HexColor triangleFillColor = 0xff00ff;
 	HexColor triangleOutlineColor = 0x00ff00;
-	
+
 	CTriangle triangle(triangleVertex1, triangleVertex2, triangleVertex3, triangleFillColor, triangleOutlineColor);
 	WHEN("Testing GetVertixes")
 	{
@@ -61,5 +61,120 @@ SCENARIO("Testing Triangle")
 		double halfPerimeter = triangle.GetPerimeter() / 2;
 		double correctTriangleArea = sqrt(halfPerimeter * (halfPerimeter - distanceVertex12) * (halfPerimeter - distanceVertex12) * (halfPerimeter - distanceVertex12));
 		REQUIRE(triangle.GetArea() == correctTriangleArea);
+	}
+}
+
+SCENARIO("Testing CRectangleee")
+{
+	CPoint rectangleLeftTopPoint = { 0, 10 };
+	CPoint rectangleRightBottomPoint = { 10, 0 };
+
+	HexColor rectangleFillColor = 0xff00ff;
+	HexColor rectangleOutlineColor = 0x00ff00;
+
+	CRectangle rectangle(rectangleLeftTopPoint, rectangleRightBottomPoint, rectangleFillColor, rectangleOutlineColor);
+
+	WHEN("Testing Get Point")
+	{
+		REQUIRE(rectangle.GetLeftTopPoint() == rectangleLeftTopPoint);
+		REQUIRE(rectangle.GetRightBottomPoint() == rectangleRightBottomPoint);
+	}
+	WHEN("Testing GetFillColor")
+	{
+		REQUIRE(rectangle.GetFillColor() == rectangleFillColor);
+	}
+	WHEN("Testing GetFillColor")
+	{
+		REQUIRE(rectangle.GetOutlineColor() == rectangleOutlineColor);
+	}
+
+	double rectangleCorrectWidth = rectangleRightBottomPoint.GetPointX() - rectangleLeftTopPoint.GetPointX();
+	double rectangleCorrectHeight = rectangleLeftTopPoint.GetPointY() - rectangleRightBottomPoint.GetPointY();
+	WHEN("Testing GetWidth")
+	{
+		REQUIRE(rectangle.GetWidth() == rectangleCorrectWidth);
+	}
+	WHEN("Testing GetHeight")
+	{
+
+		REQUIRE(rectangle.GetHeight() == rectangleCorrectHeight);
+	}
+
+	WHEN("Testing GetPerimeter")
+	{
+		double rectangleCorrectPerimeter = (rectangleCorrectWidth + rectangleCorrectHeight) * 2;
+		REQUIRE(rectangle.GetPerimeter() == rectangleCorrectPerimeter);
+	}
+	WHEN("Testing GetArea")
+	{
+		double rectangleCorrectArea = rectangleCorrectWidth * rectangleCorrectHeight;
+		REQUIRE(rectangle.GetArea() == rectangleCorrectArea);
+	}
+}
+
+SCENARIO("Testing CCircle")
+{
+	CPoint circleCenterPoint = { 5, 5 };
+	double circleRadius = 5;
+
+	HexColor circleFillColor = 0xff00ff;
+	HexColor circleOutlineColor = 0x00ff00;
+
+	CCircle circle(circleCenterPoint, circleRadius, circleFillColor, circleOutlineColor);
+
+	WHEN("Testing GetCenterPoint")
+	{
+		REQUIRE(circle.GetCenterPoint() == circleCenterPoint);
+	}
+	WHEN("Testing GetFillColor")
+	{
+		REQUIRE(circle.GetFillColor() == circleFillColor);
+	}
+	WHEN("Testing GetFillColor")
+	{
+		REQUIRE(circle.GetOutlineColor() == circleOutlineColor);
+	}
+	WHEN("Testing GetPerimeter")
+	{
+		double circleCorrectPerimeter = 2 * circleRadius * M_PI;
+		REQUIRE(circle.GetPerimeter() == circleCorrectPerimeter);
+	}
+	WHEN("Testing GetArea")
+	{
+		double circleCorrectArea = 2 * circleRadius * circleRadius * M_PI;
+		REQUIRE(circle.GetArea() == circleCorrectArea);
+	}
+}
+
+SCENARIO("Testing CLineSegment")
+{
+	CPoint lineStartPoint = { 0, 0 };
+	CPoint lineEndPoint = { 5, 0 };
+
+	HexColor lineOutlineColor = 0x00ff00;
+
+	CLineSegment line(lineStartPoint, lineEndPoint, lineOutlineColor);
+
+	WHEN("Testing GetStartPoint")
+	{
+		REQUIRE(line.GetStartPoint() == lineStartPoint);
+	}
+	WHEN("Testing GetEndPoint")
+	{
+		REQUIRE(line.GetEndPoint() == lineEndPoint);
+	}
+	WHEN("Testing GetFillColor")
+	{
+		REQUIRE(line.GetOutlineColor() == lineOutlineColor);
+	}
+	WHEN("Testing GetPerimeter")
+	{
+		double lineCorrectPerimeter = CPoint::GetDistance(lineEndPoint, lineStartPoint);
+		REQUIRE(line.GetPerimeter() == lineCorrectPerimeter);
+	}
+	WHEN("Testing GetArea")
+	{
+		double lineCorrectArea = 0;
+		REQUIRE(line.GetArea() == lineCorrectArea);
 	}
 }
