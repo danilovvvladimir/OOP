@@ -3,10 +3,39 @@
 #include "Shapes/SolidShapes/Circle/CCircle.h"
 #include "Shapes/SolidShapes/Rectangle/CRectangle.h"
 #include "Shapes/SolidShapes/Triangle/CTriangle.h"
+#include <algorithm>
 #include <functional>
 #include <map>
 #include <vector>
-#include <algorithm>
+
+struct ArgsLine
+{
+	CPoint startPoint;
+	CPoint endPoint;
+	HexColor outlineColor;
+};
+struct ArgsTriangle
+{
+	CPoint vertex1;
+	CPoint vertex2;
+	CPoint vertex3;
+	HexColor fillColor;
+	HexColor outlineColor;
+};
+struct ArgsRectangle
+{
+	CPoint leftTopPoint;
+	CPoint rightBottomPoint;
+	HexColor fillColor;
+	HexColor outlineColor;
+};
+struct ArgsCircle
+{
+	CPoint centerPoint;
+	double radius;
+	HexColor fillColor;
+	HexColor outlineColor;
+};
 
 class ShapesController
 {
