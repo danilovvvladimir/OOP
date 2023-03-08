@@ -32,7 +32,6 @@ double CTriangle::GetPerimeter() const
 
 std::string CTriangle::ToString() const
 {
-	// output color fix
 	std::ostringstream outputStream;
 	outputStream << std::fixed << std::setprecision(2)
 				 << "TRIANGLE" << std::endl

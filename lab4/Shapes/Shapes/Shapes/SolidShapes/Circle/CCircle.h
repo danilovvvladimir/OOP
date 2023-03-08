@@ -11,7 +11,7 @@
 class CCircle : public ISolidShape
 {
 public:
-	CCircle(const CPoint& centerPoint, double radius, HexColor fillColor = DEFAULT_HEX_FILL_COLOR, HexColor outlineColor = DEFAULT_HEX_OUTPUT_COLOR);
+	CCircle(const CPoint& centerPoint, double radius, HexColor fillColor, HexColor outlineColor);
 
 	double GetArea() const override;
 	double GetPerimeter() const override;

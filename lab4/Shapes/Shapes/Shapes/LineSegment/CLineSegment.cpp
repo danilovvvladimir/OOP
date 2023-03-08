@@ -21,7 +21,7 @@ std::string CLineSegment::ToString() const
 {
 	std::ostringstream outputStream;
 	outputStream << std::fixed << std::setprecision(2)
-				 << "CIRCLE" << std::endl
+				 << "LINE" << std::endl
 				 << "Start Point: (" << m_startPoint.GetPointX() << ", " << m_startPoint.GetPointY() << ")" << std::endl
 				 << "End Point: (" << m_endPoint.GetPointX() << ", " << m_endPoint.GetPointY() << ")" << std::endl
 				 << "Outline Color: " << std::setfill('0') << std::setw(8) << GetOutlineColor() << std::endl

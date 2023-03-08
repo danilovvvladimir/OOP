@@ -7,7 +7,7 @@
 class CLineSegment : public IShape
 {
 public:
-	CLineSegment(const CPoint& startPoint, const CPoint& endPoint, HexColor outlineColor = DEFAULT_HEX_OUTPUT_COLOR);
+	CLineSegment(const CPoint& startPoint, const CPoint& endPoint, HexColor outlineColor);
 	double GetArea() const override;
 	double GetPerimeter() const override;
 	std::string ToString() const override;
