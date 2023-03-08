@@ -6,6 +6,7 @@
 #include <functional>
 #include <map>
 #include <vector>
+#include <algorithm>
 
 class ShapesController
 {
@@ -26,8 +27,8 @@ private:
 	bool CreateCircle(std::istream& args);
 	bool CreateRectangle(std::istream& args);
 	bool CreateTriangle(std::istream& args);
-	bool FindMaxArea(std::istream& args);
-	bool FindMinPerimeter(std::istream& args);
+	bool PrintMaxAreaShape(std::istream& args);
+	bool PrintMinPerimeterShape(std::istream& args);
 	bool Help(std::istream& args);
 
 	using Handler = std::function<bool(std::istream& args)>;

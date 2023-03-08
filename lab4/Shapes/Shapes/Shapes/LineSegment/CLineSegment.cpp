@@ -24,7 +24,7 @@ std::string CLineSegment::ToString() const
 				 << "LINE" << std::endl
 				 << "Start Point: (" << m_startPoint.GetPointX() << ", " << m_startPoint.GetPointY() << ")" << std::endl
 				 << "End Point: (" << m_endPoint.GetPointX() << ", " << m_endPoint.GetPointY() << ")" << std::endl
-				 << "Outline Color: " << std::setfill('0') << std::setw(8) << GetOutlineColor() << std::endl
+				 << "Outline Color: #" << std::hex << GetOutlineColor() << std::endl
 				 << "Area: " << GetArea() << std::endl
 				 << "Perimiter: " << GetPerimeter() << std::endl;
 	return outputStream.str();

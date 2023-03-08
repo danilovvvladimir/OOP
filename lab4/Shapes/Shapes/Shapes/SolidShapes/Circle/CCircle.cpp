@@ -25,8 +25,8 @@ std::string CCircle::ToString() const
 				 << "CIRCLE" << std::endl
 				 << "Center: (" << m_centerPoint.GetPointX() << ", " << m_centerPoint.GetPointY() << ")" << std::endl
 				 << "Radius: " << m_radius << std::endl
-				 << "Outline Color: " << std::setfill('0') << std::setw(8) << GetOutlineColor() << std::endl
-				 << "Fill Color: " << std::setfill('0') << std::setw(8) << GetFillColor() << std::endl
+				 << "Outline Color: #" << std::hex << GetOutlineColor() << std::endl
+				 << "Fill Color: #" << std::hex << GetFillColor() << std::endl
 				 << "Area: " << GetArea() << std::endl
 				 << "Perimiter: " << GetPerimeter() << std::endl;
 	return outputStream.str();

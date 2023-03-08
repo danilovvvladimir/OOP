@@ -8,7 +8,9 @@ ShapesController::ShapesController(std::istream& input, std::ostream& output)
 		  { "circle", bind(&ShapesController::CreateCircle, this, std::placeholders::_1) },
 		  { "rectangle", bind(&ShapesController::CreateRectangle, this, std::placeholders::_1) },
 		  { "triangle", bind(&ShapesController::CreateTriangle, this, std::placeholders::_1) },
-		  { "help", bind(&ShapesController::Help, this, std::placeholders::_1) } })
+		  { "help", bind(&ShapesController::Help, this, std::placeholders::_1) },
+		  { "maxAreaShape", bind(&ShapesController::PrintMaxAreaShape, this, std::placeholders::_1) },
+		  { "minPerimeterShape", bind(&ShapesController::PrintMinPerimeterShape, this, std::placeholders::_1) } })
 {
 }
 
@@ -57,11 +59,7 @@ bool ShapesController::CreateLine(std::istream& args)
 
 	CLineSegment line(CPoint{ leftTopPointX, leftTopPointY }, CPoint{ rightBottomPointX, rightBottomPointY }, outlineColor);
 	m_shapes.push_back(std::make_shared<CLineSegment>(line));
-	m_outputStream << "Line which starting in Point (" << leftTopPointX << ", " << leftTopPointY << ") and ending in Point ("
-				   << rightBottomPointX << ", " << rightBottomPointX << ")" << std::endl
-				   << " with outline color <"
-				   << std::hex
-				   << line.GetOutlineColor() << "> has been created." << std::endl;
+	m_outputStream << "Line has been created." << std::endl;
 	return true;
 }
 
@@ -73,6 +71,25 @@ bool ShapesController::CreateCircle(std::istream& args)
 					   << "\t circle <centerPoint X> <centerPoint Y> <radius> <hex fillColor?> <hex outlineColor?>" << std::endl;
 		return false;
 	}
+
+	double centerPointX;
+	double centerPointY;
+	double radius;
+	HexColor fillColor;
+	HexColor outlineColor;
+
+	args >> centerPointX >> centerPointY >> radius >> std::hex >> fillColor >> outlineColor;
+	if (args.fail())
+	{
+		m_outputStream << "Not Enough arguments!!!" << std::endl
+					   << "Correct usage:" << std::endl
+					   << "\t circle <centerPoint X> <centerPoint Y> <radius> <hex fillColor?> <hex outlineColor?>" << std::endl;
+		return false;
+	}
+
+	CCircle circle(CPoint{ centerPointX, centerPointY }, radius, fillColor, outlineColor);
+	m_shapes.push_back(std::make_shared<CCircle>(circle));
+	m_outputStream << "Circle has been created." << std::endl;
 	return true;
 }
 
@@ -84,6 +101,27 @@ bool ShapesController::CreateRectangle(std::istream& args)
 					   << "\t rectangle <leftTopPoint X> <leftTopPointY> <rightBottomPoint X> <rightBottomPoint Y> <hex fillColor?> <hex outlineColor?>" << std::endl;
 		return false;
 	}
+
+	double leftTopPointX;
+	double leftTopPointY;
+	double rightBottomPointX;
+	double rightBottomPointY;
+	HexColor fillColor;
+	HexColor outlineColor;
+
+	args >> leftTopPointX >> leftTopPointY >> rightBottomPointX >> rightBottomPointY >> std::hex >> fillColor >> outlineColor;
+	if (args.fail())
+	{
+		m_outputStream << "Not Enough arguments!!!" << std::endl
+					   << "Correct usage:" << std::endl
+					   << "\t rectangle <leftTopPoint X> <leftTopPointY> <rightBottomPoint X> <rightBottomPoint Y> <hex fillColor?> <hex outlineColor?>" << std::endl;
+		return false;
+	}
+
+	CRectangle rectangle(CPoint{ leftTopPointX, leftTopPointY }, CPoint{ rightBottomPointX, rightBottomPointY }, fillColor, outlineColor);
+
+	m_shapes.push_back(std::make_shared<CRectangle>(rectangle));
+	m_outputStream << "Rectangle has been created." << std::endl;
 	return true;
 }
 
@@ -95,16 +133,52 @@ bool ShapesController::CreateTriangle(std::istream& args)
 					   << "\t triangle <vertex1 X> <vertex1 Y> <vertex2 X> <vertex2 Y> <vertex3 X> <vertex3 Y> <hex fillColor?> <hex outlineColor?>" << std::endl;
 		return false;
 	}
+
+	double vertex1X;
+	double vertex1Y;
+	double vertex2X;
+	double vertex2Y;
+	double vertex3X;
+	double vertex3Y;
+	HexColor fillColor;
+	HexColor outlineColor;
+
+	args >> vertex1X >> vertex1Y >> vertex2X >> vertex2Y >> vertex3X >> vertex3Y >> std::hex >> fillColor >> outlineColor;
+	if (args.fail())
+	{
+		m_outputStream << "Not Enough arguments!!!" << std::endl
+					   << "Correct usage:" << std::endl
+					   << "\t triangle <vertex1 X> <vertex1 Y> <vertex2 X> <vertex2 Y> <vertex3 X> <vertex3 Y> <hex fillColor?> <hex outlineColor?>" << std::endl;
+		return false;
+	}
+
+	CTriangle triangle(CPoint{ vertex1X, vertex1Y }, CPoint{ vertex2X, vertex2Y }, CPoint{ vertex3X, vertex3Y }, fillColor, outlineColor);
+
+	m_shapes.push_back(std::make_shared<CTriangle>(triangle));
+	m_outputStream << "Rectangle has been created." << std::endl;
+
 	return true;
 }
 
-bool ShapesController::FindMaxArea(std::istream& args)
+bool ShapesController::PrintMaxAreaShape(std::istream& args)
 {
-	return false;
+	if (m_shapes.size() == 0)
+	{
+		m_outputStream << "There are no shapes yet" << std::endl;
+		return true;
+	}
+	// mb sort all with lambda and then [lastindex]
+	return true;
 }
 
-bool ShapesController::FindMinPerimeter(std::istream& args)
+bool ShapesController::PrintMinPerimeterShape(std::istream& args)
 {
+	if (m_shapes.size() == 0)
+	{
+		m_outputStream << "There are no shapes yet" << std::endl;
+		return true;
+	}
+	// mb sort all with lambda and then [0 index]
 	return false;
 }
 

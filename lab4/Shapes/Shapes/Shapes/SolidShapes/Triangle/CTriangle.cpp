@@ -38,8 +38,8 @@ std::string CTriangle::ToString() const
 				 << "Vertex #1: (" << m_vertex1.GetPointX() << ", " << m_vertex1.GetPointY() << ")" << std::endl
 				 << "Vertex #2: (" << m_vertex2.GetPointX() << ", " << m_vertex2.GetPointY() << ")" << std::endl
 				 << "Vertex #3: (" << m_vertex3.GetPointX() << ", " << m_vertex3.GetPointY() << ")" << std::endl
-				 << "Outline Color: " << std::setfill('0') << std::setw(8) << GetOutlineColor() << std::endl
-				 << "Fill Color: " << std::setfill('0') << std::setw(8) << GetFillColor() << std::endl
+				 << "Outline Color: #" << std::hex << GetOutlineColor() << std::endl
+				 << "Fill Color: #" << std::hex << GetFillColor() << std::endl
 				 << "Area: " << GetArea() << std::endl
 				 << "Perimiter: " << GetPerimeter() << std::endl;
 	return outputStream.str();
