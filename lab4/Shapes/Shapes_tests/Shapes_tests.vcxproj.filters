@@ -33,6 +33,9 @@
     <ClCompile Include="..\Shapes\Shapes\LineSegment\CLineSegment.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="..\Shapes\ShapesController.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shapes\Point\CPoint.h">
@@ -48,6 +51,9 @@
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="..\Shapes\Shapes\LineSegment\CLineSegment.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shapes\ShapesController.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>

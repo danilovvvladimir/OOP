@@ -139,7 +139,7 @@ bool ShapesController::CreateTriangle(std::istream& args)
 
 	CTriangle triangle(argsTriangle.vertex1, argsTriangle.vertex2, argsTriangle.vertex3, argsTriangle.fillColor, argsTriangle.outlineColor);
 	m_shapes.push_back(std::make_shared<CTriangle>(triangle));
-	m_outputStream << "Rectangle has been created." << std::endl;
+	m_outputStream << "Triangle has been created." << std::endl;
 
 	return true;
 }

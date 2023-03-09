@@ -5,6 +5,7 @@
 #include "../Shapes/Shapes/SolidShapes/Circle/CCircle.h"
 #include "../Shapes/Shapes/SolidShapes/Rectangle/CRectangle.h"
 #include "../Shapes/Shapes/SolidShapes/Triangle/CTriangle.h"
+#include "../Shapes/ShapesController.h"
 
 SCENARIO("Testing CPoint")
 {
@@ -200,5 +201,107 @@ SCENARIO("Testing CLineSegment")
 	{
 		double lineCorrectArea = 0;
 		REQUIRE(line.GetArea() == lineCorrectArea);
+	}
+}
+
+SCENARIO("Testing ShapeController")
+{
+	WHEN("Creating Line using ShapeController")
+	{
+		THEN("Line has been successfully created")
+		{
+			std::istringstream inputStream("line 0 0 5 5 ff00ffff \nprintAllShapes");
+			std::ostringstream outputStream;
+			ShapesController shapesController(inputStream, outputStream);
+
+			shapesController.HandleCommand();
+			shapesController.HandleCommand();
+
+			std::ostringstream correctOutputStream;
+			correctOutputStream << "Line has been created." << std::endl
+								<< "LINE" << std::endl
+								<< "Start Point: (0.00, 0.00)" << std::endl
+								<< "End Point: (5.00, 5.00)" << std::endl
+								<< "Outline Color: #ff00ffff" << std::endl
+								<< "Area: 0.00" << std::endl
+								<< "Perimiter: 7.07" << std::endl
+								<< std::endl;
+			REQUIRE(outputStream.str() == correctOutputStream.str());
+		}
+	}
+	WHEN("Creating Triangle using ShapeController")
+	{
+		THEN("Triangle has been successfully created")
+		{
+			std::istringstream inputStream("triangle 0 0 5 5 2 2 ff00ffff fefefeff\nprintAllShapes");
+			std::ostringstream outputStream;
+			ShapesController shapesController(inputStream, outputStream);
+
+			shapesController.HandleCommand();
+			shapesController.HandleCommand();
+
+			std::ostringstream correctOutputStream;
+			correctOutputStream << "Triangle has been created." << std::endl
+								<< "TRIANGLE" << std::endl
+								<< "Vertex #1: (0.00, 0.00)" << std::endl
+								<< "Vertex #2: (5.00, 5.00)" << std::endl
+								<< "Vertex #3: (2.00, 2.00)" << std::endl
+								<< "Outline Color: #fefefeff" << std::endl
+								<< "Fill Color: #ff00ffff" << std::endl
+								<< "Area: 0.00" << std::endl
+								<< "Perimiter: 14.14" << std::endl
+								<< std::endl;
+			REQUIRE(outputStream.str() == correctOutputStream.str());
+		}
+	}
+	WHEN("Creating Rectangle using ShapeController")
+	{
+		THEN("Rectangle has been successfully created")
+		{
+			std::istringstream inputStream("rectangle 10 10 15 0 ff00ffff fefefeff\nprintAllShapes");
+			std::ostringstream outputStream;
+			ShapesController shapesController(inputStream, outputStream);
+
+			shapesController.HandleCommand();
+			shapesController.HandleCommand();
+
+			std::ostringstream correctOutputStream;
+			correctOutputStream << "Rectangle has been created." << std::endl
+								<< "RECTANGLE" << std::endl
+								<< "Left Top Point: (10.00, 10.00)" << std::endl
+								<< "Right Bottom Point: (15.00, 0.00)" << std::endl
+								<< "Width: 5.00" << std::endl
+								<< "Height: 10.00" << std::endl
+								<< "Outline Color: #fefefeff" << std::endl
+								<< "Fill Color: #ff00ffff" << std::endl
+								<< "Area: 50.00" << std::endl
+								<< "Perimiter: 30.00" << std::endl
+								<< std::endl;
+			REQUIRE(outputStream.str() == correctOutputStream.str());
+		}
+	}
+	WHEN("Creating Circle using ShapeController")
+	{
+		THEN("Circle has been successfully created")
+		{
+			std::istringstream inputStream("circle 0 0 5 ff00ffff fefefeff\nprintAllShapes");
+			std::ostringstream outputStream;
+			ShapesController shapesController(inputStream, outputStream);
+
+			shapesController.HandleCommand();
+			shapesController.HandleCommand();
+
+			std::ostringstream correctOutputStream;
+			correctOutputStream << "Circle has been created." << std::endl
+								<< "CIRCLE" << std::endl
+								<< "Center: (0.00, 0.00)" << std::endl
+								<< "Radius: 5.00" << std::endl
+								<< "Outline Color: #fefefeff" << std::endl
+								<< "Fill Color: #ff00ffff" << std::endl
+								<< "Area: 157.08" << std::endl
+								<< "Perimiter: 31.42" << std::endl
+								<< std::endl;
+			REQUIRE(outputStream.str() == correctOutputStream.str());
+		}
 	}
 }
