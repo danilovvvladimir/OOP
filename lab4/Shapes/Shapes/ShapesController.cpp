@@ -37,7 +37,7 @@ bool ShapesController::CreateLine(std::istream& args)
 	if (args.eof())
 	{
 		m_outputStream << "Correct usage:" << std::endl
-					   << "   line <startPoint X> <startPoint Y> <endPoint X> <endPoint Y> <hex fillColor?> <hex outlineColor?>" << std::endl;
+					   << "   line <startPoint X> <startPoint Y> <endPoint X> <endPoint Y> <hex outlineColor?>" << std::endl;
 		return false;
 	}
 
@@ -46,9 +46,10 @@ bool ShapesController::CreateLine(std::istream& args)
 
 	if (args.fail())
 	{
-		m_outputStream << "Not Enough arguments!!!" << std::endl
-					   << "Correct usage:" << std::endl
-					   << "   line <startPoint X> <startPoint Y> <endPoint X> <endPoint Y> <hex outlineColor?>" << std::endl;
+		m_outputStream << "Correct usage:" << std::endl
+					   << "   - line <startPoint X> <startPoint Y> <endPoint X> <endPoint Y> <hex outlineColor?>" << std::endl
+					   << "   - startPoint's & endPoint's coordinates must be a number" << std::endl
+					   << "   - outlineColor must be >= 0 and <= ffffff " << std::endl;
 		return false;
 	}
 
@@ -72,9 +73,11 @@ bool ShapesController::CreateCircle(std::istream& args)
 
 	if (args.fail())
 	{
-		m_outputStream << "Not Enough arguments!!!" << std::endl
-					   << "Correct usage:" << std::endl
-					   << "   circle <centerPoint X> <centerPoint Y> <radius> <hex fillColor?> <hex outlineColor?>" << std::endl;
+		m_outputStream
+			<< "Correct usage:" << std::endl
+			<< "   - circle <centerPoint X> <centerPoint Y> <radius> <hex fillColor?> <hex outlineColor?>" << std::endl
+			<< "   - centerPoint's coordinates and radius must be a number" << std::endl
+			<< "   - fillColor & outlineColor must be >= 0 and <= ffffff " << std::endl;
 		return false;
 	}
 
@@ -98,9 +101,11 @@ bool ShapesController::CreateRectangle(std::istream& args)
 
 	if (args.fail())
 	{
-		m_outputStream << "Not Enough arguments!!!" << std::endl
-					   << "Correct usage:" << std::endl
-					   << "   rectangle <leftTopPoint X> <leftTopPointY> <rightBottomPoint X> <rightBottomPoint Y> <hex fillColor?> <hex outlineColor?>" << std::endl;
+		m_outputStream
+			<< "Correct usage:" << std::endl
+			<< "   - rectangle <leftTopPoint X> <leftTopPointY> <rightBottomPoint X> <rightBottomPoint Y> <hex fillColor?> <hex outlineColor?>" << std::endl
+			<< "   - leftTop & rightBottom coordinates must be a number" << std::endl
+			<< "   - fillColor & outlineColor must be >= 0 and <= ffffff " << std::endl;
 		return false;
 	}
 
@@ -125,48 +130,48 @@ bool ShapesController::CreateTriangle(std::istream& args)
 
 	if (args.fail())
 	{
-		m_outputStream << "Not Enough arguments!!!" << std::endl
-					   << "Correct usage:" << std::endl
-					   << "   triangle <vertex1 X> <vertex1 Y> <vertex2 X> <vertex2 Y> <vertex3 X> <vertex3 Y> <hex fillColor?> <hex outlineColor?>" << std::endl;
+		m_outputStream << "Correct usage:" << std::endl
+					   << "   - triangle <vertex1 X> <vertex1 Y> <vertex2 X> <vertex2 Y> <vertex3 X> <vertex3 Y> <hex fillColor?> <hex outlineColor?>" << std::endl
+					   << "   - vertexes's coordinates must be a number" << std::endl
+					   << "   - fillColor & outlineColor must be >= 0 and <= ffffff " << std::endl;
 		return false;
 	}
 
 	CTriangle triangle(argsTriangle.vertex1, argsTriangle.vertex2, argsTriangle.vertex3, argsTriangle.fillColor, argsTriangle.outlineColor);
-
 	m_shapes.push_back(std::make_shared<CTriangle>(triangle));
 	m_outputStream << "Rectangle has been created." << std::endl;
 
 	return true;
 }
 
-bool ShapesController::PrintMaxAreaShape()
+void ShapesController::PrintMaxAreaShape()
 {
 	if (m_shapes.size() == 0)
 	{
 		m_outputStream << "There are no shapes yet" << std::endl;
-		return false;
+		return;
 	}
 
 	auto maxAreaShapeIt = std::max_element(m_shapes.begin(),
 		m_shapes.end(),
 		[](const std::shared_ptr<IShape>& shape1, const std::shared_ptr<IShape>& shape2) { return shape1->GetArea() < shape2->GetArea(); });
-	m_outputStream << "Max Area Shape:" << std::endl <<(*maxAreaShapeIt)->ToString() << std::endl;
-	return true;
+	m_outputStream << "Max Area Shape:" << std::endl
+				   << (*maxAreaShapeIt)->ToString() << std::endl;
 }
 
-bool ShapesController::PrintMinPerimeterShape()
+void ShapesController::PrintMinPerimeterShape()
 {
 	if (m_shapes.size() == 0)
 	{
 		m_outputStream << "There are no shapes yet" << std::endl;
-		return false;
+		return;
 	}
 
 	auto minPerimeterShape = std::max_element(m_shapes.begin(),
 		m_shapes.end(),
 		[](const std::shared_ptr<IShape>& shape1, const std::shared_ptr<IShape>& shape2) { return shape1->GetPerimeter() > shape2->GetPerimeter(); });
-	m_outputStream << "Min Perimeter Shape:" << std::endl << (*minPerimeterShape)->ToString() << std::endl;
-	return true;
+	m_outputStream << "Min Perimeter Shape:" << std::endl
+				   << (*minPerimeterShape)->ToString() << std::endl;
 }
 
 bool ShapesController::PrintAllShapes(std::istream& args)

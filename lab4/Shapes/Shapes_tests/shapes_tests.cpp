@@ -8,18 +8,42 @@
 
 SCENARIO("Testing CPoint")
 {
-	WHEN("Init CPoint")
+	WHEN("Init CPoint with coordinates")
 	{
-		CPoint point(12.3, 45.67);
-		REQUIRE(point.GetPointX() == 12.3);
-		REQUIRE(point.GetPointY() == 45.67);
+		THEN("CPoint is correctly inited")
+		{
+			CPoint point(12.3, 45.67);
+			REQUIRE(point.GetPointX() == 12.3);
+			REQUIRE(point.GetPointY() == 45.67);
+		}
 	}
 	WHEN("GetDistance between two points")
 	{
-		CPoint point1(2, -5);
-		CPoint point2(-4, 3);
-		double correctDistance = sqrt(pow((point2.GetPointX() - point1.GetPointX()), 2) + pow((point2.GetPointY() - point1.GetPointY()), 2));
-		REQUIRE(CPoint::GetDistance(point1, point2) == correctDistance);
+		THEN("Distance between two points equals correctDistance")
+		{
+			CPoint point1(2, -5);
+			CPoint point2(-4, 3);
+			double correctDistance = sqrt(pow((point2.GetPointX() - point1.GetPointX()), 2) + pow((point2.GetPointY() - point1.GetPointY()), 2));
+			REQUIRE(CPoint::GetDistance(point1, point2) == correctDistance);
+		}
+	}
+	WHEN("Comparison identical CPoints")
+	{
+		THEN("Point are equal")
+		{
+			CPoint point1(12.3, 45.67);
+			CPoint point2(12.3, 45.67);
+			REQUIRE(point1 == point2);
+		}
+	}
+	WHEN("Comparison non-identical CPoints")
+	{
+		THEN("Point are not equal")
+		{
+			CPoint point1(12.3, 45.67);
+			CPoint point2(12.3, 45.68);
+			REQUIRE(!(point1 == point2));
+		}
 	}
 }
 

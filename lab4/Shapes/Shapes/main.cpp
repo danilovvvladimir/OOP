@@ -3,7 +3,6 @@
 
 int main()
 {
-	// make_shared -> static method in point
 	ShapesController shapesController(std::cin, std::cout);
 
 	while (!std::cin.eof() && !std::cin.fail())

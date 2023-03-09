@@ -42,8 +42,8 @@ class ShapesController
 public:
 	ShapesController(std::istream& input, std::ostream& output);
 	bool HandleCommand();
-	bool PrintMaxAreaShape();
-	bool PrintMinPerimeterShape();
+	void PrintMaxAreaShape();
+	void PrintMinPerimeterShape();
 
 private:
 	enum class Shape
@@ -67,5 +67,8 @@ private:
 	ActionMap m_actionMap;
 	std::istream& m_inputStream;
 	std::ostream& m_outputStream;
-	std::vector<std::shared_ptr<IShape>> m_shapes;
+
+	std::shared_ptr<CCircle> c;
+	using IShapePointer = std::shared_ptr<IShape>;
+	std::vector<IShapePointer> m_shapes;
 };
