@@ -45,6 +45,18 @@ HexColor CRectangle::GetFillColor() const
 	return m_fillColor;
 }
 
+void CRectangle::Draw(ICanvas& canvas)
+{
+	CPoint rightTopPoint = { m_rightBottomPoint.GetPointX(), m_leftTopPoint.GetPointY() };
+	CPoint leftBottomPoint = { m_leftTopPoint.GetPointX(), m_rightBottomPoint.GetPointY() };
+
+	canvas.FillPolygon({ m_leftTopPoint, rightTopPoint, m_rightBottomPoint, leftBottomPoint }, m_fillColor);
+	canvas.DrawLine(m_leftTopPoint, rightTopPoint, m_outlineColor);
+	canvas.DrawLine(rightTopPoint, m_rightBottomPoint, m_outlineColor);
+	canvas.DrawLine(m_rightBottomPoint, leftBottomPoint, m_outlineColor);
+	canvas.DrawLine(leftBottomPoint, m_leftTopPoint, m_outlineColor);
+}
+
 CPoint CRectangle::GetLeftTopPoint() const
 {
 	return m_leftTopPoint;

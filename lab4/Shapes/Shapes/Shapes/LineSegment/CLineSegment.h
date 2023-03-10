@@ -13,6 +13,8 @@ public:
 	std::string ToString() const override;
 	HexColor GetOutlineColor() const override;
 
+	void Draw(ICanvas& canvas) override;
+
 	CPoint GetStartPoint() const;
 	CPoint GetEndPoint() const;
 

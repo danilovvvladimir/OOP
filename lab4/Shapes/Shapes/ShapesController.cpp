@@ -174,6 +174,29 @@ void ShapesController::PrintMinPerimeterShape()
 				   << (*minPerimeterShape)->ToString() << std::endl;
 }
 
+void ShapesController::DrawShaped(unsigned width, unsigned height, const std::string& windowTitle) const
+{
+	sf::RenderWindow window(sf::VideoMode(width, height), windowTitle);
+	CCanvas canvas(window);
+	while (canvas.GetRenderedWindow().isOpen())
+	{
+		sf::Event event;
+		while (canvas.GetRenderedWindow().pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				canvas.GetRenderedWindow().close();
+		}
+
+		canvas.GetRenderedWindow().clear(sf::Color::White);
+
+		for (const auto& shape : m_shapes)
+		{
+			shape->Draw(canvas);
+		}
+		canvas.GetRenderedWindow().display();
+	}
+}
+
 bool ShapesController::PrintAllShapes(std::istream& args)
 {
 	for (auto& shape : m_shapes)

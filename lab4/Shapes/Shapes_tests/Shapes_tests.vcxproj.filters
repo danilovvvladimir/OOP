@@ -36,6 +36,9 @@
     <ClCompile Include="..\Shapes\ShapesController.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="..\Shapes\CCanvas.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shapes\Point\CPoint.h">
@@ -54,6 +57,15 @@
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="..\Shapes\ShapesController.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shapes\CCanvas.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shapes\ICanvas.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shapes\ICanvasDrawable.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>

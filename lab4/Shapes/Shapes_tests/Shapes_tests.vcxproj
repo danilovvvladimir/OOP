@@ -76,9 +76,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\VOLGATECH\!semestr4\OOP\lab4\SFML-2.5.1-32bit\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
+      <AdditionalLibraryDirectories>C:\VOLGATECH\!semestr4\OOP\lab4\SFML-2.5.1-32bit\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-audio-d.lib;sfml-system-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>"$(TargetPath)"</Command>
@@ -90,9 +93,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\VOLGATECH\!semestr4\OOP\lab4\SFML-2.5.1-32bit\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
+      <AdditionalLibraryDirectories>C:\VOLGATECH\!semestr4\OOP\lab4\SFML-2.5.1-32bit\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-audio-d.lib;sfml-system-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>"$(TargetPath)"</Command>
@@ -106,11 +112,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\VOLGATECH\!semestr4\OOP\lab4\SFML-2.5.1-32bit\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>C:\VOLGATECH\!semestr4\OOP\lab4\SFML-2.5.1-32bit\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-audio-d.lib;sfml-system-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>"$(TargetPath)"</Command>
@@ -124,17 +133,21 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\VOLGATECH\!semestr4\OOP\lab4\SFML-2.5.1-32bit\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>C:\VOLGATECH\!semestr4\OOP\lab4\SFML-2.5.1-32bit\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-audio-d.lib;sfml-system-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>"$(TargetPath)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Shapes\CCanvas.cpp" />
     <ClCompile Include="..\Shapes\Point\CPoint.cpp" />
     <ClCompile Include="..\Shapes\ShapesController.cpp" />
     <ClCompile Include="..\Shapes\Shapes\LineSegment\CLineSegment.cpp" />
@@ -144,6 +157,9 @@
     <ClCompile Include="shapes_tests.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Shapes\CCanvas.h" />
+    <ClInclude Include="..\Shapes\ICanvas.h" />
+    <ClInclude Include="..\Shapes\ICanvasDrawable.h" />
     <ClInclude Include="..\Shapes\Point\CPoint.h" />
     <ClInclude Include="..\Shapes\ShapesController.h" />
     <ClInclude Include="..\Shapes\Shapes\LineSegment\CLineSegment.h" />

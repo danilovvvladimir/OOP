@@ -1,5 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "../../../catch2/catch.hpp"
+#include "../Shapes/CCanvas.h"
 #include "../Shapes/Point/CPoint.h"
 #include "../Shapes/Shapes/LineSegment/CLineSegment.h"
 #include "../Shapes/Shapes/SolidShapes/Circle/CCircle.h"

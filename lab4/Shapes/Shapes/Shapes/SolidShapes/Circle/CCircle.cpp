@@ -42,6 +42,12 @@ HexColor CCircle::GetFillColor() const
 	return m_fillColor;
 }
 
+void CCircle::Draw(ICanvas& canvas)
+{
+	canvas.FillCircle(m_centerPoint, m_radius, m_fillColor);
+	canvas.DrawCircle(m_centerPoint, m_radius, m_outlineColor);
+}
+
 double CCircle::GetRadius() const
 {
 	return m_radius;

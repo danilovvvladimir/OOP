@@ -35,6 +35,11 @@ HexColor CLineSegment::GetOutlineColor() const
 	return m_outlineColor;
 }
 
+void CLineSegment::Draw(ICanvas& canvas)
+{
+	canvas.DrawLine(m_startPoint, m_endPoint, m_outlineColor);
+}
+
 CPoint CLineSegment::GetStartPoint() const
 {
 	return m_startPoint;

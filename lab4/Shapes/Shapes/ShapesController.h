@@ -7,6 +7,7 @@
 #include <functional>
 #include <map>
 #include <vector>
+#include "CCanvas.h"
 
 struct ArgsLine
 {
@@ -44,6 +45,7 @@ public:
 	bool HandleCommand();
 	void PrintMaxAreaShape();
 	void PrintMinPerimeterShape();
+	void DrawShaped(unsigned width, unsigned height, const std::string& windowTitle) const;
 
 private:
 	enum class Shape

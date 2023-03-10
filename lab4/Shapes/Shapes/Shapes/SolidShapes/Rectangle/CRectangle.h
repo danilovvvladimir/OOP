@@ -14,6 +14,8 @@ public:
 	HexColor GetOutlineColor() const override;
 	HexColor GetFillColor() const override;
 
+	void Draw(ICanvas& canvas) override;
+
 	CPoint GetLeftTopPoint() const;
 	CPoint GetRightBottomPoint() const;
 	double GetWidth() const;

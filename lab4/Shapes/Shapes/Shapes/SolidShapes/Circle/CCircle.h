@@ -7,7 +7,6 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-
 class CCircle : public ISolidShape
 {
 public:
@@ -18,6 +17,7 @@ public:
 	std::string ToString() const override;
 	HexColor GetOutlineColor() const override;
 	HexColor GetFillColor() const override;
+	void Draw(ICanvas& canvas) override;
 
 	double GetRadius() const;
 	CPoint GetCenterPoint() const;
