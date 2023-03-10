@@ -167,7 +167,7 @@ SCENARIO("Testing CCircle")
 	}
 	WHEN("Testing GetArea")
 	{
-		double circleCorrectArea = 2 * circleRadius * circleRadius * M_PI;
+		double circleCorrectArea = circleRadius * circleRadius * M_PI;
 		REQUIRE(circle.GetArea() == circleCorrectArea);
 	}
 }
@@ -299,7 +299,7 @@ SCENARIO("Testing ShapeController")
 								<< "Radius: 5.00" << std::endl
 								<< "Outline Color: #fefefeff" << std::endl
 								<< "Fill Color: #ff00ffff" << std::endl
-								<< "Area: 157.08" << std::endl
+								<< "Area: 78.54" << std::endl
 								<< "Perimiter: 31.42" << std::endl
 								<< std::endl;
 			REQUIRE(outputStream.str() == correctOutputStream.str());

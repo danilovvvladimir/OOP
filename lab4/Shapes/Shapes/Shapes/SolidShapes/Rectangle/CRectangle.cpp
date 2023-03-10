@@ -69,10 +69,10 @@ CPoint CRectangle::GetRightBottomPoint() const
 
 double CRectangle::GetWidth() const
 {
-	return m_rightBottomPoint.GetPointX() - m_leftTopPoint.GetPointX();
+	return abs(m_rightBottomPoint.GetPointX() - m_leftTopPoint.GetPointX());
 }
 
 double CRectangle::GetHeight() const
 {
-	return m_leftTopPoint.GetPointY() - m_rightBottomPoint.GetPointY();
+	return abs(m_leftTopPoint.GetPointY() - m_rightBottomPoint.GetPointY());
 }

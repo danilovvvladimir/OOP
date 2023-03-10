@@ -10,7 +10,7 @@ CCircle::CCircle(const CPoint& centerPoint, double radius, HexColor fillColor, H
 
 double CCircle::GetArea() const
 {
-	return 2 * M_PI * m_radius * m_radius;
+	return M_PI * m_radius * m_radius;
 }
 
 double CCircle::GetPerimeter() const
