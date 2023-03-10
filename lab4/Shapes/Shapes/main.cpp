@@ -1,13 +1,19 @@
 #include "ShapesController.h"
 #include <SFML/Graphics.hpp>
+#include <fstream>
 #include <iostream>
 
 int main()
 {
-	ShapesController shapesController(std::cin, std::cout);
+	//fix area with abs
 
+	std::ifstream inputFile;
+	inputFile.open("input.txt");
+	ShapesController shapesController(inputFile, std::cout);
 
-	while (!std::cin.eof() && !std::cin.fail())
+	//ShapesController shapesController(std::cin, std::cout);
+	//while (!std::cin.eof() && !std::cin.fail())
+	while (!inputFile.eof() && !inputFile.fail())
 	{
 		std::cout << "> ";
 		if (!shapesController.HandleCommand())

@@ -11,6 +11,8 @@ void CCanvas::DrawLine(const CPoint& startPoint, const CPoint& endPoint, HexColo
 		sf::Vertex(sf::Vector2f((float)startPoint.GetPointX(), (float)startPoint.GetPointY()), sf::Color(lineColor)),
 		sf::Vertex(sf::Vector2f((float)endPoint.GetPointX(), (float)endPoint.GetPointY()), sf::Color(lineColor))
 	};
+	line[0].color = sf::Color(lineColor);
+	line[1].color = sf::Color(lineColor);
 
 	m_renderWindow.draw(line, 2, sf::Lines);
 }
@@ -34,11 +36,11 @@ void CCanvas::FillPolygon(const std::vector<CPoint>& points, HexColor fillColor)
 void CCanvas::DrawCircle(const CPoint& centerPoint, double radius, HexColor lineColor)
 {
 	sf::CircleShape circle((float)radius);
-	circle.setPosition((float)centerPoint.GetPointX() - (float)radius, (float)centerPoint.GetPointY() + (float)radius);
+	circle.setPosition((float)centerPoint.GetPointX() - (float)radius, (float)centerPoint.GetPointY() - (float)radius);
 
 
 	circle.setFillColor(sf::Color::Transparent);
-	circle.setOutlineThickness(1);
+	circle.setOutlineThickness(2);
 	circle.setOutlineColor(sf::Color(lineColor));
 
 	m_renderWindow.draw(circle);
@@ -48,7 +50,7 @@ void CCanvas::FillCircle(const CPoint& centerPoint, double radius, HexColor fill
 {
 	sf::CircleShape circle;
 	circle.setRadius((float)radius);
-	circle.setPosition((float)centerPoint.GetPointX() - (float)radius, (float)centerPoint.GetPointY() + (float)radius);
+	circle.setPosition((float)centerPoint.GetPointX() - (float)radius, (float)centerPoint.GetPointY() - (float)radius);
 
 	circle.setFillColor(sf::Color(fillColor));
 

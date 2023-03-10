@@ -178,6 +178,7 @@ void ShapesController::DrawShaped(unsigned width, unsigned height, const std::st
 {
 	sf::RenderWindow window(sf::VideoMode(width, height), windowTitle);
 	CCanvas canvas(window);
+	canvas.GetRenderedWindow().setFramerateLimit(30);
 	while (canvas.GetRenderedWindow().isOpen())
 	{
 		sf::Event event;
