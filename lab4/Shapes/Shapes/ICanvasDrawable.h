@@ -1,6 +1,6 @@
 #pragma once
 #include "ICanvas.h"
-using HexColor = uint32_t;
+
 
 class ICanvasDrawable
 {

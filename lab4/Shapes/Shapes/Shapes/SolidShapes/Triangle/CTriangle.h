@@ -15,11 +15,6 @@ public:
 	HexColor GetFillColor() const override;
 
 	void Draw(ICanvas& canvas) override;
-
-	CPoint GetVertex1() const;
-	CPoint GetVertex2() const;
-	CPoint GetVertex3() const;
-
 private:
 	CPoint m_vertex1;
 	CPoint m_vertex2;

@@ -17,11 +17,8 @@ public:
 	std::string ToString() const override;
 	HexColor GetOutlineColor() const override;
 	HexColor GetFillColor() const override;
+
 	void Draw(ICanvas& canvas) override;
-
-	double GetRadius() const;
-	CPoint GetCenterPoint() const;
-
 private:
 	CPoint m_centerPoint;
 	double m_radius;

@@ -58,12 +58,6 @@ SCENARIO("Testing CTriangle")
 	HexColor triangleOutlineColor = 0x00ff00;
 
 	CTriangle triangle(triangleVertex1, triangleVertex2, triangleVertex3, triangleFillColor, triangleOutlineColor);
-	WHEN("Testing GetVertixes")
-	{
-		REQUIRE(triangle.GetVertex1() == triangleVertex1);
-		REQUIRE(triangle.GetVertex2() == triangleVertex2);
-		REQUIRE(triangle.GetVertex3() == triangleVertex3);
-	}
 	WHEN("Testing GetFillColor")
 	{
 		REQUIRE(triangle.GetFillColor() == triangleFillColor);
@@ -73,9 +67,9 @@ SCENARIO("Testing CTriangle")
 		REQUIRE(triangle.GetOutlineColor() == triangleOutlineColor);
 	}
 
-	double distanceVertex12 = CPoint::GetDistance(triangle.GetVertex1(), triangle.GetVertex2());
-	double distanceVertex13 = CPoint::GetDistance(triangle.GetVertex1(), triangle.GetVertex3());
-	double distanceVertex23 = CPoint::GetDistance(triangle.GetVertex2(), triangle.GetVertex3());
+	double distanceVertex12 = CPoint::GetDistance(triangleVertex1, triangleVertex2);
+	double distanceVertex13 = CPoint::GetDistance(triangleVertex1, triangleVertex3);
+	double distanceVertex23 = CPoint::GetDistance(triangleVertex2, triangleVertex3);
 
 	WHEN("Testing GetPerimeter")
 	{
@@ -100,11 +94,6 @@ SCENARIO("Testing CRectangleee")
 
 	CRectangle rectangle(rectangleLeftTopPoint, rectangleRightBottomPoint, rectangleFillColor, rectangleOutlineColor);
 
-	WHEN("Testing Get Point")
-	{
-		REQUIRE(rectangle.GetLeftTopPoint() == rectangleLeftTopPoint);
-		REQUIRE(rectangle.GetRightBottomPoint() == rectangleRightBottomPoint);
-	}
 	WHEN("Testing GetFillColor")
 	{
 		REQUIRE(rectangle.GetFillColor() == rectangleFillColor);
@@ -148,10 +137,6 @@ SCENARIO("Testing CCircle")
 
 	CCircle circle(circleCenterPoint, circleRadius, circleFillColor, circleOutlineColor);
 
-	WHEN("Testing GetCenterPoint")
-	{
-		REQUIRE(circle.GetCenterPoint() == circleCenterPoint);
-	}
 	WHEN("Testing GetFillColor")
 	{
 		REQUIRE(circle.GetFillColor() == circleFillColor);

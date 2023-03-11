@@ -57,15 +57,6 @@ void CRectangle::Draw(ICanvas& canvas)
 	canvas.DrawLine(leftBottomPoint, m_leftTopPoint, m_outlineColor);
 }
 
-CPoint CRectangle::GetLeftTopPoint() const
-{
-	return m_leftTopPoint;
-}
-
-CPoint CRectangle::GetRightBottomPoint() const
-{
-	return m_rightBottomPoint;
-}
 
 double CRectangle::GetWidth() const
 {

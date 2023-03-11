@@ -2,7 +2,7 @@
 
 CCircle::CCircle(const CPoint& centerPoint, double radius, HexColor fillColor, HexColor outlineColor)
 	: m_centerPoint(centerPoint)
-	, m_radius(radius)
+	, m_radius(abs(radius))
 	, m_fillColor(fillColor)
 	, m_outlineColor(outlineColor)
 {
@@ -46,14 +46,4 @@ void CCircle::Draw(ICanvas& canvas)
 {
 	canvas.FillCircle(m_centerPoint, m_radius, m_fillColor);
 	canvas.DrawCircle(m_centerPoint, m_radius, m_outlineColor);
-}
-
-double CCircle::GetRadius() const
-{
-	return m_radius;
-}
-
-CPoint CCircle::GetCenterPoint() const
-{
-	return m_centerPoint;
 }

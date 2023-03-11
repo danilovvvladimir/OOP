@@ -16,8 +16,6 @@ public:
 
 	void Draw(ICanvas& canvas) override;
 
-	CPoint GetLeftTopPoint() const;
-	CPoint GetRightBottomPoint() const;
 	double GetWidth() const;
 	double GetHeight() const;
 

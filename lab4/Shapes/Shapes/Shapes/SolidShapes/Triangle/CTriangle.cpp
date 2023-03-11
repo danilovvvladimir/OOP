@@ -62,18 +62,3 @@ void CTriangle::Draw(ICanvas& canvas)
 	canvas.DrawLine(m_vertex2, m_vertex3, m_outlineColor);
 	canvas.DrawLine(m_vertex1, m_vertex3, m_outlineColor);
 }
-
-CPoint CTriangle::GetVertex1() const
-{
-	return m_vertex1;
-}
-
-CPoint CTriangle::GetVertex2() const
-{
-	return m_vertex2;
-}
-
-CPoint CTriangle::GetVertex3() const
-{
-	return m_vertex3;
-}

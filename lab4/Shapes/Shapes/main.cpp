@@ -5,11 +5,13 @@
 
 int main()
 {
-	std::ifstream inputFile;
-	inputFile.open("input.txt");
-	std::istream& inputStream = inputFile;
+	//-file
+	//std::ifstream inputFile;
+	//inputFile.open("input.txt");
+	//std::istream& inputStream = inputFile;
 
-	//std::istream& inputStream = std::cin;
+	//-cin
+	std::istream& inputStream = std::cin;
 
 	ShapesController shapesController(inputStream, std::cout);
 	while (!inputStream.eof() && !inputStream.fail())

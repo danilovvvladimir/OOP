@@ -37,7 +37,7 @@ bool ShapesController::CreateLine(std::istream& args)
 	if (args.eof())
 	{
 		m_outputStream << "Correct usage:" << std::endl
-					   << "   line <startPoint X> <startPoint Y> <endPoint X> <endPoint Y> <hex outlineColor?>" << std::endl;
+					   << "   line <startPoint X> <startPoint Y> <endPoint X> <endPoint Y> <hex outlineColor>" << std::endl;
 		return false;
 	}
 
@@ -47,8 +47,8 @@ bool ShapesController::CreateLine(std::istream& args)
 	if (args.fail())
 	{
 		m_outputStream << "Correct usage:" << std::endl
-					   << "   - line <startPoint X> <startPoint Y> <endPoint X> <endPoint Y> <hex outlineColor?>" << std::endl
-					   << "   - startPoint's & endPoint's coordinates must be a number" << std::endl
+					   << "   - line <startPoint X> <startPoint Y> <endPoint X> <endPoint Y> <hex outlineColor>" << std::endl
+					   << "   - startPoint's & endPoint's coordinates must be numbers" << std::endl
 					   << "   - outlineColor must be >= 0 and <= ffffff " << std::endl;
 		return false;
 	}
@@ -76,7 +76,7 @@ bool ShapesController::CreateCircle(std::istream& args)
 		m_outputStream
 			<< "Correct usage:" << std::endl
 			<< "   - circle <centerPoint X> <centerPoint Y> <radius> <hex fillColor?> <hex outlineColor?>" << std::endl
-			<< "   - centerPoint's coordinates and radius must be a number" << std::endl
+			<< "   - centerPoint's coordinates and radius must be numbers" << std::endl
 			<< "   - fillColor & outlineColor must be >= 0 and <= ffffff " << std::endl;
 		return false;
 	}
@@ -104,7 +104,7 @@ bool ShapesController::CreateRectangle(std::istream& args)
 		m_outputStream
 			<< "Correct usage:" << std::endl
 			<< "   - rectangle <leftTopPoint X> <leftTopPointY> <rightBottomPoint X> <rightBottomPoint Y> <hex fillColor?> <hex outlineColor?>" << std::endl
-			<< "   - leftTop & rightBottom coordinates must be a number" << std::endl
+			<< "   - leftTop & rightBottom coordinates must be numbers" << std::endl
 			<< "   - fillColor & outlineColor must be >= 0 and <= ffffff " << std::endl;
 		return false;
 	}
@@ -132,7 +132,7 @@ bool ShapesController::CreateTriangle(std::istream& args)
 	{
 		m_outputStream << "Correct usage:" << std::endl
 					   << "   - triangle <vertex1 X> <vertex1 Y> <vertex2 X> <vertex2 Y> <vertex3 X> <vertex3 Y> <hex fillColor?> <hex outlineColor?>" << std::endl
-					   << "   - vertexes's coordinates must be a number" << std::endl
+					   << "   - vertexes's coordinates must be numbers" << std::endl
 					   << "   - fillColor & outlineColor must be >= 0 and <= ffffff " << std::endl;
 		return false;
 	}

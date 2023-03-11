@@ -8,8 +8,8 @@ CCanvas::CCanvas(sf::RenderWindow& window)
 void CCanvas::DrawLine(const CPoint& startPoint, const CPoint& endPoint, HexColor lineColor)
 {
 	sf::Vertex line[] = {
-		sf::Vertex(sf::Vector2f((float)startPoint.GetPointX(), (float)startPoint.GetPointY()), sf::Color(lineColor)),
-		sf::Vertex(sf::Vector2f((float)endPoint.GetPointX(), (float)endPoint.GetPointY()), sf::Color(lineColor))
+		sf::Vertex(sf::Vector2f((float)startPoint.GetPointX(), (float)startPoint.GetPointY())),
+		sf::Vertex(sf::Vector2f((float)endPoint.GetPointX(), (float)endPoint.GetPointY()))
 	};
 	line[0].color = sf::Color(lineColor);
 	line[1].color = sf::Color(lineColor);
@@ -20,7 +20,6 @@ void CCanvas::DrawLine(const CPoint& startPoint, const CPoint& endPoint, HexColo
 void CCanvas::FillPolygon(const std::vector<CPoint>& points, HexColor fillColor)
 {
 	sf::ConvexShape convex;
-
 	convex.setPointCount(points.size());
 
 	for (size_t i = 0; i < points.size(); ++i)
@@ -37,7 +36,6 @@ void CCanvas::DrawCircle(const CPoint& centerPoint, double radius, HexColor line
 {
 	sf::CircleShape circle((float)radius);
 	circle.setPosition((float)centerPoint.GetPointX() - (float)radius, (float)centerPoint.GetPointY() - (float)radius);
-
 
 	circle.setFillColor(sf::Color::Transparent);
 	circle.setOutlineThickness(2);

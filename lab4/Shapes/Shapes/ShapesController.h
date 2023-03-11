@@ -42,20 +42,13 @@ class ShapesController
 {
 public:
 	ShapesController(std::istream& input, std::ostream& output);
+
 	bool HandleCommand();
 	void PrintMaxAreaShape();
 	void PrintMinPerimeterShape();
 	void DrawShaped(unsigned width, unsigned height, const std::string& windowTitle) const;
 
 private:
-	enum class Shape
-	{
-		CIRCLE,
-		TRIANGLE,
-		RECTANGLE,
-		LINE,
-	};
-
 	bool CreateLine(std::istream& args);
 	bool CreateCircle(std::istream& args);
 	bool CreateRectangle(std::istream& args);
@@ -70,7 +63,6 @@ private:
 	std::istream& m_inputStream;
 	std::ostream& m_outputStream;
 
-	std::shared_ptr<CCircle> c;
 	using IShapePointer = std::shared_ptr<IShape>;
 	std::vector<IShapePointer> m_shapes;
 };
