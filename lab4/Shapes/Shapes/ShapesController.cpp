@@ -1,9 +1,10 @@
 #include "ShapesController.h"
 
+
 ShapesController::ShapesController(std::istream& input, std::ostream& output)
 	: m_inputStream(input)
 	, m_outputStream(output)
-	, m_shapes({})
+	//, m_shapes({})
 	, m_actionMap({ { "line", bind(&ShapesController::CreateLine, this, std::placeholders::_1) },
 		  { "circle", bind(&ShapesController::CreateCircle, this, std::placeholders::_1) },
 		  { "rectangle", bind(&ShapesController::CreateRectangle, this, std::placeholders::_1) },
@@ -54,7 +55,7 @@ bool ShapesController::CreateLine(std::istream& args)
 	}
 
 	CLineSegment line(argsLine.startPoint, argsLine.endPoint, argsLine.outlineColor);
-	m_shapes.push_back(std::make_shared<CLineSegment>(line));
+	m_shapes.push_back(std::make_unique<CLineSegment>(line));
 	m_outputStream << "Line has been created." << std::endl;
 	return true;
 }
@@ -82,7 +83,7 @@ bool ShapesController::CreateCircle(std::istream& args)
 	}
 
 	CCircle circle(argsCircle.centerPoint, argsCircle.radius, argsCircle.fillColor, argsCircle.outlineColor);
-	m_shapes.push_back(std::make_shared<CCircle>(circle));
+	m_shapes.push_back(std::make_unique<CCircle>(circle));
 	m_outputStream << "Circle has been created." << std::endl;
 	return true;
 }
@@ -111,7 +112,7 @@ bool ShapesController::CreateRectangle(std::istream& args)
 
 	CRectangle rectangle(argsRectangle.leftTopPoint, argsRectangle.rightBottomPoint, argsRectangle.fillColor, argsRectangle.outlineColor);
 
-	m_shapes.push_back(std::make_shared<CRectangle>(rectangle));
+	m_shapes.push_back(std::make_unique<CRectangle>(rectangle));
 	m_outputStream << "Rectangle has been created." << std::endl;
 	return true;
 }
@@ -138,7 +139,7 @@ bool ShapesController::CreateTriangle(std::istream& args)
 	}
 
 	CTriangle triangle(argsTriangle.vertex1, argsTriangle.vertex2, argsTriangle.vertex3, argsTriangle.fillColor, argsTriangle.outlineColor);
-	m_shapes.push_back(std::make_shared<CTriangle>(triangle));
+	m_shapes.push_back(std::make_unique<CTriangle>(triangle));
 	m_outputStream << "Triangle has been created." << std::endl;
 
 	return true;
@@ -154,7 +155,7 @@ void ShapesController::PrintMaxAreaShape()
 
 	auto maxAreaShapeIt = std::max_element(m_shapes.begin(),
 		m_shapes.end(),
-		[](const std::shared_ptr<IShape>& shape1, const std::shared_ptr<IShape>& shape2) { return shape1->GetArea() < shape2->GetArea(); });
+		[](const std::unique_ptr<IShape>& shape1, const std::unique_ptr<IShape>& shape2) { return shape1->GetArea() < shape2->GetArea(); });
 	m_outputStream << "Max Area Shape:" << std::endl
 				   << (*maxAreaShapeIt)->ToString() << std::endl;
 }
@@ -169,7 +170,7 @@ void ShapesController::PrintMinPerimeterShape()
 
 	auto minPerimeterShape = std::max_element(m_shapes.begin(),
 		m_shapes.end(),
-		[](const std::shared_ptr<IShape>& shape1, const std::shared_ptr<IShape>& shape2) { return shape1->GetPerimeter() > shape2->GetPerimeter(); });
+		[](const std::unique_ptr<IShape>& shape1, const std::unique_ptr<IShape>& shape2) { return shape1->GetPerimeter() > shape2->GetPerimeter(); });
 	m_outputStream << "Min Perimeter Shape:" << std::endl
 				   << (*minPerimeterShape)->ToString() << std::endl;
 }

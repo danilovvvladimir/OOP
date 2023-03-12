@@ -7,6 +7,8 @@ CLineSegment::CLineSegment(const CPoint& startPoint, const CPoint& endPoint, Hex
 {
 }
 
+CLineSegment::~CLineSegment() = default;
+
 double CLineSegment::GetArea() const
 {
 	return 0.0;

@@ -9,6 +9,8 @@ CRectangle::CRectangle(const CPoint& leftTopPoint, const CPoint& rightBottomPoin
 {
 }
 
+CRectangle::~CRectangle() = default;
+
 double CRectangle::GetArea() const
 {
 	return GetHeight() * GetWidth();

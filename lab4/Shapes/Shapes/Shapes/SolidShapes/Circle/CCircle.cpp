@@ -8,6 +8,10 @@ CCircle::CCircle(const CPoint& centerPoint, double radius, HexColor fillColor, H
 {
 }
 
+CCircle::~CCircle() = default;
+
+
+
 double CCircle::GetArea() const
 {
 	return M_PI * m_radius * m_radius;

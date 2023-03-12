@@ -9,35 +9,6 @@
 #include <vector>
 #include "CCanvas.h"
 
-struct ArgsLine
-{
-	CPoint startPoint;
-	CPoint endPoint;
-	HexColor outlineColor;
-};
-struct ArgsTriangle
-{
-	CPoint vertex1;
-	CPoint vertex2;
-	CPoint vertex3;
-	HexColor fillColor;
-	HexColor outlineColor;
-};
-struct ArgsRectangle
-{
-	CPoint leftTopPoint;
-	CPoint rightBottomPoint;
-	HexColor fillColor;
-	HexColor outlineColor;
-};
-struct ArgsCircle
-{
-	CPoint centerPoint;
-	double radius;
-	HexColor fillColor;
-	HexColor outlineColor;
-};
-
 class ShapesController
 {
 public:
@@ -49,6 +20,38 @@ public:
 	void DrawShaped(unsigned width, unsigned height, const std::string& windowTitle) const;
 
 private:
+	struct ArgsLine
+	{
+		CPoint startPoint;
+		CPoint endPoint;
+		HexColor outlineColor;
+	};
+
+	struct ArgsTriangle
+	{
+		CPoint vertex1;
+		CPoint vertex2;
+		CPoint vertex3;
+		HexColor fillColor;
+		HexColor outlineColor;
+	};
+
+	struct ArgsRectangle
+	{
+		CPoint leftTopPoint;
+		CPoint rightBottomPoint;
+		HexColor fillColor;
+		HexColor outlineColor;
+	};
+
+	struct ArgsCircle
+	{
+		CPoint centerPoint;
+		double radius;
+		HexColor fillColor;
+		HexColor outlineColor;
+	};
+
 	bool CreateLine(std::istream& args);
 	bool CreateCircle(std::istream& args);
 	bool CreateRectangle(std::istream& args);
@@ -63,6 +66,6 @@ private:
 	std::istream& m_inputStream;
 	std::ostream& m_outputStream;
 
-	using IShapePointer = std::shared_ptr<IShape>;
-	std::vector<IShapePointer> m_shapes;
+	using IShapeSmartPointer = std::unique_ptr<IShape>;
+	std::vector<IShapeSmartPointer> m_shapes;
 };

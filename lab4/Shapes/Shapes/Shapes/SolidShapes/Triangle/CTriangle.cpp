@@ -9,6 +9,9 @@ CTriangle::CTriangle(const CPoint& vertex1, const CPoint& vertex2, const CPoint&
 {
 }
 
+CTriangle::~CTriangle() = default;
+
+
 double CTriangle::GetArea() const
 {
 	double halfPerimeter = GetPerimeter() / 2;
