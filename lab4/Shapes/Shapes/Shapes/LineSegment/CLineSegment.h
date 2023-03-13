@@ -8,7 +8,6 @@ class CLineSegment : public IShape
 {
 public:
 	CLineSegment(const CPoint& startPoint, const CPoint& endPoint, HexColor outlineColor);
-	~CLineSegment();
 
 	double GetArea() const override;
 	double GetPerimeter() const override;
@@ -18,7 +17,8 @@ public:
 	CPoint GetStartPoint() const;
 	CPoint GetEndPoint() const;
 
-	void Draw(ICanvas& canvas) override;
+	void Draw(ICanvas& canvas) const override;
+
 private:
 	CPoint m_startPoint;
 	CPoint m_endPoint;

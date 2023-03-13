@@ -2,14 +2,13 @@
 
 
 CRectangle::CRectangle(const CPoint& leftTopPoint, const CPoint& rightBottomPoint, HexColor fillColor, HexColor outlineColor)
-	: m_leftTopPoint(leftTopPoint)
+	: CSolidShape(fillColor, outlineColor)
+	,
+	m_leftTopPoint(leftTopPoint)
 	, m_rightBottomPoint(rightBottomPoint)
-	, m_fillColor(fillColor)
-	, m_outlineColor(outlineColor)
 {
 }
 
-CRectangle::~CRectangle() = default;
 
 double CRectangle::GetArea() const
 {
@@ -37,26 +36,17 @@ std::string CRectangle::ToString() const
 	return outputStream.str();
 }
 
-HexColor CRectangle::GetOutlineColor() const
-{
-	return m_outlineColor;
-}
 
-HexColor CRectangle::GetFillColor() const
-{
-	return m_fillColor;
-}
-
-void CRectangle::Draw(ICanvas& canvas)
+void CRectangle::Draw(ICanvas& canvas) const
 {
 	CPoint rightTopPoint = { m_rightBottomPoint.GetPointX(), m_leftTopPoint.GetPointY() };
 	CPoint leftBottomPoint = { m_leftTopPoint.GetPointX(), m_rightBottomPoint.GetPointY() };
 
-	canvas.FillPolygon({ m_leftTopPoint, rightTopPoint, m_rightBottomPoint, leftBottomPoint }, m_fillColor);
-	canvas.DrawLine(m_leftTopPoint, rightTopPoint, m_outlineColor);
-	canvas.DrawLine(rightTopPoint, m_rightBottomPoint, m_outlineColor);
-	canvas.DrawLine(m_rightBottomPoint, leftBottomPoint, m_outlineColor);
-	canvas.DrawLine(leftBottomPoint, m_leftTopPoint, m_outlineColor);
+	canvas.FillPolygon({ m_leftTopPoint, rightTopPoint, m_rightBottomPoint, leftBottomPoint }, GetFillColor());
+	canvas.DrawLine(m_leftTopPoint, rightTopPoint, GetOutlineColor());
+	canvas.DrawLine(rightTopPoint, m_rightBottomPoint, GetOutlineColor());
+	canvas.DrawLine(m_rightBottomPoint, leftBottomPoint, GetOutlineColor());
+	canvas.DrawLine(leftBottomPoint, m_leftTopPoint, GetOutlineColor());
 }
 
 

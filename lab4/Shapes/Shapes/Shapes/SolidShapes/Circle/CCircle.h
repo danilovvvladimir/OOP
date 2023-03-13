@@ -1,28 +1,25 @@
 #pragma once
 #include "../../../Point/CPoint.h"
-#include "../ISolidShape.h"
+#include "../CSolidShape.h"
 #include <iomanip>
 #include <sstream>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-class CCircle : public ISolidShape
+class CCircle : public CSolidShape
 {
 public:
 	CCircle(const CPoint& centerPoint, double radius, HexColor fillColor, HexColor outlineColor);
-	~CCircle();
 
 	double GetArea() const override;
 	double GetPerimeter() const override;
 	std::string ToString() const override;
-	HexColor GetOutlineColor() const override;
-	HexColor GetFillColor() const override;
 
-	void Draw(ICanvas& canvas) override;
+	void Draw(ICanvas& canvas) const override;
+
 private:
 	CPoint m_centerPoint;
 	double m_radius;
-	HexColor m_fillColor;
-	HexColor m_outlineColor;
+
 };

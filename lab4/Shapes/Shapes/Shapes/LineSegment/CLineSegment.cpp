@@ -7,7 +7,6 @@ CLineSegment::CLineSegment(const CPoint& startPoint, const CPoint& endPoint, Hex
 {
 }
 
-CLineSegment::~CLineSegment() = default;
 
 double CLineSegment::GetArea() const
 {
@@ -37,7 +36,7 @@ HexColor CLineSegment::GetOutlineColor() const
 	return m_outlineColor;
 }
 
-void CLineSegment::Draw(ICanvas& canvas)
+void CLineSegment::Draw(ICanvas& canvas) const
 {
 	canvas.DrawLine(m_startPoint, m_endPoint, m_outlineColor);
 }

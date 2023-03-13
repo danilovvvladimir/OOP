@@ -1,15 +1,12 @@
 #include "CTriangle.h"
 
 CTriangle::CTriangle(const CPoint& vertex1, const CPoint& vertex2, const CPoint& vertex3, HexColor fillColor, HexColor outlineColor)
-	: m_vertex1(vertex1)
+	: CSolidShape(fillColor, outlineColor)
+	, m_vertex1(vertex1)
 	, m_vertex2(vertex2)
 	, m_vertex3(vertex3)
-	, m_fillColor(fillColor)
-	, m_outlineColor(outlineColor)
 {
 }
-
-CTriangle::~CTriangle() = default;
 
 
 double CTriangle::GetArea() const
@@ -48,20 +45,10 @@ std::string CTriangle::ToString() const
 	return outputStream.str();
 }
 
-HexColor CTriangle::GetOutlineColor() const
+void CTriangle::Draw(ICanvas& canvas) const
 {
-	return m_outlineColor;
-}
-
-HexColor CTriangle::GetFillColor() const
-{
-	return m_fillColor;
-}
-
-void CTriangle::Draw(ICanvas& canvas)
-{
-	canvas.FillPolygon({ m_vertex1, m_vertex2, m_vertex3 }, m_fillColor);
-	canvas.DrawLine(m_vertex1, m_vertex2, m_outlineColor);
-	canvas.DrawLine(m_vertex2, m_vertex3, m_outlineColor);
-	canvas.DrawLine(m_vertex1, m_vertex3, m_outlineColor);
+	canvas.FillPolygon({ m_vertex1, m_vertex2, m_vertex3 }, GetFillColor());
+	canvas.DrawLine(m_vertex1, m_vertex2, GetOutlineColor());
+	canvas.DrawLine(m_vertex2, m_vertex3, GetOutlineColor());
+	canvas.DrawLine(m_vertex1, m_vertex3, GetOutlineColor());
 }

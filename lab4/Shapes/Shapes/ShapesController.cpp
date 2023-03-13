@@ -177,7 +177,7 @@ void ShapesController::PrintMinPerimeterShape()
 
 void ShapesController::DrawShaped(unsigned width, unsigned height, const std::string& windowTitle) const
 {
-	sf::RenderWindow window(sf::VideoMode(width, height), windowTitle);
+	sf::RenderWindow window(sf::VideoMode(width, height), windowTitle, sf::Style::Close);
 	CCanvas canvas(window);
 	canvas.GetRenderedWindow().setFramerateLimit(30);
 	while (canvas.GetRenderedWindow().isOpen())

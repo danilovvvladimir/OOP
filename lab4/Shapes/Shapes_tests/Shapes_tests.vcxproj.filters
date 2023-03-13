@@ -39,6 +39,9 @@
     <ClCompile Include="..\Shapes\CCanvas.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="..\Shapes\Shapes\SolidShapes\CSolidShape.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shapes\Point\CPoint.h">
@@ -67,6 +70,9 @@
     </ClInclude>
     <ClInclude Include="..\Shapes\ICanvasDrawable.h">
       <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shapes\Shapes\SolidShapes\CSolidShape.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

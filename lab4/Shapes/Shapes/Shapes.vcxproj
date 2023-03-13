@@ -27,6 +27,7 @@
     <ClCompile Include="Shapes\SolidShapes\Triangle\CTriangle.cpp" />
     <ClCompile Include="Point\CPoint.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Shapes\SolidShapes\CSolidShape.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CCanvas.h" />
@@ -40,6 +41,7 @@
     <ClInclude Include="Point\CPoint.h" />
     <ClInclude Include="Shapes\IShape.h" />
     <ClInclude Include="Shapes\SolidShapes\ISolidShape.h" />
+    <ClInclude Include="Shapes\SolidShapes\CSolidShape.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

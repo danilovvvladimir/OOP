@@ -152,6 +152,7 @@
     <ClCompile Include="..\Shapes\ShapesController.cpp" />
     <ClCompile Include="..\Shapes\Shapes\LineSegment\CLineSegment.cpp" />
     <ClCompile Include="..\Shapes\Shapes\SolidShapes\Circle\CCircle.cpp" />
+    <ClCompile Include="..\Shapes\Shapes\SolidShapes\CSolidShape.cpp" />
     <ClCompile Include="..\Shapes\Shapes\SolidShapes\Rectangle\CRectangle.cpp" />
     <ClCompile Include="..\Shapes\Shapes\SolidShapes\Triangle\CTriangle.cpp" />
     <ClCompile Include="shapes_tests.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="..\Shapes\ShapesController.h" />
     <ClInclude Include="..\Shapes\Shapes\LineSegment\CLineSegment.h" />
     <ClInclude Include="..\Shapes\Shapes\SolidShapes\Circle\CCircle.h" />
+    <ClInclude Include="..\Shapes\Shapes\SolidShapes\CSolidShape.h" />
     <ClInclude Include="..\Shapes\Shapes\SolidShapes\Rectangle\CRectangle.h" />
     <ClInclude Include="..\Shapes\Shapes\SolidShapes\Triangle\CTriangle.h" />
   </ItemGroup>

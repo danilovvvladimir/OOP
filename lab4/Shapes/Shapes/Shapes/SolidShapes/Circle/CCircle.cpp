@@ -1,15 +1,11 @@
 #include "CCircle.h"
 
 CCircle::CCircle(const CPoint& centerPoint, double radius, HexColor fillColor, HexColor outlineColor)
-	: m_centerPoint(centerPoint)
+	: CSolidShape(fillColor, outlineColor)
+	, m_centerPoint(centerPoint)
 	, m_radius(abs(radius))
-	, m_fillColor(fillColor)
-	, m_outlineColor(outlineColor)
 {
 }
-
-CCircle::~CCircle() = default;
-
 
 
 double CCircle::GetArea() const
@@ -36,18 +32,8 @@ std::string CCircle::ToString() const
 	return outputStream.str();
 }
 
-HexColor CCircle::GetOutlineColor() const
+void CCircle::Draw(ICanvas& canvas) const
 {
-	return m_outlineColor;
-}
-
-HexColor CCircle::GetFillColor() const
-{
-	return m_fillColor;
-}
-
-void CCircle::Draw(ICanvas& canvas)
-{
-	canvas.FillCircle(m_centerPoint, m_radius, m_fillColor);
-	canvas.DrawCircle(m_centerPoint, m_radius, m_outlineColor);
+	canvas.FillCircle(m_centerPoint, m_radius, GetFillColor());
+	canvas.DrawCircle(m_centerPoint, m_radius, GetOutlineColor());
 }
