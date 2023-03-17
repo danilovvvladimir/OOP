@@ -14,7 +14,7 @@ SCENARIO("Testing CPoint")
 	{
 		THEN("CPoint is correctly inited")
 		{
-			CPoint point(12.3, 45.67);
+			const CPoint point(12.3, 45.67);
 			REQUIRE(point.GetPointX() == 12.3);
 			REQUIRE(point.GetPointY() == 45.67);
 		}
@@ -23,9 +23,9 @@ SCENARIO("Testing CPoint")
 	{
 		THEN("Distance between two points equals correctDistance")
 		{
-			CPoint point1(2, -5);
-			CPoint point2(-4, 3);
-			double correctDistance = sqrt(pow((point2.GetPointX() - point1.GetPointX()), 2) + pow((point2.GetPointY() - point1.GetPointY()), 2));
+			const CPoint point1(2, -5);
+			const CPoint point2(-4, 3);
+			const double correctDistance = sqrt(pow((point2.GetPointX() - point1.GetPointX()), 2) + pow((point2.GetPointY() - point1.GetPointY()), 2));
 			REQUIRE(CPoint::GetDistance(point1, point2) == correctDistance);
 		}
 	}
@@ -33,8 +33,8 @@ SCENARIO("Testing CPoint")
 	{
 		THEN("Point are equal")
 		{
-			CPoint point1(12.3, 45.67);
-			CPoint point2(12.3, 45.67);
+			const CPoint point1(12.3, 45.67);
+			const CPoint point2(12.3, 45.67);
 			REQUIRE(point1 == point2);
 		}
 	}
@@ -42,8 +42,8 @@ SCENARIO("Testing CPoint")
 	{
 		THEN("Point are not equal")
 		{
-			CPoint point1(12.3, 45.67);
-			CPoint point2(12.3, 45.68);
+			const CPoint point1(12.3, 45.67);
+			const CPoint point2(12.3, 45.68);
 			REQUIRE(!(point1 == point2));
 		}
 	}
@@ -51,13 +51,13 @@ SCENARIO("Testing CPoint")
 
 SCENARIO("Testing CTriangle")
 {
-	CPoint triangleVertex1 = { 0, 0 };
-	CPoint triangleVertex2 = { 3, 0 };
-	CPoint triangleVertex3 = { 2, 2 };
-	HexColor triangleFillColor = 0xff00ff;
-	HexColor triangleOutlineColor = 0x00ff00;
+	const CPoint triangleVertex1 = { 0, 0 };
+	const CPoint triangleVertex2 = { 3, 0 };
+	const CPoint triangleVertex3 = { 2, 2 };
+	const HexColor triangleFillColor = 0xff00ff;
+	const HexColor triangleOutlineColor = 0x00ff00;
 
-	CTriangle triangle(triangleVertex1, triangleVertex2, triangleVertex3, triangleFillColor, triangleOutlineColor);
+	const CTriangle triangle(triangleVertex1, triangleVertex2, triangleVertex3, triangleFillColor, triangleOutlineColor);
 	WHEN("Testing GetFillColor")
 	{
 		REQUIRE(triangle.GetFillColor() == triangleFillColor);
@@ -67,32 +67,32 @@ SCENARIO("Testing CTriangle")
 		REQUIRE(triangle.GetOutlineColor() == triangleOutlineColor);
 	}
 
-	double distanceVertex12 = CPoint::GetDistance(triangleVertex1, triangleVertex2);
-	double distanceVertex13 = CPoint::GetDistance(triangleVertex1, triangleVertex3);
-	double distanceVertex23 = CPoint::GetDistance(triangleVertex2, triangleVertex3);
+	const double distanceVertex12 = CPoint::GetDistance(triangleVertex1, triangleVertex2);
+	const double distanceVertex13 = CPoint::GetDistance(triangleVertex1, triangleVertex3);
+	const double distanceVertex23 = CPoint::GetDistance(triangleVertex2, triangleVertex3);
 
 	WHEN("Testing GetPerimeter")
 	{
-		double correctTrianglePerimeter = distanceVertex12 + distanceVertex13 + distanceVertex23;
+		const double correctTrianglePerimeter = distanceVertex12 + distanceVertex13 + distanceVertex23;
 		REQUIRE(triangle.GetPerimeter() == correctTrianglePerimeter);
 	}
 	WHEN("Testing GetArea")
 	{
-		double halfPerimeter = triangle.GetPerimeter() / 2;
-		double correctTriangleArea = sqrt(halfPerimeter * (halfPerimeter - distanceVertex12) * (halfPerimeter - distanceVertex12) * (halfPerimeter - distanceVertex12));
+		const double halfPerimeter = triangle.GetPerimeter() / 2;
+		const double correctTriangleArea = sqrt(halfPerimeter * (halfPerimeter - distanceVertex12) * (halfPerimeter - distanceVertex12) * (halfPerimeter - distanceVertex12));
 		REQUIRE(triangle.GetArea() == correctTriangleArea);
 	}
 }
 
 SCENARIO("Testing CRectangleee")
 {
-	CPoint rectangleLeftTopPoint = { 0, 10 };
-	CPoint rectangleRightBottomPoint = { 10, 0 };
+	const CPoint rectangleLeftTopPoint = { 0, 10 };
+	const CPoint rectangleRightBottomPoint = { 10, 0 };
 
-	HexColor rectangleFillColor = 0xff00ff;
-	HexColor rectangleOutlineColor = 0x00ff00;
+	const HexColor rectangleFillColor = 0xff00ff;
+	const HexColor rectangleOutlineColor = 0x00ff00;
 
-	CRectangle rectangle(rectangleLeftTopPoint, rectangleRightBottomPoint, rectangleFillColor, rectangleOutlineColor);
+	const CRectangle rectangle(rectangleLeftTopPoint, rectangleRightBottomPoint, rectangleFillColor, rectangleOutlineColor);
 
 	WHEN("Testing GetFillColor")
 	{
@@ -103,8 +103,8 @@ SCENARIO("Testing CRectangleee")
 		REQUIRE(rectangle.GetOutlineColor() == rectangleOutlineColor);
 	}
 
-	double rectangleCorrectWidth = rectangleRightBottomPoint.GetPointX() - rectangleLeftTopPoint.GetPointX();
-	double rectangleCorrectHeight = rectangleLeftTopPoint.GetPointY() - rectangleRightBottomPoint.GetPointY();
+	const double rectangleCorrectWidth = rectangleRightBottomPoint.GetPointX() - rectangleLeftTopPoint.GetPointX();
+	const double rectangleCorrectHeight = rectangleLeftTopPoint.GetPointY() - rectangleRightBottomPoint.GetPointY();
 	WHEN("Testing GetWidth")
 	{
 		REQUIRE(rectangle.GetWidth() == rectangleCorrectWidth);
@@ -117,25 +117,25 @@ SCENARIO("Testing CRectangleee")
 
 	WHEN("Testing GetPerimeter")
 	{
-		double rectangleCorrectPerimeter = (rectangleCorrectWidth + rectangleCorrectHeight) * 2;
+		const double rectangleCorrectPerimeter = (rectangleCorrectWidth + rectangleCorrectHeight) * 2;
 		REQUIRE(rectangle.GetPerimeter() == rectangleCorrectPerimeter);
 	}
 	WHEN("Testing GetArea")
 	{
-		double rectangleCorrectArea = rectangleCorrectWidth * rectangleCorrectHeight;
+		const double rectangleCorrectArea = rectangleCorrectWidth * rectangleCorrectHeight;
 		REQUIRE(rectangle.GetArea() == rectangleCorrectArea);
 	}
 }
 
 SCENARIO("Testing CCircle")
 {
-	CPoint circleCenterPoint = { 5, 5 };
-	double circleRadius = 5;
+	const CPoint circleCenterPoint = { 5, 5 };
+	const double circleRadius = 5;
 
-	HexColor circleFillColor = 0xff00ff;
-	HexColor circleOutlineColor = 0x00ff00;
+	const HexColor circleFillColor = 0xff00ff;
+	const HexColor circleOutlineColor = 0x00ff00;
 
-	CCircle circle(circleCenterPoint, circleRadius, circleFillColor, circleOutlineColor);
+	const CCircle circle(circleCenterPoint, circleRadius, circleFillColor, circleOutlineColor);
 
 	WHEN("Testing GetFillColor")
 	{
@@ -147,24 +147,24 @@ SCENARIO("Testing CCircle")
 	}
 	WHEN("Testing GetPerimeter")
 	{
-		double circleCorrectPerimeter = 2 * circleRadius * M_PI;
+		const double circleCorrectPerimeter = 2 * circleRadius * M_PI;
 		REQUIRE(circle.GetPerimeter() == circleCorrectPerimeter);
 	}
 	WHEN("Testing GetArea")
 	{
-		double circleCorrectArea = circleRadius * circleRadius * M_PI;
+		const double circleCorrectArea = circleRadius * circleRadius * M_PI;
 		REQUIRE(circle.GetArea() == circleCorrectArea);
 	}
 }
 
 SCENARIO("Testing CLineSegment")
 {
-	CPoint lineStartPoint = { 0, 0 };
-	CPoint lineEndPoint = { 5, 0 };
+	const CPoint lineStartPoint = { 0, 0 };
+	const CPoint lineEndPoint = { 5, 0 };
 
-	HexColor lineOutlineColor = 0x00ff00;
+	const HexColor lineOutlineColor = 0x00ff00;
 
-	CLineSegment line(lineStartPoint, lineEndPoint, lineOutlineColor);
+	const CLineSegment line(lineStartPoint, lineEndPoint, lineOutlineColor);
 
 	WHEN("Testing GetStartPoint")
 	{
@@ -180,12 +180,12 @@ SCENARIO("Testing CLineSegment")
 	}
 	WHEN("Testing GetPerimeter")
 	{
-		double lineCorrectPerimeter = CPoint::GetDistance(lineEndPoint, lineStartPoint);
+		const double lineCorrectPerimeter = CPoint::GetDistance(lineEndPoint, lineStartPoint);
 		REQUIRE(line.GetPerimeter() == lineCorrectPerimeter);
 	}
 	WHEN("Testing GetArea")
 	{
-		double lineCorrectArea = 0;
+		const double lineCorrectArea = 0;
 		REQUIRE(line.GetArea() == lineCorrectArea);
 	}
 }
@@ -198,7 +198,7 @@ SCENARIO("Testing ShapeController")
 		{
 			std::istringstream inputStream("line 0 0 5 5 ff00ffff \nprintAllShapes");
 			std::ostringstream outputStream;
-			ShapesController shapesController(inputStream, outputStream);
+			const ShapesController shapesController(inputStream, outputStream);
 
 			shapesController.HandleCommand();
 			shapesController.HandleCommand();
@@ -221,7 +221,7 @@ SCENARIO("Testing ShapeController")
 		{
 			std::istringstream inputStream("triangle 0 0 5 5 2 2 ff00ffff fefefeff\nprintAllShapes");
 			std::ostringstream outputStream;
-			ShapesController shapesController(inputStream, outputStream);
+			const ShapesController shapesController(inputStream, outputStream);
 
 			shapesController.HandleCommand();
 			shapesController.HandleCommand();
@@ -246,7 +246,7 @@ SCENARIO("Testing ShapeController")
 		{
 			std::istringstream inputStream("rectangle 10 10 15 0 ff00ffff fefefeff\nprintAllShapes");
 			std::ostringstream outputStream;
-			ShapesController shapesController(inputStream, outputStream);
+			const ShapesController shapesController(inputStream, outputStream);
 
 			shapesController.HandleCommand();
 			shapesController.HandleCommand();
@@ -272,7 +272,7 @@ SCENARIO("Testing ShapeController")
 		{
 			std::istringstream inputStream("circle 0 0 5 ff00ffff fefefeff\nprintAllShapes");
 			std::ostringstream outputStream;
-			ShapesController shapesController(inputStream, outputStream);
+			const ShapesController shapesController(inputStream, outputStream);
 
 			shapesController.HandleCommand();
 			shapesController.HandleCommand();

@@ -14,9 +14,9 @@ class ShapesController
 public:
 	ShapesController(std::istream& input, std::ostream& output);
 
-	bool HandleCommand();
-	void PrintMaxAreaShape();
-	void PrintMinPerimeterShape();
+	bool HandleCommand() const;
+	void PrintMaxAreaShape() const;
+	void PrintMinPerimeterShape() const;
 	void DrawShaped(unsigned width, unsigned height, const std::string& windowTitle) const;
 
 private:

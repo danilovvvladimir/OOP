@@ -1,10 +1,8 @@
 #include "ShapesController.h"
 
-
 ShapesController::ShapesController(std::istream& input, std::ostream& output)
 	: m_inputStream(input)
 	, m_outputStream(output)
-	//, m_shapes({})
 	, m_actionMap({ { "line", bind(&ShapesController::CreateLine, this, std::placeholders::_1) },
 		  { "circle", bind(&ShapesController::CreateCircle, this, std::placeholders::_1) },
 		  { "rectangle", bind(&ShapesController::CreateRectangle, this, std::placeholders::_1) },
@@ -14,7 +12,7 @@ ShapesController::ShapesController(std::istream& input, std::ostream& output)
 {
 }
 
-bool ShapesController::HandleCommand()
+bool ShapesController::HandleCommand() const
 {
 	std::string commandLine;
 	std::getline(m_inputStream, commandLine);
@@ -145,8 +143,9 @@ bool ShapesController::CreateTriangle(std::istream& args)
 	return true;
 }
 
-void ShapesController::PrintMaxAreaShape()
+void ShapesController::PrintMaxAreaShape() const
 {
+	m_outputStream << "Max Area Shape: " << std::endl;
 	if (m_shapes.size() == 0)
 	{
 		m_outputStream << "There are no shapes yet" << std::endl;
@@ -155,13 +154,13 @@ void ShapesController::PrintMaxAreaShape()
 
 	auto maxAreaShapeIt = std::max_element(m_shapes.begin(),
 		m_shapes.end(),
-		[](const std::unique_ptr<IShape>& shape1, const std::unique_ptr<IShape>& shape2) { return shape1->GetArea() < shape2->GetArea(); });
-	m_outputStream << "Max Area Shape:" << std::endl
-				   << (*maxAreaShapeIt)->ToString() << std::endl;
+		[](const IShapeSmartPointer& shape1, const IShapeSmartPointer& shape2) { return shape1->GetArea() < shape2->GetArea(); });
+	m_outputStream << (*maxAreaShapeIt)->ToString() << std::endl;
 }
 
-void ShapesController::PrintMinPerimeterShape()
+void ShapesController::PrintMinPerimeterShape() const
 {
+	m_outputStream << "Min Perimeter Shape:" << std::endl;
 	if (m_shapes.size() == 0)
 	{
 		m_outputStream << "There are no shapes yet" << std::endl;
@@ -170,9 +169,8 @@ void ShapesController::PrintMinPerimeterShape()
 
 	auto minPerimeterShape = std::max_element(m_shapes.begin(),
 		m_shapes.end(),
-		[](const std::unique_ptr<IShape>& shape1, const std::unique_ptr<IShape>& shape2) { return shape1->GetPerimeter() > shape2->GetPerimeter(); });
-	m_outputStream << "Min Perimeter Shape:" << std::endl
-				   << (*minPerimeterShape)->ToString() << std::endl;
+		[](const IShapeSmartPointer& shape1, const IShapeSmartPointer& shape2) { return shape1->GetPerimeter() > shape2->GetPerimeter(); });
+	m_outputStream << (*minPerimeterShape)->ToString() << std::endl;
 }
 
 void ShapesController::DrawShaped(unsigned width, unsigned height, const std::string& windowTitle) const
