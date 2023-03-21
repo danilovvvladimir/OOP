@@ -344,6 +344,58 @@ SCENARIO("Testing - operator")
 	}
 }
 
+SCENARIO("Testing += operator")
+{
+	WHEN("Date is valid")
+	{
+		THEN("Date is modified")
+		{
+
+			CDate date(20, Month::MARCH, 2023);
+			CDate correctOutputDate(30, Month::MARCH, 2023);
+			date += 10;
+			REQUIRE(date == correctOutputDate);
+		}
+	}
+
+	WHEN("Date is not valid")
+	{
+		THEN("Date is not modified")
+		{
+			CDate date(1, Month::JANUARY, MAX_AVAILABLE_YEAR + 1);
+			CDate correctOutputDate(1, Month::JANUARY, MAX_AVAILABLE_YEAR + 1);
+			date += 10;
+			REQUIRE(date == correctOutputDate);
+		}
+	}
+}
+
+SCENARIO("Testing -= operator")
+{
+	WHEN("Date is valid")
+	{
+		THEN("Date is modified")
+		{
+
+			CDate date(20, Month::MARCH, 2023);
+			CDate correctOutputDate(10, Month::MARCH, 2023);
+			date -= 10;
+			REQUIRE(date == correctOutputDate);
+		}
+	}
+
+	WHEN("Date is not valid")
+	{
+		THEN("Date is not modified")
+		{
+			CDate date(1, Month::JANUARY, MAX_AVAILABLE_YEAR + 1);
+			CDate correctOutputDate(1, Month::JANUARY, MAX_AVAILABLE_YEAR + 1);
+			date -= 10;
+			REQUIRE(date == correctOutputDate);
+		}
+	}
+}
+
 SCENARIO("Testing << operator")
 {
 	WHEN("Date is valid")
@@ -388,7 +440,7 @@ SCENARIO("Testing >> operator")
 		{
 			outputStream << e.what();
 		}
-		
+
 		REQUIRE(outputStream.str() == "Day should be a number");
 	}
 	WHEN("Date is written correctly but it's not valid")

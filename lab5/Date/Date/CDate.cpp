@@ -125,6 +125,24 @@ CDate& CDate::operator--(int)
 	return tempDateCopy;
 }
 
+CDate& CDate::operator+=(Days days)
+{
+	if (IsValid())
+	{
+		m_days += days;
+	}
+	return *this;
+}
+
+CDate& CDate::operator-=(Days days)
+{
+	if (IsValid())
+	{
+		m_days -= days;
+	}
+	return *this;
+}
+
 CDate const CDate::operator+(Days days) const
 {
 	if (IsValid())
@@ -174,7 +192,7 @@ DateValues CDate::StringToDateValues(std::string& const str)
 		throw std::invalid_argument("Day should be a number");
 	}
 
-	int secondDotIndex = str.find('.', firstDotIndex+1);
+	int secondDotIndex = str.find('.', firstDotIndex + 1);
 
 	try
 	{
@@ -187,14 +205,14 @@ DateValues CDate::StringToDateValues(std::string& const str)
 
 	try
 	{
-		year = stoi(str.substr(secondDotIndex+1));
+		year = stoi(str.substr(secondDotIndex + 1));
 	}
 	catch (...)
 	{
 		throw std::invalid_argument("Year should be a number");
 	}
 
-	return {day, static_cast<Month>(monthIndex), year};
+	return { day, static_cast<Month>(monthIndex), year };
 }
 
 Days CDate::ConvertDateToDays(Days day, Month month, Year year) const

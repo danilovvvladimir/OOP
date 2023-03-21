@@ -78,10 +78,12 @@ public:
 	CDate& operator--();
 	CDate& operator--(int);
 
+	CDate& operator+=(Days days);
+	CDate& operator-=(Days days);
+
 	CDate const operator+(Days days) const;
 	CDate const operator-(Days days) const;
 	Days const operator-(CDate const& otherDate) const;
-
 
 	friend std::istream& operator>>(std::istream& stream, CDate& date);
 private:
