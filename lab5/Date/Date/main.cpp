@@ -1,8 +1,12 @@
-#include <iostream>
 #include "CDate.h"
+#include <iostream>
+#include <sstream>
 
 int main()
 {
-	CDate date(1, Month::NOVEMBER, 2040);
+
+	CDate date;
+	std::cout << date;
+
 	return 0;
 }

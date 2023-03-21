@@ -1,7 +1,5 @@
 #include "CDate.h"
 
-
-
 CDate::CDate(Days day, Month month, Year year)
 	: m_days(ConvertDateToDays(day, month, year))
 {
@@ -57,9 +55,146 @@ bool CDate::IsValid() const
 	return true;
 }
 
+bool CDate::operator==(CDate const& otherDate) const
+{
+	return m_days == otherDate.m_days;
+}
+
+bool CDate::operator!=(CDate const& otherDate) const
+{
+	return m_days != otherDate.m_days;
+}
+
+bool CDate::operator<(CDate const& otherDate) const
+{
+	return m_days < otherDate.m_days;
+}
+
+bool CDate::operator<=(CDate const& otherDate) const
+{
+	return m_days <= otherDate.m_days;
+}
+
+bool CDate::operator>(CDate const& otherDate) const
+{
+	return m_days > otherDate.m_days;
+}
+
+bool CDate::operator>=(CDate const& otherDate) const
+{
+	return m_days >= otherDate.m_days;
+}
+
+CDate& CDate::operator++()
+{
+	if (IsValid())
+	{
+		++m_days;
+	}
+	return *this;
+}
+
+CDate& CDate::operator++(int)
+{
+	if (!IsValid())
+	{
+		return *this;
+	}
+	CDate tempDateCopy(*this);
+	++*this;
+	return tempDateCopy;
+}
+
+CDate& CDate::operator--()
+{
+	if (IsValid())
+	{
+		--m_days;
+	}
+	return *this;
+}
+
+CDate& CDate::operator--(int)
+{
+	if (!IsValid())
+	{
+		return *this;
+	}
+	CDate tempDateCopy(*this);
+	--*this;
+	return tempDateCopy;
+}
+
+CDate const CDate::operator+(Days days) const
+{
+	if (IsValid())
+	{
+		return m_days + days;
+	}
+	return m_days;
+}
+
+CDate const CDate::operator-(Days days) const
+{
+	if (IsValid())
+	{
+		return m_days - days;
+	}
+	return m_days;
+}
+
+Days const CDate::operator-(CDate const& otherDate) const
+{
+	if (IsValid())
+	{
+		return m_days - otherDate.m_days;
+	}
+	return m_days;
+}
+
 bool CDate::IsLeapYear(Year year) const
 {
 	return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+}
+
+DateValues CDate::StringToDateValues(std::string& const str)
+{
+	Days day = 1;
+	int monthIndex = 1;
+	Year year = 1970;
+
+	int firstDotIndex = str.find('.');
+
+	try
+	{
+		day = stoi(str.substr(0, firstDotIndex));
+	}
+	catch (...)
+	{
+		throw std::invalid_argument("Day should be a number");
+	}
+
+	int secondDotIndex = str.find('.', firstDotIndex+1);
+
+	try
+	{
+		monthIndex = stoi(str.substr(firstDotIndex + 1, secondDotIndex - firstDotIndex));
+	}
+	catch (...)
+	{
+		throw std::invalid_argument("Month should be a number");
+	}
+
+	try
+	{
+		year = stoi(str.substr(secondDotIndex+1));
+	}
+	catch (...)
+	{
+		throw std::invalid_argument("Year should be a number");
+	}
+
+	return {day, static_cast<Month>(monthIndex), year};
 }
 
 Days CDate::ConvertDateToDays(Days day, Month month, Year year) const
@@ -102,4 +237,34 @@ DateValues CDate::ConvertDaysToDateValues(Days days) const
 	}
 
 	return { d, static_cast<Month>(monthIndex), year };
+}
+
+std::ostream& operator<<(std::ostream& stream, CDate const& date)
+{
+	if (!date.IsValid())
+	{
+		stream << "INVALID";
+	}
+	else
+	{
+		stream << date.GetDay() << "." << static_cast<int>(date.GetMonth()) << "." << date.GetYear();
+	}
+	return stream;
+}
+
+std::istream& operator>>(std::istream& stream, CDate& date)
+{
+	std::string stringStream;
+	stream >> stringStream;
+
+	DateValues dateValues = CDate::StringToDateValues(stringStream);
+
+	CDate newDate(dateValues.day, dateValues.month, dateValues.year);
+	if (!newDate.IsValid())
+	{
+		throw std::invalid_argument("Date is not valid. 1.1.1970 >= YOUR DATE <= 31.12.9999");
+	}
+	date = newDate;
+
+	return stream;
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+#include <string>
 using Days = unsigned;
 using Year = unsigned;
 
@@ -37,7 +39,7 @@ struct DateValues
 	Year year;
 };
 
-const Days MAX_AVAILABLE_DAY = 2932532;
+const Days MAX_AVAILABLE_DAY = 2932896;
 
 const Year MIN_AVAILABLE_YEAR = 1970;
 const Year MAX_AVAILABLE_YEAR = 9999;
@@ -50,21 +52,45 @@ const int MONTHS_OFFSET[2][12] = {
 class CDate
 {
 public:
+	// => Constructors
 	CDate(Days day, Month month, Year year);
 	CDate(Days timestamp = 0);
 
+	// => Methods
 	Days GetDay() const;
 	Month GetMonth() const;
 	Year GetYear() const;
 	WeekDay GetWeekDay() const;
 
 	bool IsValid() const;
+
+	// => Operators
+	bool operator==(CDate const& otherDate) const;
+	bool operator!=(CDate const& otherDate) const;
+	bool operator<(CDate const& otherDate) const;
+	bool operator<=(CDate const& otherDate) const;
+	bool operator>(CDate const& otherDate) const;
+	bool operator>=(CDate const& otherDate) const;
+	
+
+	CDate& operator++();
+	CDate& operator++(int);
+	CDate& operator--();
+	CDate& operator--(int);
+
+	CDate const operator+(Days days) const;
+	CDate const operator-(Days days) const;
+	Days const operator-(CDate const& otherDate) const;
+
+
+	friend std::istream& operator>>(std::istream& stream, CDate& date);
 private:
+	static DateValues StringToDateValues(std::string& const str);
 	Days ConvertDateToDays(Days day, Month month, Year year) const;
 	DateValues ConvertDaysToDateValues(Days days) const;
 	bool IsLeapYear(Year year) const;
 	Days m_days;
 };
 
-//	–езультат применени€ данных операций к недопустимой дате не измен€ет ее значени€.
-//	ѕри выходе результата после выполнени€ операций за пределы диапазона 01 : 01 : 1970 Ц 31 : 12 : 9999 дата должна стать недопустимой.
+std::ostream& operator<<(std::ostream& stream, CDate const& date);
+std::istream& operator>>(std::istream& stream, CDate& date);
