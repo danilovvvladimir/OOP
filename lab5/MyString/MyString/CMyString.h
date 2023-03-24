@@ -59,7 +59,15 @@ private:
 	char* m_data;
 	size_t m_length;
 };
+
 CMyString const operator+(CMyString const& myString1, CMyString const& myString2);
+
+bool operator==(CMyString const& myString1, CMyString const& myString2);
+bool operator!=(CMyString const& myString1, CMyString const& myString2);
+bool operator>(CMyString const& myString1, CMyString const& myString2);
+bool operator>=(CMyString const& myString1, CMyString const& myString2);
+bool operator<(CMyString const& myString1, CMyString const& myString2);
+bool operator<=(CMyString const& myString1, CMyString const& myString2);
 
 std::ostream& operator<<(std::ostream& stream, CMyString const& myString);
 std::istream& operator>>(std::istream& stream, CMyString& myString);

@@ -260,3 +260,156 @@ SCENARIO("Testing << operator")
 		}
 	}
 }
+
+SCENARIO("Testing operator +=")
+{
+	WHEN("Two CMyStrings are empty")
+	{
+		THEN("First CMyString is empty")
+		{
+			CMyString str1 = "";
+			CMyString str2 = "";
+
+			str1 += str2;
+			REQUIRE(strcmp(str1.GetStringData(), "") == 0);
+		}
+	}
+	WHEN("Two CMyStrings are different")
+	{
+		THEN("CMyString contains first its data and other's data")
+		{
+			CMyString str1 = "Hello ";
+			CMyString str2 = "world!";
+
+			str1 += str2;
+			REQUIRE(strcmp(str1.GetStringData(), "Hello world!") == 0);
+		}
+	}
+}
+
+SCENARIO("Testing operator +")
+{
+	WHEN("Two CMyStrings are empty")
+	{
+		THEN("First CMyString is empty")
+		{
+			CMyString str1 = "";
+			CMyString str2 = "";
+
+			CMyString str3 = str1 + str2;
+			REQUIRE(strcmp(str3.GetStringData(), "") == 0);
+		}
+	}
+	WHEN("Combaining two CMyStrings")
+	{
+		THEN("Result CMyString contains data of both CMyStrings")
+		{
+			CMyString str1 = "Hello ";
+			CMyString str2 = "world!";
+
+			CMyString str3 = str1 + str2;
+			REQUIRE(strcmp(str3.GetStringData(), "Hello world!") == 0);
+		}
+	}
+	WHEN("Combaining CMyString and std::string")
+	{
+		THEN("Result CMyString contains data of both CMyString and std::string")
+		{
+			std::string str1 = "Hello ";
+			CMyString str2 = "world!";
+
+			CMyString str3 = str1 + str2;
+			REQUIRE(strcmp(str3.GetStringData(), "Hello world!") == 0);
+		}
+	}
+	WHEN("Combaining CMyString and const char*")
+	{
+		THEN("Result CMyString contains data of both CMyString and const char*")
+		{
+			CMyString str2 = "world!";
+
+			CMyString str3 = "Hello " + str2;
+			REQUIRE(strcmp(str3.GetStringData(), "Hello world!") == 0);
+		}
+	}
+}
+
+SCENARIO("Testing operator ==")
+{
+	WHEN("Two CMyStrings are equal")
+	{
+		THEN("return true")
+		{
+			CMyString str1 = "Hi";
+			CMyString str2 = "Hi";
+
+			REQUIRE(str1 == str2);
+		}
+	}
+	WHEN("Two CMyStrings are different")
+	{
+		THEN("return false")
+		{
+			CMyString str1 = "Hi";
+			CMyString str2 = "Not Hi";
+
+			REQUIRE(!(str1 == str2));
+		}
+	}
+}
+
+SCENARIO("Testing operator !=")
+{
+	WHEN("Two CMyStrings are equal")
+	{
+		THEN("return false")
+		{
+			CMyString str1 = "Hi";
+			CMyString str2 = "Hi";
+
+			REQUIRE(!(str1 != str2));
+		}
+	}
+
+	WHEN("Two CMyStrings are different")
+	{
+		THEN("return true")
+		{
+			CMyString str1 = "Hi";
+			CMyString str2 = "Definitely Not Hi";
+
+			REQUIRE(str1 != str2);
+		}
+	}
+}
+
+SCENARIO("Testing >, <, >=, <= operators")
+{
+	WHEN("CMyStrings are equal")
+	{
+		CMyString str1 = "Hi";
+		CMyString str2 = "Hi";
+		REQUIRE(!(str1 > str2));
+		REQUIRE(!(str1 < str2));
+		REQUIRE(str1 >= str2);
+		REQUIRE(str1 <= str2);
+	}
+	WHEN("First CMyString is greater than second one")
+	{
+		CMyString str1 = "Hi hi";
+		CMyString str2 = "Hi";
+		REQUIRE(str1 > str2);
+		REQUIRE(!(str1 < str2));
+		REQUIRE(str1 >= str2);
+		REQUIRE(!(str1 <= str2));
+	}
+	WHEN("First CMyString is lesser than second one")
+	{
+		CMyString str1 = "Hi";
+		CMyString str2 = "Hi hi";
+		REQUIRE(!(str1 > str2));
+		REQUIRE(str1 < str2);
+		REQUIRE(!(str1 >= str2));
+		REQUIRE(str1 <= str2);
+	}
+}

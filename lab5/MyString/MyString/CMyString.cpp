@@ -91,16 +91,66 @@ CMyString& CMyString::operator=(CMyString const& other)
 
 CMyString& CMyString::operator+=(CMyString const& other)
 {
-	// через "+" мб
+	size_t newCMyStringLength = m_length + other.m_length;
+	char* newCMyStringData = new char[newCMyStringLength + 1];
+
+	memcpy(newCMyStringData, m_data, m_length);
+	memcpy(newCMyStringData + m_length, other.m_data, other.m_length);
+
+	newCMyStringData[newCMyStringLength] = STRING_END_SYMBOL;
+
+	m_data = newCMyStringData;
+	m_length = newCMyStringLength;
 
 	return *this;
 }
 
 CMyString const operator+(CMyString const& myString1, CMyString const& myString2)
 {
+	size_t newCMyStringLength = myString1.GetLength() + myString2.GetLength();
+	char* newCMyStringData = new char[newCMyStringLength];
 
+	memcpy(newCMyStringData, myString1.GetStringData(), myString1.GetLength());
+	memcpy(newCMyStringData + myString1.GetLength(), myString2.GetStringData(), myString2.GetLength());
 
-	return nullptr;
+	newCMyStringData[newCMyStringLength] = STRING_END_SYMBOL;
+
+	return CMyString(newCMyStringData, newCMyStringLength);
+}
+
+bool operator==(CMyString const& myString1, CMyString const& myString2)
+{
+	if (myString1.GetLength() != myString2.GetLength())
+	{
+		return false;
+	}
+
+	return (strcmp(myString1.GetStringData(), myString2.GetStringData()) == 0);
+}
+
+bool operator!=(CMyString const& myString1, CMyString const& myString2)
+{
+	return (strcmp(myString1.GetStringData(), myString2.GetStringData()) != 0);
+}
+
+bool operator>(CMyString const& myString1, CMyString const& myString2)
+{
+	return (strcmp(myString1.GetStringData(), myString2.GetStringData()) > 0);
+}
+
+bool operator>=(CMyString const& myString1, CMyString const& myString2)
+{
+	return (strcmp(myString1.GetStringData(), myString2.GetStringData()) >= 0);
+}
+
+bool operator<(CMyString const& myString1, CMyString const& myString2)
+{
+	return (strcmp(myString1.GetStringData(), myString2.GetStringData()) < 0);
+}
+
+bool operator<=(CMyString const& myString1, CMyString const& myString2)
+{
+	return (strcmp(myString1.GetStringData(), myString2.GetStringData()) <= 0);
 }
 
 std::ostream& operator<<(std::ostream& stream, CMyString const& myString)
