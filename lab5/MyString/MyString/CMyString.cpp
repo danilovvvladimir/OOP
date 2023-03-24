@@ -112,5 +112,6 @@ std::ostream& operator<<(std::ostream& stream, CMyString const& myString)
 std::istream& operator>>(std::istream& stream, CMyString& myString)
 {
 	// think about it
+	// mb as getline() -> ends with \n
 	return stream;
 }

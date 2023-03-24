@@ -25,6 +25,17 @@ SCENARIO("Testing Constructors")
 			REQUIRE(strcmp(mystr.GetStringData(), cStr) == 0);
 		}
 	}
+	WHEN("C string constructor containing nullish string code")
+	{
+		THEN("MyString contains C string")
+		{
+			const char* cStr = "Hello \0world";
+			CMyString mystr = CMyString(cStr);
+
+			REQUIRE(mystr.GetLength() == strlen(cStr));
+			REQUIRE(strcmp(mystr.GetStringData(), cStr) == 0);
+		}
+	}
 	WHEN("C string with string length constructor")
 	{
 		THEN("MyString contains C string")
@@ -63,6 +74,19 @@ SCENARIO("Testing Constructors")
 			REQUIRE(strcmp(mystr1.GetStringData(), stlString.c_str()) == 0);
 		}
 	}
+	WHEN("STL string constructor containing nullish string code")
+	{
+		THEN("MyString contains same \0 string as STL string")
+		{
+			std::string stlString = "This is STL string";
+
+			CMyString mystr1 = CMyString(stlString);
+
+			REQUIRE(mystr1.GetLength() == stlString.size());
+			REQUIRE(strcmp(mystr1.GetStringData(), stlString.c_str()) == 0);
+		}
+	}
+
 }
 
 SCENARIO("Testing Clear")
@@ -149,6 +173,18 @@ SCENARIO("Testing SubString")
 		}
 	}
 
+	WHEN("Method is called correctly with nullish string code")
+	{
+		THEN("return correct substring")
+		{
+			CMyString sNulls("Hello\0, world", 13);
+
+			auto const subString = sNulls.SubString(0, 8);
+
+			REQUIRE(std::strcmp(subString.GetStringData(), "Hello\0, ") == 0);
+		}
+	}
+
 	WHEN("Method is called incorrectly: <start> is greater than string length")
 	{
 		THEN("throw exception")
@@ -184,6 +220,43 @@ SCENARIO("Testing SubString")
 				outputStream << e.what();
 			}
 			REQUIRE(outputStream.str() == "<length> is out of range");
+		}
+	}
+}
+
+SCENARIO("Testing << operator")
+{
+	WHEN("MyString has nullish code in the middle")
+	{
+		THEN("Put MyString Data in outputStream")
+		{
+			std::ostringstream outputStream;
+
+			CMyString mystr("This is \0 nullish code symbol");
+			outputStream << mystr;
+			REQUIRE(outputStream.str() == mystr.GetStringData());
+		}
+	}
+	WHEN("MyString is empty")
+	{
+		THEN("Put MyString Data in outputStream")
+		{
+			std::ostringstream outputStream;
+
+			CMyString mystr;
+			outputStream << mystr;
+			REQUIRE(outputStream.str() == mystr.GetStringData());
+		}
+	}
+	WHEN("MyString is not empty")
+	{
+		THEN("Put MyString Data in outputStream")
+		{
+			std::ostringstream outputStream;
+
+			CMyString mystr("This string is designed for << test");
+			outputStream << mystr;
+			REQUIRE(outputStream.str() == mystr.GetStringData());
 		}
 	}
 }
