@@ -394,19 +394,19 @@ SCENARIO("Testing >, <, >=, <= operators")
 		REQUIRE(str1 >= str2);
 		REQUIRE(str1 <= str2);
 	}
-	WHEN("First CMyString is greater than second one")
+	WHEN("First CMyString is greater(ASCII) than second one")
 	{
-		CMyString str1 = "Hi hi";
-		CMyString str2 = "Hi";
+		CMyString str1 = "aab";
+		CMyString str2 = "aaa";
 		REQUIRE(str1 > str2);
 		REQUIRE(!(str1 < str2));
 		REQUIRE(str1 >= str2);
 		REQUIRE(!(str1 <= str2));
 	}
-	WHEN("First CMyString is lesser than second one")
+	WHEN("First CMyString is lesser(ASCII) than second one")
 	{
-		CMyString str1 = "Hi";
-		CMyString str2 = "Hi hi";
+		CMyString str1 = "aaaa";
+		CMyString str2 = "aab";
 		REQUIRE(!(str1 > str2));
 		REQUIRE(str1 < str2);
 		REQUIRE(!(str1 >= str2));

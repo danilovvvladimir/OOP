@@ -107,6 +107,8 @@ CMyString& CMyString::operator+=(CMyString const& other)
 
 CMyString const operator+(CMyString const& myString1, CMyString const& myString2)
 {
+	//// ask about removing const& and recreating implementation using += operator
+
 	size_t newCMyStringLength = myString1.GetLength() + myString2.GetLength();
 	char* newCMyStringData = new char[newCMyStringLength];
 

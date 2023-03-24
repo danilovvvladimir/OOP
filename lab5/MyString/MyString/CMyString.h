@@ -60,7 +60,7 @@ private:
 	size_t m_length;
 };
 
-CMyString const operator+(CMyString const& myString1, CMyString const& myString2);
+CMyString const operator+(CMyString myString1, CMyString const& myString2);
 
 bool operator==(CMyString const& myString1, CMyString const& myString2);
 bool operator!=(CMyString const& myString1, CMyString const& myString2);
