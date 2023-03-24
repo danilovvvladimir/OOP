@@ -7,17 +7,17 @@ CMyString::CMyString()
 	m_data[0] = STRING_END_SYMBOL;
 }
 
-CMyString::CMyString(const char* pString)
-	: CMyString(pString, std::strlen(pString))
-{
-}
-
 CMyString::CMyString(const char* pString, size_t length)
 	: m_data(new char[length + 1])
 	, m_length(length)
 {
 	memcpy(m_data, pString, length);
 	m_data[m_length] = STRING_END_SYMBOL;
+}
+
+CMyString::CMyString(const char* pString)
+	: CMyString(pString, std::strlen(pString))
+{
 }
 
 CMyString::CMyString(CMyString const& other)
@@ -32,6 +32,7 @@ CMyString::CMyString(CMyString&& other)
 	other.m_data = nullptr;
 	other.m_length = 0;
 }
+
 CMyString::CMyString(std::string const& stlString)
 	: CMyString(stlString.c_str(), stlString.size())
 {
@@ -71,8 +72,35 @@ void CMyString::Clear()
 {
 	delete[] m_data;
 	m_length = 0;
+
 	m_data = new char[1];
-	m_data = STRING_END_SYMBOL;
+	m_data[0] = STRING_END_SYMBOL;
+}
+
+CMyString& CMyString::operator=(CMyString const& other)
+{
+	if (std::addressof(other) != this)
+	{
+		CMyString tmpCopy(other);
+		std::swap(m_data, tmpCopy.m_data);
+		std::swap(m_length, tmpCopy.m_length);
+	}
+
+	return *this;
+}
+
+CMyString& CMyString::operator+=(CMyString const& other)
+{
+	// через "+" мб
+
+	return *this;
+}
+
+CMyString const operator+(CMyString const& myString1, CMyString const& myString2)
+{
+
+
+	return nullptr;
 }
 
 std::ostream& operator<<(std::ostream& stream, CMyString const& myString)
