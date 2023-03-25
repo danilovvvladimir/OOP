@@ -89,6 +89,20 @@ CMyString& CMyString::operator=(CMyString const& other)
 	return *this;
 }
 
+CMyString& CMyString::operator=(CMyString&& other)
+{
+	if (std::addressof(other) != this)
+	{
+		m_length = 0;
+		m_data = nullptr;
+
+		std::swap(m_data, other.m_data);
+		std::swap(m_length, other.m_length);
+	}
+
+	return *this;
+}
+
 CMyString& CMyString::operator+=(CMyString const& other)
 {
 	size_t newCMyStringLength = m_length + other.m_length;
@@ -103,6 +117,25 @@ CMyString& CMyString::operator+=(CMyString const& other)
 	m_length = newCMyStringLength;
 
 	return *this;
+}
+
+const char & CMyString::operator[](size_t index) const
+{
+	if (index > m_length)
+	{
+		throw std::out_of_range("index is out of range");
+	}
+
+	return m_data[index];
+}
+
+char& CMyString::operator[](size_t index)
+{
+	if (index > m_length)
+	{
+		throw std::out_of_range("index is out of range");
+	}
+	return m_data[index];
 }
 
 CMyString const operator+(CMyString const& myString1, CMyString const& myString2)
@@ -163,7 +196,33 @@ std::ostream& operator<<(std::ostream& stream, CMyString const& myString)
 
 std::istream& operator>>(std::istream& stream, CMyString& myString)
 {
-	// think about it
-	// mb as getline() -> ends with \n
+	size_t resultDataSize = 1;
+	size_t resultLength = 0;
+	char* resultData = new char[resultDataSize];
+
+	char ch;
+
+	while (stream.get(ch) && ch != ' ' && ch != '\n')
+	{
+
+		resultData[resultLength] = ch;
+		resultLength++;
+
+		if (resultLength == resultDataSize)
+		{
+			char* newResultData = new char[resultDataSize*2];
+			memcpy(newResultData, resultData, resultDataSize);
+			delete[] resultData;
+			resultData = newResultData;
+
+			resultDataSize *= 2;
+		}
+	}
+	resultData[resultLength] = STRING_END_SYMBOL;
+
+	delete[] myString.m_data;
+	myString.m_length = resultLength;
+	myString.m_data = resultData;
+
 	return stream;
 }
