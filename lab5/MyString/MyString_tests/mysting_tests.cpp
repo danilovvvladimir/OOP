@@ -86,7 +86,6 @@ SCENARIO("Testing Constructors")
 			REQUIRE(strcmp(mystr1.GetStringData(), stlString.c_str()) == 0);
 		}
 	}
-
 }
 
 SCENARIO("Testing Clear")
@@ -261,6 +260,35 @@ SCENARIO("Testing << operator")
 	}
 }
 
+SCENARIO("Testing operator >>")
+{
+	WHEN("Reading till ' '")
+	{
+		std::istringstream inputStream("Hello world");
+		CMyString mystr;
+		REQUIRE(inputStream >> mystr);
+		CMyString correstStr = "Hello";
+		REQUIRE(mystr == correstStr);
+	}
+	WHEN("Reading till '\n'")
+	{
+		std::istringstream inputStream("Helloworld\nworldhello");
+		CMyString mystr;
+		REQUIRE(inputStream >> mystr);
+		CMyString correstStr = "Helloworld";
+		REQUIRE(mystr == correstStr);
+	}
+	WHEN("Reading till 'eof'")
+	{
+		std::istringstream inputStream("Helloworld");
+		CMyString mystr;
+		CMyString correstStr = "Helloworld";
+
+		inputStream >> mystr;
+		REQUIRE(mystr == correstStr);
+	}
+}
+
 SCENARIO("Testing operator +=")
 {
 	WHEN("Two CMyStrings are empty")
@@ -411,5 +439,50 @@ SCENARIO("Testing >, <, >=, <= operators")
 		REQUIRE(str1 < str2);
 		REQUIRE(!(str1 >= str2));
 		REQUIRE(str1 <= str2);
+	}
+}
+
+SCENARIO("Testing operator []")
+{
+	WHEN("Reading []")
+	{
+		const CMyString str("Hello world");
+		REQUIRE(str[0] == 'H');
+	}
+	WHEN("Writing []")
+	{
+		CMyString str1("Hello world");
+		str1[0] = 'e';
+		CMyString correctStr = "eello world";
+		REQUIRE(str1 == correctStr);
+	}
+}
+
+SCENARIO("Testing moving")
+{
+	WHEN("Moving constructor")
+	{
+		THEN("Moved string is empty and string where we have moved contains data of first one")
+		{
+			CMyString firstString("Hello world");
+			CMyString secondString(std::move(firstString));
+
+			REQUIRE(firstString.GetStringData() == nullptr);
+			REQUIRE(firstString.GetLength() == 0);
+
+			REQUIRE(std::strcmp(secondString.GetStringData(), "Hello world") == 0);
+		}
+	}
+	WHEN("Move assignment operator =")
+	{
+		THEN("Moved string is empty and string where we have moved contains data of first one")
+		{
+			CMyString firstString("Hello world");
+			CMyString secondString = std::move(firstString);
+			REQUIRE(firstString.GetStringData() == nullptr);
+			REQUIRE(firstString.GetLength() == 0);
+
+			REQUIRE(std::strcmp(secondString.GetStringData(), "Hello world") == 0);
+		}
 	}
 }
