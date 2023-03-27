@@ -94,7 +94,7 @@ CDate& CDate::operator++()
 	return *this;
 }
 
-CDate& CDate::operator++(int)
+CDate const CDate::operator++(int)
 {
 	if (!IsValid())
 	{
@@ -114,7 +114,7 @@ CDate& CDate::operator--()
 	return *this;
 }
 
-CDate& CDate::operator--(int)
+CDate const CDate::operator--(int)
 {
 	if (!IsValid())
 	{
@@ -175,7 +175,7 @@ bool CDate::IsLeapYear(Year year) const
 	return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
 }
 
-DateValues CDate::StringToDateValues(std::string& const str)
+DateValues CDate::StringToDateValues(std::string const& str)
 {
 	Days day = 1;
 	int monthIndex = 1;

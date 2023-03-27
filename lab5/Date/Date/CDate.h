@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+
 using Days = unsigned;
 using Year = unsigned;
 
@@ -74,9 +75,9 @@ public:
 	
 
 	CDate& operator++();
-	CDate& operator++(int);
 	CDate& operator--();
-	CDate& operator--(int);
+	CDate const operator++(int);
+	CDate const operator--(int);
 
 	CDate& operator+=(Days days);
 	CDate& operator-=(Days days);
@@ -87,10 +88,11 @@ public:
 
 	friend std::istream& operator>>(std::istream& stream, CDate& date);
 private:
-	static DateValues StringToDateValues(std::string& const str);
+	static DateValues StringToDateValues(std::string const& str);
 	Days ConvertDateToDays(Days day, Month month, Year year) const;
 	DateValues ConvertDaysToDateValues(Days days) const;
 	bool IsLeapYear(Year year) const;
+
 	Days m_days;
 };
 

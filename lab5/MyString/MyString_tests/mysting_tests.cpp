@@ -467,7 +467,7 @@ SCENARIO("Testing moving")
 			CMyString firstString("Hello world");
 			CMyString secondString(std::move(firstString));
 
-			REQUIRE(firstString.GetStringData() == nullptr);
+			REQUIRE(std::strcmp(firstString.GetStringData(), "") == 0);
 			REQUIRE(firstString.GetLength() == 0);
 
 			REQUIRE(std::strcmp(secondString.GetStringData(), "Hello world") == 0);
@@ -479,7 +479,8 @@ SCENARIO("Testing moving")
 		{
 			CMyString firstString("Hello world");
 			CMyString secondString = std::move(firstString);
-			REQUIRE(firstString.GetStringData() == nullptr);
+
+			REQUIRE(std::strcmp(firstString.GetStringData(), "") == 0);
 			REQUIRE(firstString.GetLength() == 0);
 
 			REQUIRE(std::strcmp(secondString.GetStringData(), "Hello world") == 0);

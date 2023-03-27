@@ -50,7 +50,8 @@ size_t CMyString::GetLength() const
 
 const char* CMyString::GetStringData() const
 {
-	return m_data;
+	static const char zeroLengthString[] = "";
+	return m_data ? m_data : zeroLengthString;
 }
 
 CMyString CMyString::SubString(size_t start, size_t length) const
@@ -93,6 +94,7 @@ CMyString& CMyString::operator=(CMyString&& other)
 {
 	if (std::addressof(other) != this)
 	{
+		delete[] m_data;
 		m_length = 0;
 		m_data = nullptr;
 
