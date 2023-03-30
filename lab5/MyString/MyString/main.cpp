@@ -5,10 +5,9 @@
 #include <fstream>
 int main()
 {
-	CMyString str = "Hello world";
-	CMyString newStr(std::move(str));
-	std::cout << str.GetLength() << std::endl;
-	std::cout << newStr.GetLength() << std::endl;
+	CMyString str1 = "Hello";
+	 str1 += " world";
+	std::cout << str1 << std::endl;
 
 	return 0;
 }

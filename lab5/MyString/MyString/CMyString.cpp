@@ -1,5 +1,17 @@
 #include "CMyString.h"
 
+// TODOS:
+
+// [-]CAPACITY (как в std::string)
+// [-]КОД УСТОЙЧИВЫЙ К ИСКЛЮЧЕНИЯМ
+
+// [X] 1) noexcept
+// [X] 2) с конструкторами и передачей туда nullptr
+// [X] 3) subString до конца строки проверка
+// [X] 4) в сравнении memcmp вместо strcmp
+// [-] 5) тесты с '\0'
+// [X] 6) Утечка памяти в operator+
+
 CMyString::CMyString()
 	: m_data(new char[1])
 	, m_length(0)
@@ -8,11 +20,23 @@ CMyString::CMyString()
 }
 
 CMyString::CMyString(const char* pString, size_t length)
-	: m_data(new char[length + 1])
+	: m_data(nullptr)
 	, m_length(length)
 {
-	memcpy(m_data, pString, length);
-	m_data[m_length] = STRING_END_SYMBOL;
+	//[-]с конструкторами и передачей туда nullptr
+	// If either dest or src is an invalid or null pointer, the behavior is undefined, even if count is zero.
+
+	try
+	{
+		m_data = new char[length + 1];
+		memcpy(m_data, pString, length);
+		m_data[m_length] = STRING_END_SYMBOL;
+	}
+	catch (const std::exception&)
+	{
+		delete[] m_data;
+		throw;
+	}
 }
 
 CMyString::CMyString(const char* pString)
@@ -21,11 +45,11 @@ CMyString::CMyString(const char* pString)
 }
 
 CMyString::CMyString(CMyString const& other)
-	: CMyString(other.m_data, other.m_length)
+	: CMyString(other.GetStringData(), other.GetLength())
 {
 }
 
-CMyString::CMyString(CMyString&& other)
+CMyString::CMyString(CMyString&& other) noexcept
 	: m_data(other.m_data)
 	, m_length(other.m_length)
 {
@@ -63,7 +87,8 @@ CMyString CMyString::SubString(size_t start, size_t length) const
 
 	if (length > m_length - start)
 	{
-		throw std::out_of_range("<length> is out of range");
+		// [X]TODO: убрать выбрасывание исключения, добавить до конца строки
+		length = m_length - start;
 	}
 
 	return CMyString(&m_data[start], length);
@@ -90,7 +115,7 @@ CMyString& CMyString::operator=(CMyString const& other)
 	return *this;
 }
 
-CMyString& CMyString::operator=(CMyString&& other)
+CMyString& CMyString::operator=(CMyString&& other) noexcept
 {
 	if (std::addressof(other) != this)
 	{
@@ -108,20 +133,32 @@ CMyString& CMyString::operator=(CMyString&& other)
 CMyString& CMyString::operator+=(CMyString const& other)
 {
 	size_t newCMyStringLength = m_length + other.m_length;
-	char* newCMyStringData = new char[newCMyStringLength + 1];
 
-	memcpy(newCMyStringData, m_data, m_length);
-	memcpy(newCMyStringData + m_length, other.m_data, other.m_length);
+	char* newCMyStringData = nullptr;
 
-	newCMyStringData[newCMyStringLength] = STRING_END_SYMBOL;
+	try
+	{
+		newCMyStringData = new char[newCMyStringLength + 1];
 
-	m_data = newCMyStringData;
-	m_length = newCMyStringLength;
+		memcpy(newCMyStringData, m_data, m_length);
+		memcpy(newCMyStringData + m_length, other.m_data, other.m_length);
+
+		newCMyStringData[newCMyStringLength] = STRING_END_SYMBOL;
+
+		delete[] m_data;
+		m_data = newCMyStringData;
+		m_length = newCMyStringLength;
+	}
+	catch (const std::exception&)
+	{
+		delete[] m_data;
+		throw;
+	}
 
 	return *this;
 }
 
-const char & CMyString::operator[](size_t index) const
+const char& CMyString::operator[](size_t index) const
 {
 	if (index > m_length)
 	{
@@ -142,17 +179,28 @@ char& CMyString::operator[](size_t index)
 
 CMyString const operator+(CMyString const& myString1, CMyString const& myString2)
 {
-	//// ask about removing const& and recreating implementation using += operator
-
 	size_t newCMyStringLength = myString1.GetLength() + myString2.GetLength();
-	char* newCMyStringData = new char[newCMyStringLength];
+	CMyString newCMyString;
 
-	memcpy(newCMyStringData, myString1.GetStringData(), myString1.GetLength());
-	memcpy(newCMyStringData + myString1.GetLength(), myString2.GetStringData(), myString2.GetLength());
+	char* newCMyStringData = nullptr;
+	try
+	{
+		newCMyStringData = new char[newCMyStringLength + 1];
+		memcpy(newCMyStringData, myString1.GetStringData(), myString1.GetLength());
+		memcpy(newCMyStringData + myString1.GetLength(), myString2.GetStringData(), myString2.GetLength());
+		newCMyStringData[newCMyStringLength] = STRING_END_SYMBOL;
+		throw std::out_of_range("s");
 
-	newCMyStringData[newCMyStringLength] = STRING_END_SYMBOL;
+		// [X]Утечка памяти
+		newCMyString = CMyString(newCMyStringData, newCMyStringLength);
+		delete[] newCMyStringData;
+	}
+	catch (const std::exception&)
+	{
+		delete[] newCMyStringData;
+	}
 
-	return CMyString(newCMyStringData, newCMyStringLength);
+	return newCMyString;
 }
 
 bool operator==(CMyString const& myString1, CMyString const& myString2)
@@ -162,32 +210,51 @@ bool operator==(CMyString const& myString1, CMyString const& myString2)
 		return false;
 	}
 
-	return (strcmp(myString1.GetStringData(), myString2.GetStringData()) == 0);
+	// [X]TODO: memcmp вместо strcmp
+	return (memcmp(myString1.GetStringData(), myString2.GetStringData(), myString1.GetLength()) == 0);
 }
 
 bool operator!=(CMyString const& myString1, CMyString const& myString2)
 {
-	return (strcmp(myString1.GetStringData(), myString2.GetStringData()) != 0);
+	// [X]TODO: реализовать через ==
+	return !(myString1 == myString2);
 }
 
+// [X]TODO: memcmp вместо strcmp & сравнени длин в операторах >, <, >=, <=
 bool operator>(CMyString const& myString1, CMyString const& myString2)
 {
-	return (strcmp(myString1.GetStringData(), myString2.GetStringData()) > 0);
+	if (myString1.GetLength() < myString2.GetLength())
+	{
+		return false;
+	}
+	return (memcmp(myString1.GetStringData(), myString2.GetStringData(), myString1.GetLength()) > 0);
 }
 
 bool operator>=(CMyString const& myString1, CMyString const& myString2)
 {
-	return (strcmp(myString1.GetStringData(), myString2.GetStringData()) >= 0);
+	if (myString1.GetLength() < myString2.GetLength())
+	{
+		return false;
+	}
+	return (memcmp(myString1.GetStringData(), myString2.GetStringData(), myString1.GetLength()) >= 0);
 }
 
 bool operator<(CMyString const& myString1, CMyString const& myString2)
 {
-	return (strcmp(myString1.GetStringData(), myString2.GetStringData()) < 0);
+	if (myString1.GetLength() > myString2.GetLength())
+	{
+		return false;
+	}
+	return (memcmp(myString1.GetStringData(), myString2.GetStringData(), myString1.GetLength()) < 0);
 }
 
 bool operator<=(CMyString const& myString1, CMyString const& myString2)
 {
-	return (strcmp(myString1.GetStringData(), myString2.GetStringData()) <= 0);
+	if (myString1.GetLength() > myString2.GetLength())
+	{
+		return false;
+	}
+	return (memcmp(myString1.GetStringData(), myString2.GetStringData(), myString1.GetLength()) <= 0);
 }
 
 std::ostream& operator<<(std::ostream& stream, CMyString const& myString)
@@ -212,7 +279,7 @@ std::istream& operator>>(std::istream& stream, CMyString& myString)
 
 		if (resultLength == resultDataSize)
 		{
-			char* newResultData = new char[resultDataSize*2];
+			char* newResultData = new char[resultDataSize * 2];
 			memcpy(newResultData, resultData, resultDataSize);
 			delete[] resultData;
 			resultData = newResultData;

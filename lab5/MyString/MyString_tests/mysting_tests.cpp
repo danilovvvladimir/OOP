@@ -203,7 +203,7 @@ SCENARIO("Testing SubString")
 		}
 	}
 
-	WHEN("Method is called incorrectly: <length> is greater than string length - <start> index")
+	/*WHEN("Method is called incorrectly: <length> is greater than string length - <start> index")
 	{
 		THEN("throw exception")
 		{
@@ -220,7 +220,7 @@ SCENARIO("Testing SubString")
 			}
 			REQUIRE(outputStream.str() == "<length> is out of range");
 		}
-	}
+	}*/
 }
 
 SCENARIO("Testing << operator")

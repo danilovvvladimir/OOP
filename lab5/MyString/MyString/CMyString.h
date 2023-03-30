@@ -25,7 +25,7 @@ public:
 
 	// перемещающий конструктор (для компиляторов, совместимых с C++11)
 	//  реализуется совместно с перемещающим оператором присваивания
-	CMyString(CMyString&& other);
+	CMyString(CMyString&& other) noexcept;
 
 	// конструктор, инициализирующий строку данными из
 	// строки стандартной библиотеки C++
@@ -52,7 +52,7 @@ public:
 
 	// ===> Operators <===
 	CMyString& operator=(CMyString const& other);
-	CMyString& operator=(CMyString && other);
+	CMyString& operator=(CMyString&& other) noexcept;
 	CMyString& operator+=(CMyString const& other);
 	const char& operator[](size_t index) const;
 	char& operator[](size_t index);
