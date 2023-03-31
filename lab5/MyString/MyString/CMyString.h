@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 constexpr char STRING_END_SYMBOL = '\0';
 

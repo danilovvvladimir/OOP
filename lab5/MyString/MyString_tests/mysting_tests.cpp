@@ -30,10 +30,10 @@ SCENARIO("Testing Constructors")
 		THEN("MyString contains C string")
 		{
 			const char* cStr = "Hello \0world";
-			CMyString mystr = CMyString(cStr);
+			CMyString mystr = CMyString(cStr, 12);
 
-			REQUIRE(mystr.GetLength() == strlen(cStr));
-			REQUIRE(strcmp(mystr.GetStringData(), cStr) == 0);
+			REQUIRE(mystr.GetLength() == 12);
+			REQUIRE(memcmp(mystr.GetStringData(), cStr, 12) == 0);
 		}
 	}
 	WHEN("C string with string length constructor")
@@ -180,7 +180,7 @@ SCENARIO("Testing SubString")
 
 			auto const subString = sNulls.SubString(0, 8);
 
-			REQUIRE(std::strcmp(subString.GetStringData(), "Hello\0, ") == 0);
+			REQUIRE(memcmp(subString.GetStringData(), "Hello\0, ", 8) == 0);
 		}
 	}
 
@@ -203,24 +203,16 @@ SCENARIO("Testing SubString")
 		}
 	}
 
-	/*WHEN("Method is called incorrectly: <length> is greater than string length - <start> index")
+	WHEN("Method is called correctly but <length> is greater than string length - <start> index")
 	{
 		THEN("throw exception")
 		{
 			std::ostringstream outputStream;
 			CMyString mystr("Hello world");
-
-			try
-			{
-				CMyString substring = mystr.SubString(0, mystr.GetLength() + 1);
-			}
-			catch (const std::exception& e)
-			{
-				outputStream << e.what();
-			}
-			REQUIRE(outputStream.str() == "<length> is out of range");
+			CMyString substring = mystr.SubString(0, mystr.GetLength() + 1);
+			REQUIRE(substring == mystr);
 		}
-	}*/
+	}
 }
 
 SCENARIO("Testing << operator")
@@ -360,6 +352,17 @@ SCENARIO("Testing operator +")
 			REQUIRE(strcmp(str3.GetStringData(), "Hello world!") == 0);
 		}
 	}
+	WHEN("Concat strings with \0 ")
+	{
+		THEN("Result CMyString contains data of both CMyString and const char*")
+		{
+			CMyString str1("Hello \0", 7);
+
+			CMyString str2("wo\0rld", 6);
+			CMyString strResult = str1 + str2;
+			REQUIRE(memcmp(strResult.GetStringData(), "Hello \0wo\0rld!", 13) == 0);
+		}
+	}
 }
 
 SCENARIO("Testing operator ==")
@@ -433,7 +436,7 @@ SCENARIO("Testing >, <, >=, <= operators")
 	}
 	WHEN("First CMyString is lesser(ASCII) than second one")
 	{
-		CMyString str1 = "aaaa";
+		CMyString str1 = "aaaaaa";
 		CMyString str2 = "aab";
 		REQUIRE(!(str1 > str2));
 		REQUIRE(str1 < str2);
@@ -484,6 +487,30 @@ SCENARIO("Testing moving")
 			REQUIRE(firstString.GetLength() == 0);
 
 			REQUIRE(std::strcmp(secondString.GetStringData(), "Hello world") == 0);
+		}
+	}
+	WHEN("Constructing string from moved-out string")
+	{
+		THEN("New string which is based on movedOut string has nullish length")
+		{
+
+			CMyString movedOutString("Hello world");
+			CMyString movedInString(std::move(movedOutString));
+
+			CMyString movedOutBasedString(movedOutString);
+			REQUIRE(movedOutBasedString.GetLength() == 0);
+		}
+	}
+	WHEN("Substring moved-out string")
+	{
+		THEN("New slices substring is empty")
+		{
+
+			CMyString movedOutString("Hello world");
+			CMyString movedInString(std::move(movedOutString));
+
+			CMyString movedOutBasedString(movedOutString);
+			REQUIRE(movedOutBasedString.SubString(0) == "");
 		}
 	}
 }
