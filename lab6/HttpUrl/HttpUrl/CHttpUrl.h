@@ -2,6 +2,9 @@
 
 #include "CUrlParsingError.h"
 #include <string>
+#include <algorithm>
+#include <regex>
+#include <cctype>
 
 enum class Protocol
 {
@@ -63,8 +66,6 @@ public:
 	Port GetPort() const;
 
 private:
-	std::string ParseProtocolToString(Protocol protocol) const;
-
 
 	Protocol m_protocol;
 	std::string m_domain;
