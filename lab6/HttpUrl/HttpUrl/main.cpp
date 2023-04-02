@@ -1,22 +1,29 @@
 #include "CHttpUrl.h"
 #include <iostream>
 
+void PrintUrlInfo(std::ostream& outputStream, CHttpUrl const& httpUrl)
+{
+	outputStream << "Protocol: " << CHttpUrl::ParseProtocolToString(httpUrl.GetProtocol()) << std::endl
+				 << "Port: " << httpUrl.GetPort() << std::endl
+				 << "Domain: " << httpUrl.GetDomain() << std::endl
+				 << "Document: " << httpUrl.GetDocument() << std::endl;
+}
+
 int main()
 {
-
-	try
+	std::string line;
+	while (std::getline(std::cin, line))
 	{
-		CHttpUrl c("http://vk.com/fruityflunt/fdag.jpg");
+		try
+		{
+			CHttpUrl url(line);
+			PrintUrlInfo(std::cout, url);
+		}
+		catch (CUrlParsingError const& e)
+		{
+			std::cout << e.what() << std::endl;
+		}
+	}
 
-		std::cout << static_cast<int>(c.GetProtocol()) << std::endl;
-		std::cout << c.GetDomain() << std::endl;
-		std::cout << c.GetPort() << std::endl;
-		std::cout << c.GetDocument() << std::endl;
-		std::cout << c.GetURL() << std::endl;
-	}
-	catch (const std::exception& e)
-	{
-		std::cout << e.what() << std::endl;
-	}
 	return 0;
 }

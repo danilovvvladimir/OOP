@@ -64,6 +64,7 @@ public:
 	std::string GetDocument() const;
 	Protocol GetProtocol() const;
 	Port GetPort() const;
+	static std::string ParseProtocolToString(Protocol protocol);
 
 private:
 

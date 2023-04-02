@@ -8,6 +8,7 @@ public:
 	static CUrlParsingError InvalidUrl();
 	static CUrlParsingError InvalidPort();
 	static CUrlParsingError InvalidProtocol();
+	static CUrlParsingError InvalidDocument();
 	static CUrlParsingError InvalidDomain();
 
 private:
