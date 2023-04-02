@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.2092
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HttpUrl", "HttpUrl\HttpUrl.vcxproj", "{62AC8792-5B47-4F1C-BAC2-1525BD887CB6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HttpUrl_tests", "HttpUrl_tests\HttpUrl_tests.vcxproj", "{BB257DD3-7CF5-42CC-B5DA-151E5757A88D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{62AC8792-5B47-4F1C-BAC2-1525BD887CB6}.Release|x64.Build.0 = Release|x64
 		{62AC8792-5B47-4F1C-BAC2-1525BD887CB6}.Release|x86.ActiveCfg = Release|Win32
 		{62AC8792-5B47-4F1C-BAC2-1525BD887CB6}.Release|x86.Build.0 = Release|Win32
+		{BB257DD3-7CF5-42CC-B5DA-151E5757A88D}.Debug|x64.ActiveCfg = Debug|x64
+		{BB257DD3-7CF5-42CC-B5DA-151E5757A88D}.Debug|x64.Build.0 = Debug|x64
+		{BB257DD3-7CF5-42CC-B5DA-151E5757A88D}.Debug|x86.ActiveCfg = Debug|Win32
+		{BB257DD3-7CF5-42CC-B5DA-151E5757A88D}.Debug|x86.Build.0 = Debug|Win32
+		{BB257DD3-7CF5-42CC-B5DA-151E5757A88D}.Release|x64.ActiveCfg = Release|x64
+		{BB257DD3-7CF5-42CC-B5DA-151E5757A88D}.Release|x64.Build.0 = Release|x64
+		{BB257DD3-7CF5-42CC-B5DA-151E5757A88D}.Release|x86.ActiveCfg = Release|Win32
+		{BB257DD3-7CF5-42CC-B5DA-151E5757A88D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

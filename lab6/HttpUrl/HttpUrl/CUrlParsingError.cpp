@@ -1,6 +1,6 @@
 #include "CUrlParsingError.h"
 
-const std::string INVALID_URL_MESSAGE = "Invalid Url";
+const std::string INVALID_URL_MESSAGE = "Invalid Url.";
 const std::string INVALID_PORT_MESSAGE = "Invalid port. Port must be number in this interval: 1 <= Port <= 65565.";
 const std::string INVALID_PROTOCOL_MESSAGE = "Invalid protocol. Protocol must be: HTTP / HTTPS.";
 const std::string INVALID_DOMAIN_MESSAGE = "Invalid domain. Domain must only contain english letters, digits, '-', '.'.";

@@ -6,7 +6,8 @@ void PrintUrlInfo(std::ostream& outputStream, CHttpUrl const& httpUrl)
 	outputStream << "Protocol: " << CHttpUrl::ParseProtocolToString(httpUrl.GetProtocol()) << std::endl
 				 << "Port: " << httpUrl.GetPort() << std::endl
 				 << "Domain: " << httpUrl.GetDomain() << std::endl
-				 << "Document: " << httpUrl.GetDocument() << std::endl;
+				 << "Document: " << httpUrl.GetDocument() << std::endl
+				 << std::endl;
 }
 
 int main()
@@ -21,7 +22,8 @@ int main()
 		}
 		catch (CUrlParsingError const& e)
 		{
-			std::cout << e.what() << std::endl;
+			std::cout << e.what() << std::endl
+					  << std::endl;
 		}
 	}
 
