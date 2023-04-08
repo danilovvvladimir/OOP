@@ -21,9 +21,15 @@
     <ClCompile Include="..\StringList\CStringList.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="..\StringList\CStringNode.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\StringList\CStringList.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="..\StringList\CStringNode.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>
