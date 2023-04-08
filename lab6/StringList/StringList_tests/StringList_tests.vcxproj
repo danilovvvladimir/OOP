@@ -136,12 +136,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\StringList\CStringList.cpp" />
-    <ClCompile Include="..\StringList\CStringNode.cpp" />
     <ClCompile Include="StringList_tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\StringList\CStringList.h" />
-    <ClInclude Include="..\StringList\CStringNode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

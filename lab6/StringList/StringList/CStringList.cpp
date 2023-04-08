@@ -10,18 +10,63 @@ CStringList::CStringList()
 CStringList::CStringList(const CStringList& other)
 	: CStringList()
 {
-	CStringNode* temp = other.m_head;
-
-	while (temp != nullptr)
+	try
 	{
-		PushBack(temp->m_data);
-		temp = temp->m_next;
+		CStringNode* temp = other.m_head;
+
+		while (temp != nullptr)
+		{
+			PushBack(temp->m_data);
+			temp = temp->m_next;
+		}
 	}
+	catch (const std::exception&)
+	{
+		Clear();
+		throw;
+	}
+}
+
+CStringList::CStringList(CStringList&& other) noexcept
+	: m_head(other.m_head)
+	, m_tail(other.m_tail)
+	, m_size(other.GetSize())
+{
+	other.m_head = nullptr;
+	other.m_tail = nullptr;
+	other.m_size = 0;
 }
 
 CStringList::~CStringList() noexcept
 {
 	Clear();
+}
+
+CStringList& CStringList::operator=(const CStringList& other)
+{
+	if (std::addressof(other) != this)
+	{
+		Clear();
+
+		CStringList tmpCopy(other);
+		std::swap(m_head, tmpCopy.m_head);
+		std::swap(m_tail, tmpCopy.m_tail);
+		std::swap(m_size, tmpCopy.m_size);
+	}
+
+	return *this;
+}
+
+CStringList& CStringList::operator=(CStringList&& other) noexcept
+{
+	if (std::addressof(other) != this)
+	{
+		std::swap(m_head, other.m_head);
+		std::swap(m_tail, other.m_tail);
+		std::swap(m_size, other.m_size);
+	}
+
+	return *this;
 }
 
 size_t CStringList::GetSize() const
