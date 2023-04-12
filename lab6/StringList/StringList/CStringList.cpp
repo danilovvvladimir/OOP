@@ -2,9 +2,22 @@
 
 CStringList::CStringList()
 	: m_size(0)
-	, m_head(nullptr)
+	, m_head(new CStringListNode())
 	, m_tail(nullptr)
 {
+	try
+	{
+		m_tail = new CStringListNode();
+	}
+	catch (const std::bad_alloc&)
+	{
+		delete m_head;
+		throw;
+	}
+
+	m_head->m_next = m_tail;
+	m_tail->m_prev = m_head;
+	m_head = m_tail;
 }
 
 CStringList::CStringList(const CStringList& other)
@@ -12,7 +25,7 @@ CStringList::CStringList(const CStringList& other)
 {
 	try
 	{
-		CStringNode* temp = other.m_head;
+		CStringListNode* temp = other.m_head;
 
 		while (temp != nullptr)
 		{
@@ -40,6 +53,9 @@ CStringList::CStringList(CStringList&& other) noexcept
 CStringList::~CStringList() noexcept
 {
 	Clear();
+	// delete head & tail?
+	delete m_head->m_prev;
+	delete m_tail;
 }
 
 CStringList& CStringList::operator=(const CStringList& other)
@@ -61,6 +77,8 @@ CStringList& CStringList::operator=(CStringList&& other) noexcept
 {
 	if (std::addressof(other) != this)
 	{
+		Clear();
+
 		std::swap(m_head, other.m_head);
 		std::swap(m_tail, other.m_tail);
 		std::swap(m_size, other.m_size);
@@ -83,7 +101,7 @@ void CStringList::Clear()
 {
 	if (!IsEmpty())
 	{
-		CStringNode* tempNode;
+		CStringListNode* tempNode;
 		while ((tempNode = m_head) != nullptr)
 		{
 			m_head = m_head->m_next;
@@ -93,9 +111,50 @@ void CStringList::Clear()
 	}
 }
 
+CStringList::Iterator CStringList::begin() const
+{
+	return Iterator(m_head);
+}
+
+CStringList::Iterator CStringList::end() const
+{
+	return Iterator(m_tail);
+}
+
+std::reverse_iterator<CStringListIterator> CStringList::rbegin() const
+{
+	return std::make_reverse_iterator(end());
+}
+
+std::reverse_iterator<CStringListIterator> CStringList::rend() const
+{
+	return std::make_reverse_iterator(begin());
+}
+
+CStringList::ConstIterator CStringList::cbegin() const
+{
+	return ConstIterator(m_head);
+}
+
+CStringList::ConstIterator CStringList::cend() const
+{
+	return ConstIterator(m_tail);
+}
+
+std::reverse_iterator<CStringListConstIterator> CStringList::crbegin() const
+{
+	return std::make_reverse_iterator(cend());
+}
+
+std::reverse_iterator<CStringListConstIterator> CStringList::crend() const
+{
+	return std::make_reverse_iterator(cbegin());
+}
+
+
 void CStringList::PushFront(const std::string& data)
 {
-	CStringNode* newNode = new CStringNode(data);
+	CStringListNode* newNode = new CStringListNode(data);
 	newNode->m_next = m_head;
 
 	if (m_head != nullptr)
@@ -115,9 +174,29 @@ void CStringList::PushFront(const std::string& data)
 	m_size++;
 }
 
+CStringList::Iterator CStringList::Insert(const CStringListIterator& position, const std::string& data)
+{
+	CStringListNode* newNodePtr = new CStringListNode(data);
+	CStringListNode* wherePtr = position.m_ptr;
+
+	newNodePtr->m_next = wherePtr;
+	newNodePtr->m_prev = wherePtr->m_prev;
+	wherePtr->m_prev->m_next = newNodePtr;
+	wherePtr->m_prev = newNodePtr;
+
+	if (wherePtr == m_head)
+	{
+		m_head = newNodePtr;
+	}
+
+	++m_size;
+
+	return Iterator(newNodePtr);
+}
+
 void CStringList::PushBack(const std::string& data)
 {
-	CStringNode* newNode = new CStringNode(data);
+	CStringListNode* newNode = new CStringListNode(data);
 	newNode->m_prev = m_tail;
 
 	if (m_tail != nullptr)

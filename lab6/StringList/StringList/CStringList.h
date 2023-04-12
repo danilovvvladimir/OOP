@@ -1,12 +1,16 @@
 #pragma once
 
-//#include "CStringNode.h"
-#include <string>
 #include <algorithm>
+
+#include "CStringListNode.h"
+#include "CStringListIterator.h"
+#include "CStringListConstIterator.h"
 
 class CStringList
 {
 public:
+	using Iterator = CStringListIterator;
+	using ConstIterator = CStringListConstIterator;
 	// ==> Constructors & destructor <==
 	CStringList();
 	CStringList(const CStringList& other);
@@ -21,9 +25,7 @@ public:
 	// ==> Methods <==
 	void PushBack(const std::string& data);
 	void PushFront(const std::string& data);
-
-	//CStringList& PopBack();
-	//CStringList& PopFront();
+	Iterator Insert(const CStringListIterator& position, const std::string& data);
 
 	size_t GetSize() const;
 	bool IsEmpty() const;
@@ -32,29 +34,19 @@ public:
 
 	// ==> Iterators <==
 
+
+	Iterator begin() const;
+	Iterator end() const;
+	std::reverse_iterator<CStringListIterator> rbegin() const;
+	std::reverse_iterator<CStringListIterator> rend() const;
+
+	ConstIterator cbegin() const;
+	ConstIterator cend() const;
+	std::reverse_iterator<CStringListConstIterator> crbegin() const;
+	std::reverse_iterator<CStringListConstIterator> crend() const;
+
 private:
-	class CStringNode
-	{
-	public:
-		CStringNode()
-			: m_data("")
-			, m_next(nullptr)
-			, m_prev(nullptr)
-		{
-		}
-
-		CStringNode(std::string const& data)
-			: m_data(data)
-			, m_next(nullptr)
-			, m_prev(nullptr)
-		{
-		}
-		CStringNode* m_next;
-		CStringNode* m_prev;
-		std::string m_data;
-	};
-
-	CStringNode* m_head;
-	CStringNode* m_tail;
+	CStringListNode* m_head;
+	CStringListNode* m_tail;
 	size_t m_size;
 };

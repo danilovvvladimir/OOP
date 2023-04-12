@@ -124,10 +124,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CStringList.cpp" />
+    <ClCompile Include="CStringListConstIterator.cpp" />
+    <ClCompile Include="CStringListIterator.cpp" />
+    <ClCompile Include="CStringListNode.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CStringList.h" />
+    <ClInclude Include="CStringListConstIterator.h" />
+    <ClInclude Include="CStringListIterator.h" />
+    <ClInclude Include="CStringListNode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
