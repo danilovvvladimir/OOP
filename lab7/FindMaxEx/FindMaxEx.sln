@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.2092
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FindMaxEx", "FindMaxEx\FindMaxEx.vcxproj", "{EDC4DEFB-5E10-4341-9A1E-59157AAAD35C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FindMaxEx_tests", "FindMaxEx_tests\FindMaxEx_tests.vcxproj", "{71A5AD39-4CD9-46E0-AD92-9D1468F1C74F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{EDC4DEFB-5E10-4341-9A1E-59157AAAD35C}.Release|x64.Build.0 = Release|x64
 		{EDC4DEFB-5E10-4341-9A1E-59157AAAD35C}.Release|x86.ActiveCfg = Release|Win32
 		{EDC4DEFB-5E10-4341-9A1E-59157AAAD35C}.Release|x86.Build.0 = Release|Win32
+		{71A5AD39-4CD9-46E0-AD92-9D1468F1C74F}.Debug|x64.ActiveCfg = Debug|x64
+		{71A5AD39-4CD9-46E0-AD92-9D1468F1C74F}.Debug|x64.Build.0 = Debug|x64
+		{71A5AD39-4CD9-46E0-AD92-9D1468F1C74F}.Debug|x86.ActiveCfg = Debug|Win32
+		{71A5AD39-4CD9-46E0-AD92-9D1468F1C74F}.Debug|x86.Build.0 = Debug|Win32
+		{71A5AD39-4CD9-46E0-AD92-9D1468F1C74F}.Release|x64.ActiveCfg = Release|x64
+		{71A5AD39-4CD9-46E0-AD92-9D1468F1C74F}.Release|x64.Build.0 = Release|x64
+		{71A5AD39-4CD9-46E0-AD92-9D1468F1C74F}.Release|x86.ActiveCfg = Release|Win32
+		{71A5AD39-4CD9-46E0-AD92-9D1468F1C74F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

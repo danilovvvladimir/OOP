@@ -15,12 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="find_max_ex_tests.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="find_max_ex.hpp">
+    <ClInclude Include="..\FindMaxEx\find_max_ex.hpp">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>
