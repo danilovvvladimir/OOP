@@ -1,9 +1,13 @@
-#pragma once
+﻿#pragma once
+
 #include "CStringListNode.h"
 #include <iterator>
+#include <stdexcept>
 
-class CStringListIterator
+class CStringListIterator : public std::iterator<std::bidirectional_iterator_tag, std::string>
 {
+	friend class CStringList;
+
 public:
 	using iterator_category = std::bidirectional_iterator_tag;
 	using difference_type = std::ptrdiff_t;
@@ -11,22 +15,22 @@ public:
 	using pointer = std::string*;
 	using reference = std::string&;
 
-	CStringListIterator();
-	CStringListIterator(CStringListNode* node);
-
-	CStringListIterator operator++(int);
-	CStringListIterator operator--(int);
-	CStringListIterator& operator++();
-	CStringListIterator& operator--();
-
-	bool operator!=(const CStringListIterator& other) const;
-	bool operator==(const CStringListIterator& other) const;
+	bool operator!=(CStringListIterator const& other) const;
+	bool operator==(CStringListIterator const& other) const;
 
 	reference operator*() const;
 	pointer operator->() const;
 
-private:
-	friend class CStringList;
+	CStringListIterator& operator++();
+	CStringListIterator& operator--();
 
-	CStringListNode* m_ptr;
+	CStringListIterator operator++(int);
+	CStringListIterator operator--(int);
+
+protected:
+	CStringListIterator(CStringListNode* node);
+
+private:
+	CStringListNode* m_nodePtr;
 };
+

@@ -1,92 +1,54 @@
 #include "CStringListIterator.h"
 
-CStringListIterator::CStringListIterator()
-	: m_ptr(nullptr)
-{
-}
-
 CStringListIterator::CStringListIterator(CStringListNode* node)
-	: m_ptr(node)
+	: m_nodePtr(node)
 {
 }
 
-CStringListIterator CStringListIterator::operator++(int)
+bool CStringListIterator::operator!=(CStringListIterator const& other) const
 {
-	if (m_ptr == nullptr)
-	{
-		throw std::logic_error("Unable to increment uninitialized iterator");
-	}
-
-	if (m_ptr->m_next == nullptr)
-	{
-		throw std::out_of_range("Unable to increment END list iterator");
-	}
-
-	CStringListNode* tempPtr = m_ptr;
-	m_ptr = m_ptr->m_next;
-
-	return tempPtr;
+	return m_nodePtr != other.m_nodePtr;
 }
 
-CStringListIterator CStringListIterator::operator--(int)
+bool CStringListIterator::operator==(CStringListIterator const& other) const
 {
-	if (m_ptr == nullptr)
-	{
-		throw std::logic_error("Unable to decrement uninitialized iterator");
-	}
+	return m_nodePtr == other.m_nodePtr;
+}
 
-	if (m_ptr->m_prev == nullptr)
-	{
-		throw std::out_of_range("Unable to decrement BEGIN list iterator");
-	}
+CStringListIterator::reference CStringListIterator::operator*() const
+{
+	return m_nodePtr->m_data;
+}
 
-	CStringListNode* tempPtr = m_ptr;
-	m_ptr = m_ptr->m_prev;
-
-	return tempPtr;
+CStringListIterator::pointer CStringListIterator::operator->() const
+{
+	return &m_nodePtr->m_data;
 }
 
 CStringListIterator& CStringListIterator::operator++()
 {
-	if (m_ptr->m_next == nullptr)
-	{
-		throw std::out_of_range("Unable to increment END list iterator");
-	}
-
-	m_ptr = m_ptr->m_next;
-
-
+	m_nodePtr = m_nodePtr->m_next;
 	return *this;
 }
 
 CStringListIterator& CStringListIterator::operator--()
 {
-	if (m_ptr->m_prev == nullptr)
-	{
-		throw std::logic_error("Unable to decrement BEGIN list iterator");
-	}
-
-	m_ptr = m_ptr->m_prev;
-
+	m_nodePtr = m_nodePtr->m_prev;
 	return *this;
 }
 
-bool CStringListIterator::operator!=(const CStringListIterator& other) const
+CStringListIterator CStringListIterator::operator++(int)
 {
-	return m_ptr != other.m_ptr;
+	CStringListIterator tmp(*this);
+	++(*this);
+	return tmp;
 }
 
-bool CStringListIterator::operator==(const CStringListIterator& other) const
+CStringListIterator CStringListIterator::operator--(int)
 {
-	return m_ptr == other.m_ptr;
+	CStringListIterator tmp(*this);
+	--(*this);
+	return tmp;
 }
 
-CStringListIterator::reference CStringListIterator::operator*() const
-{
-	return m_ptr->m_data;
-}
 
-CStringListIterator::pointer CStringListIterator::operator->() const
-{
-	return &(m_ptr->m_data);
-}
