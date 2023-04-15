@@ -2,9 +2,9 @@
 
 #include <algorithm>
 
-#include "CStringListNode.h"
-#include "CStringListIterator.h"
 #include "CStringListConstIterator.h"
+#include "CStringListIterator.h"
+#include "CStringListNode.h"
 
 class CStringList
 {
@@ -30,8 +30,8 @@ public:
 	void PushBack(const std::string& data);
 	void PushFront(const std::string& data);
 
-	void Insert(Iterator const & position, const std::string& data);
-	void Erase(Iterator const & position);
+	void Insert(Iterator const& position, const std::string& data);
+	void Erase(Iterator const& position);
 
 	size_t GetSize() const;
 	bool IsEmpty() const;

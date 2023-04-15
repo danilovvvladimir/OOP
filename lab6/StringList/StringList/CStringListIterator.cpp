@@ -50,5 +50,3 @@ CStringListIterator CStringListIterator::operator--(int)
 	--(*this);
 	return tmp;
 }
-
-

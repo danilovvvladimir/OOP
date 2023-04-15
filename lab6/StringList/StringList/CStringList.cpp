@@ -24,20 +24,18 @@ CStringList::CStringList()
 CStringList::CStringList(const CStringList& other)
 	: CStringList()
 {
-	try
-	{
-		CStringListNode* temp = other.m_head;
 
-		while (temp != nullptr)
-		{
-			PushBack(temp->m_data);
-			temp = temp->m_next;
-		}
-	}
-	catch (const std::bad_alloc&)
+	for (const std::string& element : other)
 	{
-		Clear();
-		throw;
+		try
+		{
+			PushBack(element);
+		}
+		catch (const std::exception&)
+		{
+			Clear();
+			throw;
+		}
 	}
 }
 
@@ -146,14 +144,14 @@ void CStringList::Erase(Iterator const& position)
 {
 	if (IsEmpty())
 	{
-		throw std::logic_error("List is empty");
+		throw std::out_of_range("List is out of range");
 	}
 
 	CStringListNode* positionPtr = position.m_nodePtr;
 
 	if (positionPtr->m_next == nullptr || positionPtr->m_prev == nullptr)
 	{
-		throw std::logic_error("Erasing past-the-end-iterator");
+		throw std::out_of_range("Erasing past-the-end-iterator");
 	}
 
 	CStringListNode* followingPtr;

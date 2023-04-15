@@ -1,8 +1,7 @@
-﻿#pragma once
+#pragma once
 
 #include "CStringListNode.h"
 #include <iterator>
-#include <stdexcept>
 
 class CStringListIterator : public std::iterator<std::bidirectional_iterator_tag, std::string>
 {
@@ -33,4 +32,3 @@ protected:
 private:
 	CStringListNode* m_nodePtr;
 };
-

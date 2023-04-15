@@ -2,7 +2,6 @@
 
 #include "CStringListNode.h"
 #include <iterator>
-#include <stdexcept>
 
 class CStringListConstIterator : public std::iterator<std::bidirectional_iterator_tag, const std::string>
 {
