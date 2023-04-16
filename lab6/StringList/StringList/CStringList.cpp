@@ -44,6 +44,7 @@ CStringList::CStringList(CStringList&& other) noexcept
 	, m_tail(other.m_tail)
 	, m_size(other.GetSize())
 {
+
 	other.m_head = nullptr;
 	other.m_tail = nullptr;
 	other.m_size = 0;
@@ -52,8 +53,8 @@ CStringList::CStringList(CStringList&& other) noexcept
 CStringList::~CStringList() noexcept
 {
 	Clear();
-	m_tail = nullptr;
 	m_head = nullptr;
+	m_tail = nullptr;
 }
 
 CStringList& CStringList::operator=(const CStringList& other)
@@ -99,12 +100,16 @@ void CStringList::Clear()
 {
 	if (!IsEmpty())
 	{
+		m_head->m_prev->m_next = m_tail;
+		m_tail->m_prev = m_head->m_prev;
+
 		CStringListNode* tempNode;
-		while ((tempNode = m_head) != nullptr)
+		while ((tempNode = m_head) != m_tail)
 		{
 			m_head = m_head->m_next;
 			delete tempNode;
 		}
+
 		m_size = 0;
 	}
 }

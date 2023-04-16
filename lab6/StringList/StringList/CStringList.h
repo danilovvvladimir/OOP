@@ -19,6 +19,7 @@ public:
 	CStringList();
 	CStringList(const CStringList& other);
 	CStringList(CStringList&& other) noexcept;
+	//CStringList(CStringList&&) = default;
 
 	~CStringList() noexcept;
 

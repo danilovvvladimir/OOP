@@ -1,20 +1,15 @@
 #include "CStringList.h"
 #include <iostream>
 #include <vector>
+#include <list>
 int main()
 {
-	CStringList lst;
 
-	lst.PushBack("1");
-	lst.PushBack("2");
-	lst.PushBack("3");
+	CStringList lst1 = CStringList();
+	lst1.PushBack("Hello");
 
-	std::cout << lst.GetSize() << std::endl;
+	lst1.~CStringList();
 
-	CStringList lstCopy(lst);
-	std::cout << lstCopy.GetSize() << std::endl;
-	std::vector<int> v;
-	v.erase(v.begin());
-	
+
 	return 0;
 }
