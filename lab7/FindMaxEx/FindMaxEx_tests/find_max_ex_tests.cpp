@@ -4,6 +4,17 @@
 
 #include <string>
 
+SCENARIO("Testing with empty vector")
+{
+	std::vector<size_t> v;
+
+	size_t maxSizet;
+
+	REQUIRE(!FindMax(v, maxSizet, [](size_t firstValue, size_t secondValue) {
+		return firstValue < secondValue;
+	}));
+}
+
 SCENARIO("Testing Function with default types")
 {
 	WHEN("Testing with size_t")
@@ -54,7 +65,7 @@ SCENARIO("Testing with custom class")
 	public:
 		Athlete() = default;
 
-		Athlete(std::string name, short height, short weight)
+		Athlete(std::string name, unsigned short height, unsigned short weight)
 			: m_name(name)
 			, m_height(height)
 			, m_weight(weight)

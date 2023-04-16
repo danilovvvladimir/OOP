@@ -1,15 +1,15 @@
 #include <vector>
 
 template <typename T, typename Less>
-bool FindMax(const std::vector<T>& arr, T& maxValue, const Less& less)
+bool FindMax(std::vector<T> const& arr, T& maxValue, Less const& less)
 {
-	auto maxElementIterator = std::max_element(arr.begin(), arr.end(), less);
-
-	if (maxElementIterator != arr.end())
+	if (arr.empty())
 	{
-		maxValue = *maxElementIterator;
-		return true;
+		return false;
 	}
 
-	return false;
+	auto maxElementIterator = std::max_element(arr.begin(), arr.end(), less);
+	maxValue = *maxElementIterator;
+
+	return true;
 }
