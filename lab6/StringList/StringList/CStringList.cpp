@@ -1,6 +1,5 @@
 #include "CStringList.h"
 
-// Creating 2 nodes for head & tail, and make them one based on tail
 CStringList::CStringList()
 	: m_size(0)
 	, m_head(new CStringListNode())
@@ -39,7 +38,7 @@ CStringList::CStringList(const CStringList& other)
 	}
 }
 
-CStringList::CStringList(CStringList&& other) noexcept
+CStringList::CStringList(CStringList&& other) 
 	: m_head(other.m_head)
 	, m_tail(other.m_tail)
 	, m_size(other.GetSize())
@@ -48,13 +47,28 @@ CStringList::CStringList(CStringList&& other) noexcept
 	other.m_head = nullptr;
 	other.m_tail = nullptr;
 	other.m_size = 0;
+
+	try
+	{
+		other.m_head = new CStringListNode();
+		other.m_tail = new CStringListNode();
+	}
+	catch (const std::bad_alloc&)
+	{
+		delete other.m_head;
+		throw;
+	}
+
+	other.m_head->m_next = other.m_tail;
+	other.m_tail->m_prev = other.m_head;
+	other.m_head = other.m_tail;
 }
 
 CStringList::~CStringList() noexcept
 {
 	Clear();
-	m_head = nullptr;
-	m_tail = nullptr;
+	delete m_head->m_prev;
+	delete m_tail;
 }
 
 CStringList& CStringList::operator=(const CStringList& other)
@@ -72,7 +86,7 @@ CStringList& CStringList::operator=(const CStringList& other)
 	return *this;
 }
 
-CStringList& CStringList::operator=(CStringList&& other) noexcept
+CStringList& CStringList::operator=(CStringList&& other)
 {
 	if (std::addressof(other) != this)
 	{
@@ -86,17 +100,17 @@ CStringList& CStringList::operator=(CStringList&& other) noexcept
 	return *this;
 }
 
-size_t CStringList::GetSize() const
+size_t CStringList::GetSize() const noexcept
 {
 	return m_size;
 }
 
-bool CStringList::IsEmpty() const
+bool CStringList::IsEmpty() const noexcept
 {
 	return m_size == 0;
 }
 
-void CStringList::Clear()
+void CStringList::Clear() noexcept
 {
 	if (!IsEmpty())
 	{

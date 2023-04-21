@@ -2,7 +2,6 @@
 
 #include <algorithm>
 
-#include "CStringListConstIterator.h"
 #include "CStringListIterator.h"
 #include "CStringListNode.h"
 
@@ -18,14 +17,13 @@ public:
 	// ==> Constructors & destructor <==
 	CStringList();
 	CStringList(const CStringList& other);
-	CStringList(CStringList&& other) noexcept;
-	//CStringList(CStringList&&) = default;
+	CStringList(CStringList&& other);
 
 	~CStringList() noexcept;
 
 	// ==> Operators <==
 	CStringList& operator=(const CStringList& other);
-	CStringList& operator=(CStringList&& other) noexcept;
+	CStringList& operator=(CStringList&& other);
 
 	// ==> Methods <==
 	void PushBack(const std::string& data);
@@ -34,10 +32,10 @@ public:
 	void Insert(Iterator const& position, const std::string& data);
 	void Erase(Iterator const& position);
 
-	size_t GetSize() const;
-	bool IsEmpty() const;
+	size_t GetSize() const noexcept;
+	bool IsEmpty() const noexcept;
 
-	void Clear();
+	void Clear() noexcept;
 
 	// ==> Iterators <==
 

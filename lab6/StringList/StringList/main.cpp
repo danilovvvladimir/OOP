@@ -1,14 +1,48 @@
 #include "CStringList.h"
 #include <iostream>
-#include <vector>
-#include <list>
+
+// [X] CStringListNode: принимать дату по значению, а не по конст ссылке.
+// [X] CStringListNode: сделать ноду структурой.
+
+// [X] При создании своих итераторов не наследоваться от std::iterator.
+// [X] Добавить преобразование из обычного итератора в константный.
+
+// [X] Ликвидировать утечку памяти с двумя начальными нодами при деструктурировании.
+// [X] Добавить noexcept на методы, которые не генерируют исключения.
+
+// [X] Исправить констуктор перемещения: move-out объект должен остаться в валидном состоянии.
+
 int main()
 {
 
-	CStringList lst1 = CStringList();
-	lst1.PushBack("Hello");
+	CStringList lst1;
+	lst1.PushBack("hello");
+	lst1.PushBack("world");
 
-	lst1.~CStringList();
+	std::cout << "lst1:" << std::endl;
+	for (auto el : lst1)
+	{
+		std::cout << el<< std::endl;
+	}
+	std::cout << std::endl;
+
+	CStringList lst2(std::move(lst1));
+	lst1.PushBack("NOOT HELLO");
+	lst1.PushBack("NOOT WORLD");
+
+	std::cout << "lst1:" << std::endl;
+	for (auto el : lst1)
+	{
+		std::cout << el << std::endl;
+	}
+	std::cout << std::endl;
+
+	std::cout << "lst2:" << std::endl;
+	for (auto el : lst2)
+	{
+		std::cout << el << std::endl;
+	}
+	std::cout << std::endl;
 
 
 	return 0;
