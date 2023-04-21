@@ -18,16 +18,10 @@
     <ClCompile Include="..\StringList\CStringList.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="..\StringList\CStringListConstIterator.cpp">
+    <ClCompile Include="StringList_Tests.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="..\StringList\CStringListIterator.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="..\StringList\CStringListNode.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="StringList_Tests.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,13 +29,10 @@
     <ClInclude Include="..\StringList\CStringList.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="..\StringList\CStringListConstIterator.h">
+    <ClInclude Include="..\StringList\CStringListNode.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="..\StringList\CStringListIterator.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="..\StringList\CStringListNode.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>

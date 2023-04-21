@@ -330,3 +330,33 @@ SCENARIO("Test range-based for")
 
 	REQUIRE(outputStream.str() == "GrindNeverStops");
 }
+
+SCENARIO("Clear after creation")
+{
+	CStringList lst;
+	lst.PushBack("abc");
+	lst.Clear();
+
+	REQUIRE(lst.IsEmpty());
+
+	lst.PushBack("def");
+
+	REQUIRE(!lst.IsEmpty());
+}
+
+SCENARIO("Testing valid move-out object")
+{
+	CStringList lst1;
+	lst1.PushBack("per ");
+	lst1.PushBack("aspera ");
+	lst1.PushBack("ad ");
+	lst1.PushBack("astra.");
+	REQUIRE(lst1.GetSize() == 4);
+
+	CStringList lst2(std::move(lst1));
+	REQUIRE(lst2.GetSize() == 4);
+	REQUIRE(lst1.GetSize() == 0);
+
+	lst1.PushBack("per aspera ad astra");
+	REQUIRE(lst1.GetSize() == 1);
+}
